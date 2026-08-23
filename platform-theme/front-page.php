@@ -34,6 +34,32 @@ get_header();
 		</div>
 	</section>
 
+	<section class="mpp-home-section">
+		<div class="mpp-home-container">
+			<h2><?php esc_html_e( 'Security & ACL', 'platform-theme' ); ?> / امنیت و ACL</h2>
+			<p class="mpp-home-lead"><?php esc_html_e( 'Dynamic roles, scoped permissions, audit logging, and a dedicated ACL admin experience.', 'platform-theme' ); ?></p>
+			<div class="mpp-home-grid">
+				<article class="mpp-home-card"><h3><?php esc_html_e( 'Role-based access', 'platform-theme' ); ?></h3><p><?php esc_html_e( 'Platform roles remain separate from WordPress roles.', 'platform-theme' ); ?></p></article>
+				<article class="mpp-home-card"><h3><?php esc_html_e( 'Permission matrix', 'platform-theme' ); ?></h3><p><?php esc_html_e( 'Grant and revoke permissions with scope controls.', 'platform-theme' ); ?></p></article>
+				<article class="mpp-home-card"><h3><?php esc_html_e( 'Audit trail', 'platform-theme' ); ?></h3><p><?php esc_html_e( 'Administrative changes are recorded for review.', 'platform-theme' ); ?></p></article>
+			</div>
+		</div>
+	</section>
+
+	<section class="mpp-home-section mpp-home-section--muted">
+		<div class="mpp-home-container">
+			<h2><?php esc_html_e( 'Module ecosystem', 'platform-theme' ); ?> / اکوسیستم ماژول</h2>
+			<p class="mpp-home-lead"><?php esc_html_e( 'Independent plugins can register routes, permissions, navigation, and dashboard widgets through Platform Core.', 'platform-theme' ); ?></p>
+		</div>
+	</section>
+
+	<section class="mpp-home-section">
+		<div class="mpp-home-container">
+			<h2><?php esc_html_e( 'Bilingual foundation', 'platform-theme' ); ?> / پایه دوزبانه</h2>
+			<p class="mpp-home-lead"><?php esc_html_e( 'Native RTL/LTR support with a shared design system for Persian and English interfaces.', 'platform-theme' ); ?></p>
+		</div>
+	</section>
+
 	<section class="mpp-home-section mpp-home-section--muted">
 		<div class="mpp-home-container">
 			<h2>نحوه کار</h2>
