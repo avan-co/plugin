@@ -227,7 +227,13 @@ class AclEngine {
 					continue;
 				}
 
-				$scope_value = ! empty( $rp['scope_value'] ) ? json_decode( $rp['scope_value'], true ) : null;
+				$scope_value = null;
+				if ( ! empty( $rp['scope_value'] ) ) {
+					$decoded = json_decode( $rp['scope_value'], true );
+					if ( JSON_ERROR_NONE === json_last_error() ) {
+						$scope_value = $decoded;
+					}
+				}
 
 				if ( $this->scopes->allows( $rp['scope_type'], $scope_value, $user_id, $context ) ) {
 					return true;

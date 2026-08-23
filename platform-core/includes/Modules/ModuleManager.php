@@ -57,7 +57,7 @@ class ModuleManager {
 			$module->boot();
 		}
 
-		$this->registry->sync_to_database();
+		$this->registry->sync_if_needed();
 	}
 
 	/**

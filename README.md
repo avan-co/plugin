@@ -144,10 +144,24 @@ Namespace: `platform/v1`
 | `/roles` | GET, POST | `core.acl.manage` |
 | `/roles/{id}` | GET, PUT, DELETE | `core.acl.manage` |
 | `/permissions` | GET | `core.acl.manage` |
-| `/acl/me` | GET | Logged in |
-| `/acl/check` | POST | Logged in |
-| `/acl/roles/{id}/permissions` | GET, POST | `core.acl.manage` |
-| `/acl/users/{id}/roles` | GET, POST | `core.acl.manage` |
+| `/acl/me` | GET | Logged in (permissions only with `core.acl.manage`) |
+| `/acl/check` | POST | `core.acl.manage` |
+| `/acl/roles/{id}/permissions` | GET, POST, DELETE | `core.acl.manage` |
+| `/acl/users/{id}/roles` | GET, POST, DELETE | `core.acl.manage` |
+
+WordPress administrators are **not** automatically granted platform admin access. Enable explicitly:
+
+```php
+add_filter( 'mpp_sync_wp_admin_to_platform_admin', '__return_true' );
+```
+
+### Running Tests
+
+```bash
+cd platform-core
+composer install
+composer test
+```
 
 ### Extending Routes
 

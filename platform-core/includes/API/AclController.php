@@ -8,6 +8,7 @@
 namespace MPP\API;
 
 use MPP\ACL\AclEngine;
+use MPP\ACL\PermissionRegistry;
 use MPP\ACL\RoleManager;
 use MPP\Auth\AccessGuard;
 use MPP\Services\UserRoleService;
@@ -34,6 +35,13 @@ class AclController extends RestController {
 	private $roles;
 
 	/**
+	 * Permission registry.
+	 *
+	 * @var PermissionRegistry
+	 */
+	private $registry;
+
+	/**
 	 * User role service.
 	 *
 	 * @var UserRoleService
@@ -50,12 +58,15 @@ class AclController extends RestController {
 	/**
 	 * Constructor.
 	 *
-	 * @param AclEngine       $acl        ACL engine.
-	 * @param UserRoleService $user_roles User role service.
+	 * @param AclEngine          $acl        ACL engine.
+	 * @param RoleManager        $roles      Role manager.
+	 * @param PermissionRegistry $registry   Permission registry.
+	 * @param UserRoleService    $user_roles User role service.
 	 */
-	public function __construct( AclEngine $acl, UserRoleService $user_roles ) {
+	public function __construct( AclEngine $acl, RoleManager $roles, PermissionRegistry $registry, UserRoleService $user_roles ) {
 		$this->acl        = $acl;
-		$this->roles      = new RoleManager();
+		$this->roles      = $roles;
+		$this->registry   = $registry;
 		$this->user_roles = $user_roles;
 		$this->guard      = new AccessGuard( $acl );
 	}
@@ -77,9 +88,7 @@ class AclController extends RestController {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'check_permission' ),
-				'permission_callback' => function () {
-					return is_user_logged_in();
-				},
+				'permission_callback' => $this->guard->rest_permission( 'core.acl.manage' ),
 			)
 		);
 
@@ -97,6 +106,11 @@ class AclController extends RestController {
 					'callback'            => array( $this, 'assign_role_permission' ),
 					'permission_callback' => $this->guard->rest_permission( 'core.acl.manage' ),
 				),
+				array(
+					'methods'             => \WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'revoke_role_permission' ),
+					'permission_callback' => $this->guard->rest_permission( 'core.acl.manage' ),
+				),
 			)
 		);
 
@@ -112,6 +126,11 @@ class AclController extends RestController {
 				array(
 					'methods'             => \WP_REST_Server::CREATABLE,
 					'callback'            => array( $this, 'assign_user_role' ),
+					'permission_callback' => $this->guard->rest_permission( 'core.acl.manage' ),
+				),
+				array(
+					'methods'             => \WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'revoke_user_role' ),
 					'permission_callback' => $this->guard->rest_permission( 'core.acl.manage' ),
 				),
 			)
@@ -134,16 +153,26 @@ class AclController extends RestController {
 	 * Check a permission for the current user.
 	 *
 	 * @param \WP_REST_Request $request Request.
-	 * @return \WP_REST_Response
+	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function check_permission( $request ) {
 		$params     = $request->get_json_params();
 		$permission = isset( $params['permission'] ) ? sanitize_text_field( $params['permission'] ) : '';
-		$context    = isset( $params['context'] ) && is_array( $params['context'] ) ? $params['context'] : array();
+		$context    = isset( $params['context'] ) && is_array( $params['context'] ) ? $this->sanitize_context( $params['context'] ) : array();
+
+		if ( empty( $permission ) || ! \MPP\ACL\Permission::is_valid_key( $permission ) ) {
+			return new \WP_Error( 'invalid_permission', __( 'A valid permission key is required.', 'platform-core' ), array( 'status' => 400 ) );
+		}
+
+		$target_user_id = isset( $params['user_id'] ) ? (int) $params['user_id'] : get_current_user_id();
+
+		if ( $target_user_id !== get_current_user_id() && ! $this->acl->can( get_current_user_id(), 'core.acl.manage' ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You cannot check permissions for other users.', 'platform-core' ), array( 'status' => 403 ) );
+		}
 
 		return rest_ensure_response(
 			array(
-				'allowed' => $this->acl->can( get_current_user_id(), $permission, $context ),
+				'allowed' => $this->acl->can( $target_user_id, $permission, $context ),
 			)
 		);
 	}
@@ -171,11 +200,34 @@ class AclController extends RestController {
 		$scope_type    = isset( $params['scope_type'] ) ? sanitize_key( $params['scope_type'] ) : 'all';
 		$scope_value   = isset( $params['scope_value'] ) ? $params['scope_value'] : null;
 
+		if ( ! $permission_id || ! $this->registry->find_by_id( $permission_id ) ) {
+			return new \WP_Error( 'invalid_data', __( 'A valid permission_id is required.', 'platform-core' ), array( 'status' => 400 ) );
+		}
+
+		$result = $this->roles->assign_permission( (int) $request['role_id'], $permission_id, $scope_type, $scope_value );
+
+		if ( ! $result ) {
+			return new \WP_Error( 'assign_failed', __( 'Could not assign permission. Check scope_type.', 'platform-core' ), array( 'status' => 400 ) );
+		}
+
+		return rest_ensure_response( array( 'success' => true ) );
+	}
+
+	/**
+	 * Revoke permission from role.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function revoke_role_permission( $request ) {
+		$params        = $request->get_json_params();
+		$permission_id = isset( $params['permission_id'] ) ? (int) $params['permission_id'] : 0;
+
 		if ( ! $permission_id ) {
 			return new \WP_Error( 'invalid_data', __( 'permission_id is required.', 'platform-core' ), array( 'status' => 400 ) );
 		}
 
-		$result = $this->roles->assign_permission( (int) $request['role_id'], $permission_id, $scope_type, $scope_value );
+		$result = $this->roles->revoke_permission( (int) $request['role_id'], $permission_id );
 
 		return rest_ensure_response( array( 'success' => (bool) $result ) );
 	}
@@ -200,11 +252,30 @@ class AclController extends RestController {
 		$params  = $request->get_json_params();
 		$role_id = isset( $params['role_id'] ) ? (int) $params['role_id'] : 0;
 
+		if ( ! $role_id || ! $this->roles->find( $role_id ) ) {
+			return new \WP_Error( 'invalid_data', __( 'A valid role_id is required.', 'platform-core' ), array( 'status' => 400 ) );
+		}
+
+		$result = $this->roles->assign_to_user( (int) $request['user_id'], $role_id );
+
+		return rest_ensure_response( array( 'success' => (bool) $result ) );
+	}
+
+	/**
+	 * Revoke role from user.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function revoke_user_role( $request ) {
+		$params  = $request->get_json_params();
+		$role_id = isset( $params['role_id'] ) ? (int) $params['role_id'] : 0;
+
 		if ( ! $role_id ) {
 			return new \WP_Error( 'invalid_data', __( 'role_id is required.', 'platform-core' ), array( 'status' => 400 ) );
 		}
 
-		$result = $this->roles->assign_to_user( (int) $request['user_id'], $role_id );
+		$result = $this->roles->revoke_from_user( (int) $request['user_id'], $role_id );
 
 		return rest_ensure_response( array( 'success' => (bool) $result ) );
 	}
@@ -217,12 +288,39 @@ class AclController extends RestController {
 	public function get_current_user_acl() {
 		$user_id = get_current_user_id();
 
-		return rest_ensure_response(
-			array(
-				'roles'       => $this->user_roles->get_roles( $user_id ),
-				'permissions' => $this->acl->get_user_permissions( $user_id ),
-				'panels'      => $this->acl->get_accessible_panels( $user_id ),
-			)
+		$response = array(
+			'roles'  => $this->user_roles->get_roles( $user_id ),
+			'panels' => $this->acl->get_accessible_panels( $user_id ),
 		);
+
+		if ( $this->acl->can( $user_id, 'core.acl.manage' ) ) {
+			$response['permissions'] = $this->acl->get_user_permissions( $user_id );
+		}
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Sanitize ACL context values.
+	 *
+	 * @param array<string, mixed> $context Raw context.
+	 * @return array<string, mixed>
+	 */
+	private function sanitize_context( array $context ) {
+		$sanitized = array();
+
+		foreach ( $context as $key => $value ) {
+			$key = sanitize_key( $key );
+
+			if ( is_array( $value ) ) {
+				$sanitized[ $key ] = array_map( 'absint', $value );
+			} elseif ( is_numeric( $value ) ) {
+				$sanitized[ $key ] = absint( $value );
+			} else {
+				$sanitized[ $key ] = sanitize_text_field( (string) $value );
+			}
+		}
+
+		return $sanitized;
 	}
 }

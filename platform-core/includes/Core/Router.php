@@ -86,7 +86,7 @@ class Router {
 	 * Add rewrite rules on init.
 	 */
 	public function add_rewrite_rules() {
-		foreach ( array_keys( $this->routes ) as $slug ) {
+		foreach ( array_keys( $this->get_routes() ) as $slug ) {
 			add_rewrite_rule(
 				'^' . preg_quote( $slug, '/' ) . '/?$',
 				'index.php?' . self::QUERY_VAR . '=' . $slug,

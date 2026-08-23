@@ -77,6 +77,7 @@ class AuthIntegration {
 		}
 
 		$redirect = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : home_url( '/app' );
+		$redirect = wp_validate_redirect( $redirect, home_url( '/app' ) );
 		wp_safe_redirect( $redirect );
 		exit;
 	}
@@ -115,7 +116,10 @@ class AuthIntegration {
 		}
 
 		if ( ! empty( $request ) ) {
-			return $request;
+			$validated = wp_validate_redirect( $request, home_url( '/app' ) );
+			if ( $validated ) {
+				return $validated;
+			}
 		}
 
 		return home_url( '/app' );

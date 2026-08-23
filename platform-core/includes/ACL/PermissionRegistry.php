@@ -67,6 +67,42 @@ class PermissionRegistry {
 	}
 
 	/**
+	 * Persist registered permissions only when the registry has changed.
+	 */
+	public function sync_if_needed() {
+		$hash = $this->get_registry_hash();
+		$stored = get_option( 'mpp_permissions_hash', '' );
+
+		if ( $hash === $stored ) {
+			return;
+		}
+
+		$this->sync_to_database();
+		update_option( 'mpp_permissions_hash', $hash, false );
+	}
+
+	/**
+	 * Compute a hash of registered permission keys.
+	 *
+	 * @return string
+	 */
+	public function get_registry_hash() {
+		$keys = array_keys( $this->registered );
+		sort( $keys );
+
+		return md5( implode( '|', $keys ) );
+	}
+
+	/**
+	 * Get in-memory registered permissions.
+	 *
+	 * @return array<string, Permission>
+	 */
+	public function get_registered() {
+		return $this->registered;
+	}
+
+	/**
 	 * Persist all registered permissions to the database.
 	 */
 	public function sync_to_database() {
@@ -176,5 +212,23 @@ class PermissionRegistry {
 	public function get_id_by_key( $key ) {
 		$row = $this->find_by_key( $key );
 		return $row ? (int) $row['id'] : null;
+	}
+
+	/**
+	 * Find a permission by database ID.
+	 *
+	 * @param int $id Permission ID.
+	 * @return array<string, mixed>|null
+	 */
+	public function find_by_id( $id ) {
+		global $wpdb;
+
+		$table = Schema::table( 'permissions' );
+		$row   = $wpdb->get_row(
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", (int) $id ),
+			ARRAY_A
+		);
+
+		return $row ? $row : null;
 	}
 }

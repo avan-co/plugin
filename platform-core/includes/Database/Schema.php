@@ -17,7 +17,7 @@ class Schema {
 	/**
 	 * Database version for migrations.
 	 */
-	const DB_VERSION = '1.0.0';
+	const DB_VERSION = '1.0.1';
 
 	/**
 	 * Option key for stored DB version.

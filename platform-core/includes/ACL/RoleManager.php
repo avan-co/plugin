@@ -166,6 +166,12 @@ class RoleManager {
 	public function assign_permission( $role_id, $permission_id, $scope_type = 'all', $scope_value = null ) {
 		global $wpdb;
 
+		$scope_type = sanitize_key( $scope_type );
+
+		if ( ! $this->is_valid_scope_type( $scope_type ) ) {
+			return false;
+		}
+
 		$table = Schema::table( 'role_permissions' );
 		$existing = $wpdb->get_var(
 			$wpdb->prepare(
@@ -312,5 +318,24 @@ class RoleManager {
 		);
 
 		return $wpdb->get_results( $sql, ARRAY_A );
+	}
+
+	/**
+	 * Validate a scope type slug.
+	 *
+	 * @param string $scope_type Scope type.
+	 * @return bool
+	 */
+	private function is_valid_scope_type( $scope_type ) {
+		$valid = array( 'all', 'own', 'department', 'team', 'project', 'organization', 'custom' );
+
+		/**
+		 * Filter valid scope types for permission assignment.
+		 *
+		 * @param array<int, string> $valid Valid scope type slugs.
+		 */
+		$valid = apply_filters( 'mpp_valid_scope_types', $valid );
+
+		return in_array( $scope_type, $valid, true );
 	}
 }

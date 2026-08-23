@@ -22,3 +22,4 @@ foreach ( $tables as $table ) {
 }
 
 delete_option( 'mpp_db_version' );
+delete_option( 'mpp_permissions_hash' );

@@ -152,7 +152,12 @@ class Plugin {
 		} );
 
 		$this->container->set( AclController::class, function ( Container $c ) {
-			return new AclController( $c->get( AclEngine::class ), $c->get( UserRoleService::class ) );
+			return new AclController(
+				$c->get( AclEngine::class ),
+				$c->get( RoleManager::class ),
+				$c->get( PermissionRegistry::class ),
+				$c->get( UserRoleService::class )
+			);
 		} );
 	}
 

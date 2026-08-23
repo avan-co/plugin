@@ -1,0 +1,26 @@
+{
+    "name": "platform/core",
+    "description": "Platform Core WordPress plugin",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "brain/monkey": "^2.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "MPP\\": "includes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MPP\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}

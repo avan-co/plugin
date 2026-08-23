@@ -62,9 +62,21 @@ class UserRoleService {
 	/**
 	 * Sync WordPress administrator to platform admin role.
 	 *
+	 * Disabled by default. Enable explicitly via the mpp_sync_wp_admin_to_platform_admin filter.
+	 *
 	 * @param int $user_id User ID.
 	 */
 	public function maybe_sync_wp_admin( $user_id ) {
+		/**
+		 * Whether WordPress administrators should receive the platform_admin role.
+		 *
+		 * @param bool $sync    Whether to sync.
+		 * @param int  $user_id User ID.
+		 */
+		if ( ! apply_filters( 'mpp_sync_wp_admin_to_platform_admin', false, $user_id ) ) {
+			return;
+		}
+
 		$user = get_userdata( $user_id );
 
 		if ( ! $user || ! user_can( $user, 'manage_options' ) ) {

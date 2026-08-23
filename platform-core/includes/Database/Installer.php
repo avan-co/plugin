@@ -47,6 +47,8 @@ class Installer {
 
 		if ( version_compare( $installed, Schema::DB_VERSION, '<' ) ) {
 			self::create_tables();
+			self::seed_permissions_and_roles();
+			delete_option( 'mpp_permissions_hash' );
 			update_option( Schema::VERSION_OPTION, Schema::DB_VERSION );
 		}
 	}
@@ -110,6 +112,7 @@ class Installer {
 		$manager  = new ModuleManager( $registry );
 		$manager->register_core_module();
 		$registry->sync_to_database();
+		update_option( 'mpp_permissions_hash', $registry->get_registry_hash(), false );
 
 		$roles = new RoleManager();
 
