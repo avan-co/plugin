@@ -54,4 +54,37 @@ class ScopeService {
 
 		return $rows;
 	}
+
+	/**
+	 * Scope types available for assignment in admin UI.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function assignable() {
+		$availability = array(
+			'all' => true,
+			'own' => true,
+		);
+
+		/**
+		 * Filter which scope types are available for assignment.
+		 *
+		 * @param array<string, bool> $availability Scope slug => implemented.
+		 */
+		$availability = apply_filters( 'mpp_assignable_scope_types', $availability );
+
+		$rows = array();
+
+		foreach ( $this->all() as $row ) {
+			$slug = $row['slug'];
+
+			if ( isset( $availability[ $slug ] ) && ! $availability[ $slug ] ) {
+				continue;
+			}
+
+			$rows[] = $row;
+		}
+
+		return $rows;
+	}
 }

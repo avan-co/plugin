@@ -86,7 +86,8 @@ class AccessBootstrapTest extends TestCase {
 
 	public function test_registration_assigns_platform_user(): void {
 		$source = file_get_contents( dirname( __DIR__, 2 ) . '/includes/Auth/RegistrationHandler.php' );
-		$this->assertStringContainsString( "assign_role_by_slug( (int) \$user_id, 'platform_user' )", $source );
+		$this->assertStringContainsString( "assign_role_by_slug( (int) \$user_id, \$default_role )", $source );
+		$this->assertStringContainsString( 'default_platform_role', $source );
 		$this->assertStringContainsString( 'Installer::ensure_defaults()', $source );
 		$this->assertStringContainsString( 'user_pass_confirm', $source );
 		$this->assertStringContainsString( 'wp_set_auth_cookie', $source );

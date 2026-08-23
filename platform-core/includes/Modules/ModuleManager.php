@@ -224,7 +224,36 @@ class ModuleManager {
 		 */
 		do_action( 'mpp_module_registered', $module );
 
+		if ( $this->booted ) {
+			$this->activate_module( $module );
+		}
+
 		return true;
+	}
+
+	/**
+	 * Run lifecycle steps for a module registered after core boot.
+	 *
+	 * @param ModuleInterface $module Module instance.
+	 */
+	public function activate_module( ModuleInterface $module ) {
+		$module->run_migrations();
+		$module->register_permissions();
+		$this->registry->sync_if_needed();
+		$module->boot();
+
+		if ( function_exists( 'mpp' ) ) {
+			$router = mpp()->get( \MPP\Core\Router::class );
+			$module->register_routes( $router );
+			update_option( 'mpp_routes_version', '', false );
+		}
+
+		/**
+		 * Fires after a module is activated post-boot.
+		 *
+		 * @param ModuleInterface $module Activated module.
+		 */
+		do_action( 'mpp_module_activated', $module );
 	}
 
 	/**

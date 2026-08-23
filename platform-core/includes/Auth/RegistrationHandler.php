@@ -10,6 +10,7 @@ namespace MPP\Auth;
 use MPP\Database\Installer;
 use MPP\Services\AuditLogService;
 use MPP\Services\UserRoleService;
+use MPP\Settings\PlatformSettings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -30,9 +31,15 @@ class RegistrationHandler {
 	 */
 	private $audit;
 
-	public function __construct( UserRoleService $user_roles, AuditLogService $audit ) {
+	/**
+	 * @var PlatformSettings
+	 */
+	private $settings;
+
+	public function __construct( UserRoleService $user_roles, AuditLogService $audit, PlatformSettings $settings ) {
 		$this->user_roles = $user_roles;
 		$this->audit      = $audit;
+		$this->settings   = $settings;
 	}
 
 	public function register() {
@@ -45,6 +52,10 @@ class RegistrationHandler {
 	 * @return bool
 	 */
 	public static function is_enabled() {
+		if ( function_exists( 'mpp' ) ) {
+			return mpp()->get( PlatformSettings::class )->is_registration_enabled();
+		}
+
 		/**
 		 * Filter whether platform registration is enabled.
 		 *
@@ -112,7 +123,8 @@ class RegistrationHandler {
 			return;
 		}
 
-		$this->user_roles->assign_role_by_slug( (int) $user_id, 'platform_user' );
+		$default_role = $this->settings->get( 'default_platform_role', 'platform_user' );
+		$this->user_roles->assign_role_by_slug( (int) $user_id, $default_role );
 
 		if ( empty( $this->user_roles->get_roles( (int) $user_id ) ) ) {
 			require_once ABSPATH . 'wp-admin/includes/user.php';

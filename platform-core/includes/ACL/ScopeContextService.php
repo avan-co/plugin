@@ -26,7 +26,6 @@ class ScopeContextService {
 		$user_id = (int) $user_id;
 
 		$context = array(
-			'owner_id'              => $user_id,
 			'user_department_id'    => (int) get_user_meta( $user_id, 'mpp_department_id', true ),
 			'user_organization_id'  => (int) get_user_meta( $user_id, 'mpp_organization_id', true ),
 			'user_team_ids'         => $this->parse_id_list( get_user_meta( $user_id, 'mpp_team_ids', true ) ),

@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Platform Example
  * Description:       Minimal example module demonstrating external platform module registration.
- * Version:           1.0.1
+ * Version:           1.1.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Platform Team
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MPP_EXAMPLE_VERSION', '1.0.1' );
+define( 'MPP_EXAMPLE_VERSION', '1.1.0' );
 define( 'MPP_EXAMPLE_FILE', __FILE__ );
 define( 'MPP_EXAMPLE_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -80,5 +80,24 @@ function mpp_example_deactivate() {
 	if ( function_exists( 'mpp_deactivate_module' ) ) {
 		mpp_deactivate_module( 'example' );
 	}
+}
+add_filter( 'mpp_module_description', 'mpp_example_module_description', 10, 3 );
+
+/**
+ * Example module description for admin UI.
+ *
+ * @param string                         $description Current description.
+ * @param string                         $slug        Module slug.
+ * @param \MPP\Modules\ModuleInterface   $module      Module instance.
+ * @return string
+ */
+function mpp_example_module_description( $description, $slug, $module ) {
+	unset( $module );
+
+	if ( 'example' !== $slug ) {
+		return $description;
+	}
+
+	return __( 'Reference module demonstrating permissions, routes, navigation, and dashboard widgets.', 'platform-example' );
 }
 register_deactivation_hook( __FILE__, 'mpp_example_deactivate' );

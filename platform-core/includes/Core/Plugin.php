@@ -30,11 +30,13 @@ use MPP\Database\Installer;
 use MPP\Modules\ModuleManager;
 use MPP\Panels\DashboardService;
 use MPP\Services\AuditLogService;
+use MPP\Services\EffectiveAccessService;
 use MPP\Services\ModuleService;
 use MPP\Services\PermissionService;
 use MPP\Services\ScopeService;
 use MPP\Services\UserRoleService;
 use MPP\Services\UserService;
+use MPP\Settings\PlatformSettings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -186,6 +188,19 @@ class Plugin {
 			return new ScopeService( $c->get( ScopeResolver::class ) );
 		} );
 
+		$this->container->set( EffectiveAccessService::class, function ( Container $c ) {
+			return new EffectiveAccessService(
+				$c->get( AclEngine::class ),
+				$c->get( RoleManager::class ),
+				$c->get( PermissionRegistry::class ),
+				$c->get( ScopeResolver::class )
+			);
+		} );
+
+		$this->container->set( PlatformSettings::class, function () {
+			return new PlatformSettings();
+		} );
+
 		$this->container->set( ModuleService::class, function ( Container $c ) {
 			return new ModuleService( $c->get( ModuleManager::class ), $c->get( PermissionRegistry::class ) );
 		} );
@@ -202,7 +217,9 @@ class Plugin {
 				$c->get( PermissionRegistry::class ),
 				$c->get( ModuleService::class ),
 				$c->get( ScopeService::class ),
-				$c->get( AuditLogService::class )
+				$c->get( AuditLogService::class ),
+				$c->get( EffectiveAccessService::class ),
+				$c->get( PlatformSettings::class )
 			);
 		} );
 
@@ -218,7 +235,8 @@ class Plugin {
 				$c->get( AclEngine::class ),
 				$c->get( RoleManager::class ),
 				$c->get( PermissionRegistry::class ),
-				$c->get( AuditLogService::class )
+				$c->get( AuditLogService::class ),
+				$c->get( PlatformSettings::class )
 			);
 		} );
 
@@ -233,7 +251,8 @@ class Plugin {
 		$this->container->set( RegistrationHandler::class, function ( Container $c ) {
 			return new RegistrationHandler(
 				$c->get( UserRoleService::class ),
-				$c->get( AuditLogService::class )
+				$c->get( AuditLogService::class ),
+				$c->get( PlatformSettings::class )
 			);
 		} );
 
