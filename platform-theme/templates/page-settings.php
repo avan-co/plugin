@@ -63,4 +63,9 @@ ob_start();
 <?php
 $content = ob_get_clean();
 
-platform_render_account_page( 'user', __( 'Settings', 'platform-theme' ), $content );
+platform_render_account_page(
+	'user',
+	__( 'Settings', 'platform-theme' ),
+	$content,
+	__( 'Manage your account preferences and platform access summary.', 'platform-theme' )
+);

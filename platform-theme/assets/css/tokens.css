@@ -1,0 +1,65 @@
+/* Platform Design Tokens — shadcn-inspired */
+
+:root {
+	--mpp-background: #ffffff;
+	--mpp-foreground: #0f172a;
+	--mpp-muted: #f1f5f9;
+	--mpp-muted-foreground: #64748b;
+	--mpp-border: #e2e8f0;
+	--mpp-input: #e2e8f0;
+	--mpp-primary: #0f172a;
+	--mpp-primary-foreground: #f8fafc;
+	--mpp-secondary: #f1f5f9;
+	--mpp-secondary-foreground: #0f172a;
+	--mpp-success: #15803d;
+	--mpp-success-foreground: #f0fdf4;
+	--mpp-warning: #b45309;
+	--mpp-warning-foreground: #fffbeb;
+	--mpp-destructive: #dc2626;
+	--mpp-destructive-foreground: #fef2f2;
+	--mpp-info: #2563eb;
+	--mpp-info-foreground: #eff6ff;
+
+	--mpp-surface-page: #f8fafc;
+	--mpp-surface-card: #ffffff;
+	--mpp-surface-sidebar: #ffffff;
+	--mpp-surface-popover: #ffffff;
+
+	--mpp-font-body: "Noto Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	--mpp-font-heading: var(--mpp-font-body);
+	--mpp-font-small: 0.8125rem;
+	--mpp-font-label: 0.875rem;
+
+	--mpp-space-xs: 0.25rem;
+	--mpp-space-sm: 0.5rem;
+	--mpp-space-md: 1rem;
+	--mpp-space-lg: 1.5rem;
+	--mpp-space-xl: 2rem;
+	--mpp-space-2xl: 3rem;
+
+	--mpp-radius-sm: 6px;
+	--mpp-radius-md: 8px;
+	--mpp-radius-lg: 12px;
+
+	--mpp-shadow-subtle: 0 1px 2px rgba(15, 23, 42, 0.04);
+	--mpp-shadow-card: 0 1px 3px rgba(15, 23, 42, 0.08);
+	--mpp-shadow-elevated: 0 8px 24px rgba(15, 23, 42, 0.08);
+
+	--mpp-sidebar-width: 260px;
+	--mpp-header-height: 56px;
+
+	/* Legacy aliases */
+	--mpp-color-primary: var(--mpp-primary);
+	--mpp-color-primary-hover: #1e293b;
+	--mpp-color-bg: var(--mpp-surface-page);
+	--mpp-color-surface: var(--mpp-surface-card);
+	--mpp-color-border: var(--mpp-border);
+	--mpp-color-text: var(--mpp-foreground);
+	--mpp-color-text-muted: var(--mpp-muted-foreground);
+	--mpp-color-error: var(--mpp-destructive);
+	--mpp-color-warning: var(--mpp-warning);
+	--mpp-color-success: var(--mpp-success);
+	--mpp-radius: var(--mpp-radius-md);
+	--mpp-shadow: var(--mpp-shadow-card);
+	--mpp-font: var(--mpp-font-body);
+}

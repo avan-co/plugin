@@ -130,15 +130,20 @@ body.mpp-body {
 .mpp-layout {
 	display: flex;
 	max-width: 1400px;
-	margin: 0 auto;
+	margin-inline: auto;
 	min-height: calc(100vh - var(--mpp-header-height) - 60px);
+}
+
+.mpp-layout__main {
+	flex: 1;
+	min-width: 0;
 }
 
 .mpp-sidebar {
 	width: var(--mpp-sidebar-width);
-	background: var(--mpp-color-surface);
-	border-right: 1px solid var(--mpp-color-border);
-	padding: 1.5rem 0;
+	background: var(--mpp-surface-sidebar);
+	border-inline-end: 1px solid var(--mpp-border);
+	padding: var(--mpp-space-lg) 0;
 	flex-shrink: 0;
 }
 
@@ -190,10 +195,10 @@ body.mpp-body {
 }
 
 .mpp-nav__item--active a {
-	background: #eff6ff;
-	color: var(--mpp-color-primary);
+	background: var(--mpp-muted);
+	color: var(--mpp-primary);
 	font-weight: 600;
-	border-right: 3px solid var(--mpp-color-primary);
+	border-inline-end: 3px solid var(--mpp-primary);
 }
 
 .mpp-nav__item--section span {

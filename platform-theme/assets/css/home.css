@@ -12,8 +12,8 @@
 
 .mpp-home-hero {
 	padding: 4rem 0 3rem;
-	background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 60%, #ffffff 100%);
-	border-bottom: 1px solid var(--mpp-color-border);
+	background: var(--mpp-surface-card);
+	border-bottom: 1px solid var(--mpp-border);
 }
 
 .mpp-home-hero__title {
@@ -26,6 +26,12 @@
 	max-width: 42rem;
 	color: var(--mpp-color-text-muted);
 	font-size: 1.05rem;
+	margin: 0 0 1.5rem;
+}
+
+.mpp-home-lead {
+	max-width: 60ch;
+	color: var(--mpp-muted-foreground);
 	margin: 0 0 1.5rem;
 }
 

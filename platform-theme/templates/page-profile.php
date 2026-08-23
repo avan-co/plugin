@@ -16,6 +16,16 @@ $summary   = function_exists( 'mpp_get_user_summary' ) ? mpp_get_user_summary() 
 ob_start();
 ?>
 <div class="mpp-card">
+	<div class="mpp-profile-header">
+		<?php if ( function_exists( 'platform_ui_avatar' ) ) : ?>
+			<?php echo platform_ui_avatar( (int) $user->ID, 64 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<?php endif; ?>
+		<div>
+			<h2 class="mpp-profile-header__name"><?php echo esc_html( $user->display_name ); ?></h2>
+			<p class="mpp-muted"><?php echo esc_html( sprintf( __( 'Member since %s', 'platform-theme' ), mysql2date( get_option( 'date_format' ), $user->user_registered ) ) ); ?></p>
+		</div>
+	</div>
+
 	<?php if ( $can_edit ) : ?>
 		<form method="post" class="mpp-form">
 			<?php echo function_exists( 'mpp_account_nonce_field' ) ? mpp_account_nonce_field() : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -56,4 +66,9 @@ ob_start();
 <?php
 $content = ob_get_clean();
 
-platform_render_account_page( 'user', __( 'Profile', 'platform-theme' ), $content );
+platform_render_account_page(
+	'user',
+	__( 'Profile', 'platform-theme' ),
+	$content,
+	__( 'View and update your account profile information.', 'platform-theme' )
+);

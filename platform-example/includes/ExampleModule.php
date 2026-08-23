@@ -82,10 +82,12 @@ class ExampleModule extends AbstractModule {
 	 * @inheritDoc
 	 */
 	public function get_navigation_items() {
+		$url = function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app/example' ) : home_url( '/app/example' );
+
 		return array(
 			array(
 				'label'      => __( 'Example Demo', 'platform-example' ),
-				'url'        => home_url( '/app/example' ),
+				'url'        => $url,
 				'route'      => 'app/example',
 				'permission' => 'example.demo.view',
 				'panel'      => 'user',

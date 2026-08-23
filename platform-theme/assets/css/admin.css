@@ -1,5 +1,16 @@
 /* Platform Admin UI */
 
+.mpp-user-cell {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.mpp-muted {
+	color: var(--mpp-muted-foreground);
+	font-size: var(--mpp-font-small);
+}
+
 .mpp-admin-table {
 	width: 100%;
 	border-collapse: collapse;

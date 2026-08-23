@@ -8,6 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once get_template_directory() . '/inc/navigation-helpers.php';
+require_once get_template_directory() . '/inc/ui-components.php';
 
 /**
  * Theme setup.
@@ -16,6 +17,8 @@ function platform_theme_setup() {
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'post-thumbnails' );
 	add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script' ) );
+
+	load_theme_textdomain( 'platform-theme', get_template_directory() . '/languages' );
 
 	register_nav_menus(
 		array(
@@ -30,9 +33,30 @@ add_action( 'after_setup_theme', 'platform_theme_setup' );
  */
 function platform_theme_enqueue_assets() {
 	wp_enqueue_style(
+		'platform-theme-fonts',
+		'https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap',
+		array(),
+		null
+	);
+
+	wp_enqueue_style(
+		'platform-theme-tokens',
+		get_template_directory_uri() . '/assets/css/tokens.css',
+		array( 'platform-theme-fonts' ),
+		wp_get_theme()->get( 'Version' )
+	);
+
+	wp_enqueue_style(
+		'platform-theme-components',
+		get_template_directory_uri() . '/assets/css/components.css',
+		array( 'platform-theme-tokens' ),
+		wp_get_theme()->get( 'Version' )
+	);
+
+	wp_enqueue_style(
 		'platform-theme',
 		get_stylesheet_uri(),
-		array(),
+		array( 'platform-theme-components' ),
 		wp_get_theme()->get( 'Version' )
 	);
 
@@ -62,6 +86,27 @@ function platform_theme_enqueue_assets() {
 
 	if ( function_exists( 'mpp_get_current_route' ) ) {
 		$route = mpp_get_current_route();
+		if ( $route && in_array( $route['slug'], array( 'login', 'register' ), true ) ) {
+			wp_enqueue_script(
+				'platform-theme-forms',
+				get_template_directory_uri() . '/assets/js/forms.js',
+				array(),
+				wp_get_theme()->get( 'Version' ),
+				true
+			);
+			wp_localize_script(
+				'platform-theme-forms',
+				'mppForms',
+				array(
+					'show'   => __( 'Show', 'platform-theme' ),
+					'hide'   => __( 'Hide', 'platform-theme' ),
+					'weak'   => __( 'Weak password', 'platform-theme' ),
+					'fair'   => __( 'Fair password', 'platform-theme' ),
+					'good'   => __( 'Good password', 'platform-theme' ),
+					'strong' => __( 'Strong password', 'platform-theme' ),
+				)
+			);
+		}
 		if ( $route && 0 === strpos( $route['slug'], 'app/admin' ) ) {
 			wp_enqueue_style(
 				'platform-theme-admin',
@@ -83,6 +128,11 @@ add_action( 'wp_enqueue_scripts', 'platform_theme_enqueue_assets' );
 function platform_theme_body_classes( $classes ) {
 	if ( is_rtl() ) {
 		$classes[] = 'mpp-rtl';
+	}
+
+	$locale = get_locale();
+	if ( $locale ) {
+		$classes[] = 'mpp-locale-' . sanitize_html_class( strtolower( substr( $locale, 0, 2 ) ) );
 	}
 
 	return $classes;
