@@ -106,7 +106,7 @@ class Plugin {
 		$module_manager->register_module_routes( $router );
 		AdminRoutes::register( $router );
 		$router->register();
-		$this->maybe_flush_rewrite_rules();
+		add_action( 'init', array( $this, 'maybe_flush_rewrite_rules' ), 99 );
 
 		$this->container->get( FormHandler::class )->register();
 		$this->container->get( AccountFormHandler::class )->register();
@@ -299,9 +299,9 @@ class Plugin {
 	}
 
 	/**
-	 * Flush rewrite rules when plugin routes version changes.
+	 * Flush rewrite rules after route rules are registered on init.
 	 */
-	private function maybe_flush_rewrite_rules() {
+	public function maybe_flush_rewrite_rules() {
 		$stored = get_option( 'mpp_routes_version', '' );
 
 		if ( $stored === MPP_VERSION ) {

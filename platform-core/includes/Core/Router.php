@@ -110,13 +110,12 @@ class Router {
 	 * Dispatch the current route.
 	 */
 	public function dispatch() {
-		$route = get_query_var( self::QUERY_VAR );
+		$route = $this->resolve_route_slug();
 
 		if ( empty( $route ) ) {
 			return;
 		}
 
-		$route      = trim( (string) $route, '/' );
 		$routes     = $this->get_routes();
 		$definition = isset( $routes[ $route ] ) ? $routes[ $route ] : null;
 
@@ -177,6 +176,40 @@ class Router {
 		}
 
 		exit;
+	}
+
+	/**
+	 * Resolve the current route slug from query vars or request URI.
+	 *
+	 * @return string
+	 */
+	private function resolve_route_slug() {
+		$route = get_query_var( self::QUERY_VAR );
+
+		if ( ! empty( $route ) ) {
+			return trim( (string) $route, '/' );
+		}
+
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return '';
+		}
+
+		$path = wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH );
+
+		if ( ! is_string( $path ) ) {
+			return '';
+		}
+
+		$path      = trim( $path, '/' );
+		$home_path = trim( (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH ), '/' );
+
+		if ( $home_path && 0 === strpos( $path, $home_path ) ) {
+			$path = trim( substr( $path, strlen( $home_path ) ), '/' );
+		}
+
+		$routes = $this->get_routes();
+
+		return isset( $routes[ $path ] ) ? $path : '';
 	}
 
 	/**

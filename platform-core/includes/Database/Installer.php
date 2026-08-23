@@ -29,14 +29,15 @@ class Installer {
 		self::seed_scopes();
 		self::seed_permissions_and_roles();
 
-		flush_rewrite_rules();
+		delete_option( 'mpp_routes_version' );
 	}
 
 	/**
 	 * Run on plugin deactivation.
 	 */
 	public static function deactivate() {
-		flush_rewrite_rules();
+		delete_option( 'mpp_routes_version' );
+		flush_rewrite_rules( false );
 	}
 
 	/**
