@@ -1,34 +1,709 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Platform Core 1.5.0\n"
+"Project-Id-Version: platform-core\n"
 "Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Permissions"
-msgstr "مجوزهای دسترسی"
+msgid "A permission alone does not create access. Effective access is calculated from roles, permissions, and scope."
+msgstr "A permission alone does not create access. Effective access is calculated from roles, permissions, and scope."
 
-msgid "Roles"
-msgstr "نقش‌ها"
+msgid "A valid permission key is required."
+msgstr "A valid permission key is required."
 
-msgid "Effective Access"
-msgstr "دسترسی نهایی"
+msgid "A valid permission_id is required."
+msgstr "A valid permission_id is required."
 
-msgid "Modules"
-msgstr "ماژول‌ها"
+msgid "A valid role_id is required."
+msgstr "A valid role_id is required."
 
-msgid "Audit Log"
+msgid "ACL"
+msgstr "ACL"
+
+msgid "ACL Overview"
+msgstr "ACL Overview"
+
+msgid "Access Denied"
+msgstr "Access Denied"
+
+msgid "Access admin panel"
+msgstr "Access admin panel"
+
+msgid "Access denied."
+msgstr "Access denied."
+
+msgid "Access manager panel"
+msgstr "Access manager panel"
+
+msgid "Access platform dashboard"
+msgstr "Access platform dashboard"
+
+msgid "Access to all resources."
+msgstr "Access to all resources."
+
+msgid "Access to own resources only."
+msgstr "Access to own resources only."
+
+msgid "Access user panel"
+msgstr "Access user panel"
+
+msgid "Access within assigned projects."
+msgstr "Access within assigned projects."
+
+msgid "Access within organization."
+msgstr "Access within organization."
+
+msgid "Access within user department."
+msgstr "Access within user department."
+
+msgid "Access within user team."
+msgstr "Access within user team."
+
+msgid "Action"
+msgstr "Action"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Active Modules"
+msgstr "Active Modules"
+
+msgid "Add Role"
+msgstr "Add Role"
+
+msgid "Admin Panel"
+msgstr "Admin Panel"
+
+msgid "Admin Settings"
+msgstr "Admin Settings"
+
+msgid "Administrator with full panel access."
+msgstr "Administrator with full panel access."
+
+msgid "All"
+msgstr "All"
+
+msgid "All fields are required."
+msgstr "All fields are required."
+
+msgid "All modules"
+msgstr "All modules"
+
+msgid "Assign Role"
+msgstr "Assign Role"
+
+msgid "Assigned Platform Roles"
+msgstr "Assigned Platform Roles"
+
+msgid "Audit"
 msgstr "گزارش فعالیت"
 
-msgid "Granted"
-msgstr "مجاز"
+msgid "Audit Entries"
+msgstr "Audit Entries"
+
+msgid "Audit Log"
+msgstr "Audit Log"
+
+msgid "Back to permissions"
+msgstr "Back to permissions"
+
+msgid "Back to roles"
+msgstr "Back to roles"
+
+msgid "Back to users"
+msgstr "Back to users"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "Clear"
+msgstr "Clear"
+
+msgid "Core"
+msgstr "Core"
+
+msgid "Core Permissions"
+msgstr "Core Permissions"
+
+msgid "Could not assign permission. Check scope_type."
+msgstr "Could not assign permission. Check scope_type."
+
+msgid "Could not assign role."
+msgstr "Could not assign role."
+
+msgid "Could not create role."
+msgstr "Could not create role."
+
+msgid "Could not delete role."
+msgstr "Could not delete role."
+
+msgid "Could not delete role. System roles cannot be deleted."
+msgstr "Could not delete role. System roles cannot be deleted."
+
+msgid "Could not grant permission."
+msgstr "Could not grant permission."
+
+msgid "Could not remove role."
+msgstr "Could not remove role."
+
+msgid "Could not revoke permission."
+msgstr "Could not revoke permission."
+
+msgid "Could not update scope."
+msgstr "Could not update scope."
+
+msgid "Create Role"
+msgstr "Create Role"
+
+msgid "Custom"
+msgstr "Custom"
+
+msgid "Custom scope with handler."
+msgstr "Custom scope with handler."
+
+msgid "Dashboard"
+msgstr "داشبورد"
+
+msgid "Database Schema"
+msgstr "Database Schema"
+
+msgid "Date Format"
+msgstr "Date Format"
+
+msgid "Default Dashboard Route"
+msgstr "Default Dashboard Route"
+
+msgid "Default Platform Role"
+msgstr "Default Platform Role"
+
+msgid "Default platform roles are created during installation."
+msgstr "Default platform roles are created during installation."
+
+msgid "Delete Role"
+msgstr "Delete Role"
+
+msgid "Delete this role?"
+msgstr "Delete this role?"
 
 msgid "Denied"
 msgstr "غیرمجاز"
 
+msgid "Department"
+msgstr "Department"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Details"
+msgstr "جزئیات"
+
+msgid "Edit"
+msgstr "ویرایش"
+
+msgid "Edit own profile"
+msgstr "Edit own profile"
+
+msgid "Edit role"
+msgstr "Edit role"
+
+msgid "Edit settings"
+msgstr "Edit settings"
+
+msgid "Effective Access"
+msgstr "دسترسی نهایی"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Enable public registration"
+msgstr "Enable public registration"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "From"
+msgstr "From"
+
+msgid "General"
+msgstr "General"
+
+msgid "Grant"
+msgstr "Grant"
+
+msgid "Granted"
+msgstr "مجاز"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "IP"
+msgstr "IP"
+
+msgid "Inactive"
+msgstr "Inactive"
+
+msgid "Install and activate platform module plugins in WordPress to extend the platform."
+msgstr "Install and activate platform module plugins in WordPress to extend the platform."
+
+msgid "Invalid default dashboard route."
+msgstr "Invalid default dashboard route."
+
+msgid "Invalid role or permission."
+msgstr "Invalid role or permission."
+
+msgid "Invalid security token."
+msgstr "Invalid security token."
+
+msgid "Invalid user or role."
+msgstr "Invalid user or role."
+
+msgid "Key"
+msgstr "Key"
+
+msgid "Left-to-right (LTR)"
+msgstr "Left-to-right (LTR)"
+
+msgid "Locale"
+msgstr "Locale"
+
+msgid "Localization"
+msgstr "Localization"
+
+msgid "Login"
+msgstr "ورود"
+
+msgid "Logout"
+msgstr "خروج"
+
+msgid "Manage"
+msgstr "Manage"
+
+msgid "Manage permissions"
+msgstr "Manage permissions"
+
+msgid "Manage roles and permissions"
+msgstr "Manage roles and permissions"
+
+msgid "Manager Panel"
+msgstr "Manager Panel"
+
+msgid "Manager Profile"
+msgstr "Manager Profile"
+
+msgid "Manager with access to the manager panel."
+msgstr "Manager with access to the manager panel."
+
+msgid "Missing permission: %s"
+msgstr "Missing permission: %s"
+
+msgid "Module"
+msgstr "Module"
+
+msgid "Module Permissions"
+msgstr "Module Permissions"
+
+msgid "Module availability is controlled by WordPress plugin activation. Deactivating a plugin removes its runtime routes and widgets."
+msgstr "Module availability is controlled by WordPress plugin activation. Deactivating a plugin removes its runtime routes and widgets."
+
+msgid "Modules"
+msgstr "ماژول‌ها"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "No"
+msgstr "No"
+
+msgid "No audit entries for this role."
+msgstr "No audit entries for this role."
+
+msgid "No audit entries matched your filters."
+msgstr "No audit entries matched your filters."
+
+msgid "No description provided."
+msgstr "No description provided."
+
+msgid "No modules registered"
+msgstr "No modules registered"
+
+msgid "No platform roles assigned yet."
+msgstr "No platform roles assigned yet."
+
+msgid "No related audit entries yet."
+msgstr "No related audit entries yet."
+
+msgid "No roles currently grant this permission."
+msgstr "No roles currently grant this permission."
+
+msgid "No roles found"
+msgstr "No roles found"
+
+msgid "No users are assigned to this role."
+msgstr "No users are assigned to this role."
+
+msgid "No users found"
+msgstr "No users found"
+
+msgid "Not Found"
+msgstr "Not Found"
+
+msgid "Not granted"
+msgstr "Not granted"
+
+msgid "Not installed"
+msgstr "Not installed"
+
+msgid "Object"
+msgstr "Object"
+
+msgid "Object Type"
+msgstr "Object Type"
+
+msgid "Organization"
+msgstr "Organization"
+
+msgid "Overview"
+msgstr "نمای کلی"
+
+msgid "Own"
+msgstr "Own"
+
+msgid "Page %1$d of %2$d"
+msgstr "Page %1$d of %2$d"
+
+msgid "Page not found."
+msgstr "Page not found."
+
+msgid "Pagination"
+msgstr "Pagination"
+
+msgid "Password must be at least 8 characters."
+msgstr "Password must be at least 8 characters."
+
+msgid "Passwords do not match."
+msgstr "Passwords do not match."
+
+msgid "Permission"
+msgstr "Permission"
+
+msgid "Permission denied."
+msgstr "Permission denied."
+
+msgid "Permission does not exist."
+msgstr "Permission does not exist."
+
+msgid "Permission granted."
+msgstr "Permission granted."
+
+msgid "Permission is assigned but scope requirements are not met for route-level access."
+msgstr "Permission is assigned but scope requirements are not met for route-level access."
+
+msgid "Permission not found."
+msgstr "Permission not found."
+
+msgid "Permission revoked."
+msgstr "Permission revoked."
+
+msgid "Permissions"
+msgstr "مجوزهای دسترسی"
+
+msgid "Plain permalinks (index.php routes)"
+msgstr "Plain permalinks (index.php routes)"
+
+msgid "Platform Admin"
+msgstr "Platform Admin"
+
+msgid "Platform Core Version"
+msgstr "Platform Core Version"
+
+msgid "Platform Manager"
+msgstr "Platform Manager"
+
+msgid "Platform Name"
+msgstr "Platform Name"
+
+msgid "Platform Roles"
+msgstr "Platform Roles"
+
+msgid "Platform User"
+msgstr "Platform User"
+
+msgid "Platform Version"
+msgstr "Platform Version"
+
+msgid "Platform name cannot be empty."
+msgstr "Platform name cannot be empty."
+
+msgid "Please enter a valid email address."
+msgstr "Please enter a valid email address."
+
+msgid "Pretty permalinks"
+msgstr "Pretty permalinks"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Profile"
+msgstr "پروفایل"
+
+msgid "Profile updated."
+msgstr "Profile updated."
+
+msgid "Project"
+msgstr "Project"
+
+msgid "Recent ACL Activity"
+msgstr "Recent ACL Activity"
+
+msgid "Recent audit activity"
+msgstr "Recent audit activity"
+
+msgid "Register"
+msgstr "ثبت‌نام"
+
+msgid "Registered"
+msgstr "Registered"
+
+msgid "Registration"
+msgstr "Registration"
+
+msgid "Registration could not be completed. Please contact the site administrator."
+msgstr "Registration could not be completed. Please contact the site administrator."
+
+msgid "Registration is currently disabled."
+msgstr "Registration is currently disabled."
+
+msgid "Remember Me Duration (days)"
+msgstr "Remember Me Duration (days)"
+
+msgid "Remove"
+msgstr "Remove"
+
+msgid "Revoke"
+msgstr "Revoke"
+
+msgid "Right-to-left (RTL)"
+msgstr "Right-to-left (RTL)"
+
+msgid "Role"
+msgstr "Role"
+
+msgid "Role assigned."
+msgstr "Role assigned."
+
+msgid "Role created."
+msgstr "Role created."
+
+msgid "Role deleted."
+msgstr "Role deleted."
+
+msgid "Role not found."
+msgstr "Role not found."
+
+msgid "Role removed."
+msgstr "Role removed."
+
+msgid "Role slug already exists."
+msgstr "Role slug already exists."
+
+msgid "Role updated."
+msgstr "Role updated."
+
+msgid "Roles"
+msgstr "نقش‌ها"
+
+msgid "Routes"
+msgstr "Routes"
+
+msgid "Routing Mode"
+msgstr "Routing Mode"
+
+msgid "Save Settings"
+msgstr "ذخیره تنظیمات"
+
+msgid "Scope"
+msgstr "Scope"
+
+msgid "Scope Types"
+msgstr "Scope Types"
+
+msgid "Scope updated."
+msgstr "Scope updated."
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Search permissions"
+msgstr "Search permissions"
+
+msgid "Search permissions..."
+msgstr "Search permissions..."
+
+msgid "Search users..."
+msgstr "Search users..."
+
+msgid "Section navigation"
+msgstr "Section navigation"
+
+msgid "Security"
+msgstr "Security"
+
+msgid "Select role..."
+msgstr "Select role..."
+
+msgid "Set Scope"
+msgstr "Set Scope"
+
+msgid "Settings"
+msgstr "تنظیمات"
+
 msgid "Settings saved."
 msgstr "تنظیمات ذخیره شد."
 
-msgid "A permission alone does not create access. Effective access is calculated from roles, permissions, and scope."
-msgstr "این مجوز به‌تنهایی دسترسی ایجاد نمی‌کند؛ دسترسی نهایی از ترکیب نقش، مجوز و محدوده دسترسی محاسبه می‌شود."
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Slug and name are required."
+msgstr "Slug and name are required."
+
+msgid "Source"
+msgstr "Source"
+
+msgid "Standard platform user with access to the user panel."
+msgstr "Standard platform user with access to the user panel."
+
+msgid "Status"
+msgstr "Status"
+
+msgid "System"
+msgstr "System"
+
+msgid "System Information"
+msgstr "System Information"
+
+msgid "System role"
+msgstr "System role"
+
+msgid "System roles cannot be deleted."
+msgstr "System roles cannot be deleted."
+
+msgid "Team"
+msgstr "Team"
+
+msgid "Text Direction"
+msgstr "Text Direction"
+
+msgid "This email is already registered."
+msgstr "This email is already registered."
+
+msgid "This username is already taken."
+msgstr "This username is already taken."
+
+msgid "Time"
+msgstr "Time"
+
+msgid "To"
+msgstr "To"
+
+msgid "Total Permissions"
+msgstr "Total Permissions"
+
+msgid "Try adjusting your search filters."
+msgstr "Try adjusting your search filters."
+
+msgid "Unknown action."
+msgstr "Unknown action."
+
+msgid "Update Role"
+msgstr "Update Role"
+
+msgid "Used by roles"
+msgstr "Used by roles"
+
+msgid "Used by roles:"
+msgstr "Used by roles:"
+
+msgid "User"
+msgstr "User"
+
+msgid "User ID"
+msgstr "User ID"
+
+msgid "User Panel"
+msgstr "User Panel"
+
+msgid "User has no active platform roles."
+msgstr "User has no active platform roles."
+
+msgid "User not found."
+msgstr "User not found."
+
+msgid "Username"
+msgstr "Username"
+
+msgid "Users"
+msgstr "کاربران"
+
+msgid "Users with access"
+msgstr "Users with access"
+
+msgid "View"
+msgstr "مشاهده"
+
+msgid "View own profile"
+msgstr "View own profile"
+
+msgid "View settings"
+msgstr "View settings"
+
+msgid "WP Role"
+msgstr "WP Role"
+
+msgid "WordPress Administrator"
+msgstr "WordPress Administrator"
+
+msgid "WordPress Role"
+msgstr "WordPress Role"
+
+msgid "WordPress Version"
+msgstr "WordPress Version"
+
+msgid "WordPress administrators with manage_options receive effective platform_admin access for core permissions."
+msgstr "WordPress administrators with manage_options receive effective platform_admin access for core permissions."
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "You cannot check permissions for other users."
+msgstr "You cannot check permissions for other users."
+
+msgid "You do not have permission to access this resource."
+msgstr "You do not have permission to access this resource."
+
+msgid "You do not have permission."
+msgstr "You do not have permission."
+
+msgid "You must be logged in."
+msgstr "You must be logged in."
+
+msgid "Your Effective Permissions"
+msgstr "Your Effective Permissions"
+
+msgid "e.g. role"
+msgstr "e.g. role"
+
+msgid "e.g. role.created"
+msgstr "e.g. role.created"
+
+msgid "permission_id is required."
+msgstr "permission_id is required."
+
+msgid "resource context required"
+msgstr "resource context required"
+
+msgid "role_id is required."
+msgstr "role_id is required."

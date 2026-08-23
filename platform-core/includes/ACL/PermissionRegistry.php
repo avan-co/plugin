@@ -147,6 +147,148 @@ class PermissionRegistry {
 				array( '%s', '%s', '%s', '%s', '%s', '%s' )
 			);
 		}
+
+		$this->prune_orphaned_permissions();
+	}
+
+	/**
+	 * Remove all permissions for a module from memory and database.
+	 *
+	 * @param string $module Module slug.
+	 * @return int Number of permissions removed.
+	 */
+	public function unregister_module( $module ) {
+		$module = sanitize_key( $module );
+
+		if ( 'core' === $module ) {
+			return 0;
+		}
+
+		foreach ( array_keys( $this->registered ) as $key ) {
+			if ( $this->registered[ $key ]->module === $module ) {
+				unset( $this->registered[ $key ] );
+			}
+		}
+
+		return $this->prune_orphaned_permissions();
+	}
+
+	/**
+	 * Remove permissions for a module that are no longer registered.
+	 *
+	 * @param string $module Module slug.
+	 * @return int Number of permissions removed.
+	 */
+	public function remove_module_permissions( $module ) {
+		$module = sanitize_key( $module );
+
+		if ( 'core' === $module ) {
+			return 0;
+		}
+
+		$keys_to_keep = array();
+
+		foreach ( $this->registered as $permission ) {
+			if ( $permission->module === $module ) {
+				$keys_to_keep[] = $permission->key;
+			}
+		}
+
+		return $this->delete_module_permissions_not_in( $module, $keys_to_keep );
+	}
+
+	/**
+	 * Remove database permissions that are not in the in-memory registry.
+	 *
+	 * Core permissions are never auto-removed.
+	 *
+	 * @return int Number of permissions removed.
+	 */
+	public function prune_orphaned_permissions() {
+		global $wpdb;
+
+		$table         = Schema::table( 'permissions' );
+		$allowed_keys  = array_keys( $this->registered );
+		$rows          = $wpdb->get_results( "SELECT id, permission_key, module FROM {$table}", ARRAY_A );
+		$removed       = 0;
+
+		if ( empty( $rows ) ) {
+			return 0;
+		}
+
+		foreach ( $rows as $row ) {
+			if ( 'core' === $row['module'] ) {
+				continue;
+			}
+
+			if ( in_array( $row['permission_key'], $allowed_keys, true ) ) {
+				continue;
+			}
+
+			$this->delete_permission_by_id( (int) $row['id'] );
+			$removed++;
+		}
+
+		return $removed;
+	}
+
+	/**
+	 * Delete permissions for a module except allowed keys.
+	 *
+	 * @param string              $module Module slug.
+	 * @param array<int, string>  $keys   Keys to keep.
+	 * @return int
+	 */
+	private function delete_module_permissions_not_in( $module, array $keys ) {
+		global $wpdb;
+
+		$table = Schema::table( 'permissions' );
+		$rows  = $wpdb->get_results(
+			$wpdb->prepare( "SELECT id, permission_key FROM {$table} WHERE module = %s", $module ),
+			ARRAY_A
+		);
+		$removed = 0;
+
+		foreach ( $rows as $row ) {
+			if ( in_array( $row['permission_key'], $keys, true ) ) {
+				continue;
+			}
+
+			$this->delete_permission_by_id( (int) $row['id'] );
+			$removed++;
+		}
+
+		foreach ( array_keys( $this->registered ) as $registered_key ) {
+			$permission = $this->registered[ $registered_key ];
+			if ( $permission->module === $module && ! in_array( $registered_key, $keys, true ) ) {
+				unset( $this->registered[ $registered_key ] );
+			}
+		}
+
+		return $removed;
+	}
+
+	/**
+	 * Delete a permission and its role assignments.
+	 *
+	 * @param int $permission_id Permission ID.
+	 */
+	private function delete_permission_by_id( $permission_id ) {
+		global $wpdb;
+
+		$permission_id = (int) $permission_id;
+
+		$wpdb->delete(
+			Schema::table( 'role_permissions' ),
+			array( 'permission_id' => $permission_id ),
+			array( '%d' )
+		);
+
+		$wpdb->delete(
+			Schema::table( 'permissions' ),
+			array( 'id' => $permission_id ),
+			array( '%d' )
+		);
 	}
 
 	/**

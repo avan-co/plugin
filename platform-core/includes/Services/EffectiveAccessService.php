@@ -136,6 +136,26 @@ class EffectiveAccessService {
 	}
 
 	/**
+	 * Count users with a role that grants a permission.
+	 *
+	 * @param int $permission_id Permission ID.
+	 * @return int
+	 */
+	public function count_users_with_permission( $permission_id ) {
+		global $wpdb;
+
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				'SELECT COUNT(DISTINCT ur.user_id)
+				FROM ' . \MPP\Database\Schema::table( 'role_permissions' ) . ' rp
+				INNER JOIN ' . \MPP\Database\Schema::table( 'user_roles' ) . ' ur ON ur.role_id = rp.role_id
+				WHERE rp.permission_id = %d',
+				(int) $permission_id
+			)
+		);
+	}
+
+	/**
 	 * Explain effective access for a user across permissions.
 	 *
 	 * @param int                    $user_id User ID.
@@ -276,10 +296,10 @@ class EffectiveAccessService {
 		return array(
 			'all'          => true,
 			'own'          => true,
-			'department'   => false,
-			'team'         => false,
-			'project'      => false,
-			'organization' => false,
+			'department'   => true,
+			'team'         => true,
+			'project'      => true,
+			'organization' => true,
 			'custom'       => false,
 		);
 	}

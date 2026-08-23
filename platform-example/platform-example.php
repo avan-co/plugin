@@ -19,6 +19,14 @@ define( 'MPP_EXAMPLE_FILE', __FILE__ );
 define( 'MPP_EXAMPLE_DIR', plugin_dir_path( __FILE__ ) );
 
 /**
+ * Load plugin translations.
+ */
+function mpp_example_load_textdomain() {
+	load_plugin_textdomain( 'platform-example', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+add_action( 'init', 'mpp_example_load_textdomain' );
+
+/**
  * Bootstrap the example module after Platform Core is available.
  */
 function mpp_example_bootstrap() {

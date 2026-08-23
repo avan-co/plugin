@@ -270,6 +270,9 @@ class ModuleManager {
 		}
 
 		$this->modules[ $slug ]->deactivate();
+		$this->registry->unregister_module( $slug );
+		update_option( 'mpp_permissions_hash', $this->registry->get_registry_hash(), false );
+		unset( $this->modules[ $slug ] );
 
 		/**
 		 * Fires after a module is deactivated.

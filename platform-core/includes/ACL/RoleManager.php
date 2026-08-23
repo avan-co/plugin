@@ -328,6 +328,30 @@ class RoleManager {
 	}
 
 	/**
+	 * Get users assigned to a role.
+	 *
+	 * @param int $role_id Role ID.
+	 * @param int $limit   Result limit.
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function get_users_with_role( $role_id, $limit = 50 ) {
+		global $wpdb;
+
+		$sql = $wpdb->prepare(
+			'SELECT u.ID as id, u.user_login as username, u.user_email as email, u.display_name
+			FROM ' . Schema::table( 'user_roles' ) . ' ur
+			INNER JOIN ' . $wpdb->users . ' u ON u.ID = ur.user_id
+			WHERE ur.role_id = %d
+			ORDER BY u.display_name ASC
+			LIMIT %d',
+			(int) $role_id,
+			(int) $limit
+		);
+
+		return $wpdb->get_results( $sql, ARRAY_A );
+	}
+
+	/**
 	 * Validate a scope type slug.
 	 *
 	 * @param string $scope_type Scope type.

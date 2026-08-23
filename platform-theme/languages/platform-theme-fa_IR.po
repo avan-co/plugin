@@ -1,0 +1,442 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: platform-theme\n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "A unified infrastructure for users, roles, permissions, and user, manager, and admin panels with a modular, secure architecture."
+msgstr "A unified infrastructure for users, roles, permissions, and user, manager, and admin panels with a modular, secure architecture."
+
+msgid "ACL"
+msgstr "ACL"
+
+msgid "ACL Overview"
+msgstr "ACL Overview"
+
+msgid "Access the panel that matches your permissions."
+msgstr "Access the panel that matches your permissions."
+
+msgid "Accessible Panels"
+msgstr "Accessible Panels"
+
+msgid "Account"
+msgstr "Account"
+
+msgid "Account Status"
+msgstr "Account Status"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Activity"
+msgstr "Activity"
+
+msgid "Add independent modules without changing the platform core."
+msgstr "Add independent modules without changing the platform core."
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "Admin Dashboard"
+msgstr "Admin Dashboard"
+
+msgid "Admin Panel"
+msgstr "Admin Panel"
+
+msgid "Admin Settings"
+msgstr "Admin Settings"
+
+msgid "Admin panel navigation"
+msgstr "Admin panel navigation"
+
+msgid "Administrative changes are recorded for review."
+msgstr "Administrative changes are recorded for review."
+
+msgid "Already have an account?"
+msgstr "Already have an account?"
+
+msgid "Architecture overview"
+msgstr "Architecture overview"
+
+msgid "Audit platform access control activity and assignments."
+msgstr "Audit platform access control activity and assignments."
+
+msgid "Audit trail"
+msgstr "Audit trail"
+
+msgid "Authentication and users are powered by WordPress Core."
+msgstr "Authentication and users are powered by WordPress Core."
+
+msgid "Bilingual & RTL/LTR"
+msgstr "Bilingual & RTL/LTR"
+
+msgid "Breadcrumb"
+msgstr "Breadcrumb"
+
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+msgid "Core capabilities"
+msgstr "Core capabilities"
+
+msgid "Create Account"
+msgstr "ایجاد حساب"
+
+msgid "Create a platform account to access your user panel."
+msgstr "Create a platform account to access your user panel."
+
+msgid "Create and maintain platform roles and permissions."
+msgstr "Create and maintain platform roles and permissions."
+
+msgid "Dashboard"
+msgstr "داشبورد"
+
+msgid "Disabled"
+msgstr "Disabled"
+
+msgid "Display Name"
+msgstr "Display Name"
+
+msgid "Dynamic ACL with roles, permissions, and scoped access."
+msgstr "Dynamic ACL with roles, permissions, and scoped access."
+
+msgid "Dynamic roles, scoped permissions, audit logging, and a dedicated ACL admin experience."
+msgstr "Dynamic roles, scoped permissions, audit logging, and a dedicated ACL admin experience."
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Enable email notifications"
+msgstr "Enable email notifications"
+
+msgid "Enabled"
+msgstr "Enabled"
+
+msgid "Fair password"
+msgstr "Fair password"
+
+msgid "Forgot password?"
+msgstr "رمز عبور را فراموش کرده‌اید؟"
+
+msgid "Go Home"
+msgstr "Go Home"
+
+msgid "Go to Dashboard"
+msgstr "Go to Dashboard"
+
+msgid "Good password"
+msgstr "Good password"
+
+msgid "Grant and revoke permissions with scope controls."
+msgstr "Grant and revoke permissions with scope controls."
+
+msgid "Grant or revoke permissions for each platform role."
+msgstr "Grant or revoke permissions for each platform role."
+
+msgid "Hide"
+msgstr "مخفی"
+
+msgid "How it works"
+msgstr "How it works"
+
+msgid "Independent plugins can register routes, permissions, navigation, and dashboard widgets through Platform Core."
+msgstr "Independent plugins can register routes, permissions, navigation, and dashboard widgets through Platform Core."
+
+msgid "Installed modules can expose manager widgets here."
+msgstr "Installed modules can expose manager widgets here."
+
+msgid "Log In"
+msgstr "Log In"
+
+msgid "Log in"
+msgstr "Log in"
+
+msgid "Login"
+msgstr "ورود"
+
+msgid "Logout"
+msgstr "خروج"
+
+msgid "Manage WordPress users and platform role assignments."
+msgstr "Manage WordPress users and platform role assignments."
+
+msgid "Manage users, roles, permissions, modules, and ACL."
+msgstr "Manage users, roles, permissions, modules, and ACL."
+
+msgid "Manage your account preferences and platform access summary."
+msgstr "Manage your account preferences and platform access summary."
+
+msgid "Manager"
+msgstr "Manager"
+
+msgid "Manager Panel"
+msgstr "Manager Panel"
+
+msgid "Manager Profile"
+msgstr "Manager Profile"
+
+msgid "Manager panel navigation"
+msgstr "Manager panel navigation"
+
+msgid "Manager reports will be provided by future modules without fake data."
+msgstr "Manager reports will be provided by future modules without fake data."
+
+msgid "Manager workspace for oversight, module widgets, and future team tools."
+msgstr "Manager workspace for oversight, module widgets, and future team tools."
+
+msgid "Manager workspace with placeholders for future team tools."
+msgstr "Manager workspace with placeholders for future team tools."
+
+msgid "Member since %s"
+msgstr "Member since %s"
+
+msgid "Modular architecture"
+msgstr "Modular architecture"
+
+msgid "Module Widgets"
+msgstr "Module Widgets"
+
+msgid "Modules"
+msgstr "ماژول‌ها"
+
+msgid "Multi-panel WordPress platform foundation"
+msgstr "Multi-panel WordPress platform foundation"
+
+msgid "Multiple panels"
+msgstr "Multiple panels"
+
+msgid "Native RTL/LTR support with a shared design system for Persian and English interfaces."
+msgstr "Native RTL/LTR support with a shared design system for Persian and English interfaces."
+
+msgid "Need an account?"
+msgstr "Need an account?"
+
+msgid "No Platform Role"
+msgstr "No Platform Role"
+
+msgid "No activity yet"
+msgstr "No activity yet"
+
+msgid "No content found."
+msgstr "No content found."
+
+msgid "No module widgets yet"
+msgstr "No module widgets yet"
+
+msgid "No panels are available for your account. Contact an administrator."
+msgstr "No panels are available for your account. Contact an administrator."
+
+msgid "No recent activity"
+msgstr "No recent activity"
+
+msgid "Notification preferences will appear here when notification modules are enabled."
+msgstr "Notification preferences will appear here when notification modules are enabled."
+
+msgid "Notifications"
+msgstr "Notifications"
+
+msgid "Notifications:"
+msgstr "Notifications:"
+
+msgid "Open Settings"
+msgstr "Open Settings"
+
+msgid "Overview of users, roles, modules, and recent activity."
+msgstr "Overview of users, roles, modules, and recent activity."
+
+msgid "Panel navigation"
+msgstr "Panel navigation"
+
+msgid "Password"
+msgstr "Password"
+
+msgid "Password changes are managed through your WordPress account profile."
+msgstr "Password changes are managed through your WordPress account profile."
+
+msgid "Pending Tasks"
+msgstr "Pending Tasks"
+
+msgid "Permission matrix"
+msgstr "Permission matrix"
+
+msgid "Permissions"
+msgstr "مجوزهای دسترسی"
+
+msgid "Personal dashboard, profile, and account settings."
+msgstr "Personal dashboard, profile, and account settings."
+
+msgid "Platform"
+msgstr "Platform"
+
+msgid "Platform Core"
+msgstr "Platform Core"
+
+msgid "Platform Modules"
+msgstr "Platform Modules"
+
+msgid "Platform Primary"
+msgstr "Platform Primary"
+
+msgid "Platform Roles"
+msgstr "Platform Roles"
+
+msgid "Platform administrators manage ACL from the admin panel."
+msgstr "Platform administrators manage ACL from the admin panel."
+
+msgid "Platform roles remain separate from WordPress roles."
+msgstr "Platform roles remain separate from WordPress roles."
+
+msgid "Profile"
+msgstr "پروفایل"
+
+msgid "Project oversight will appear here when a project module is installed."
+msgstr "Project oversight will appear here when a project module is installed."
+
+msgid "Projects"
+msgstr "Projects"
+
+msgid "Public navigation"
+msgstr "Public navigation"
+
+msgid "Ready to get started?"
+msgstr "Ready to get started?"
+
+msgid "Receive a platform role such as platform_user."
+msgstr "Receive a platform role such as platform_user."
+
+msgid "Recent Activity"
+msgstr "Recent Activity"
+
+msgid "Register"
+msgstr "ثبت‌نام"
+
+msgid "Register or log in to the platform."
+msgstr "Register or log in to the platform."
+
+msgid "Remember me"
+msgstr "مرا به خاطر بسپار"
+
+msgid "Reports"
+msgstr "Reports"
+
+msgid "Review core platform configuration and runtime status."
+msgstr "Review core platform configuration and runtime status."
+
+msgid "Review registered platform modules and their capabilities."
+msgstr "Review registered platform modules and their capabilities."
+
+msgid "Role and access management"
+msgstr "Role and access management"
+
+msgid "Role-based access"
+msgstr "Role-based access"
+
+msgid "Roles"
+msgstr "نقش‌ها"
+
+msgid "Save Profile"
+msgstr "Save Profile"
+
+msgid "Save Settings"
+msgstr "ذخیره تنظیمات"
+
+msgid "Security"
+msgstr "Security"
+
+msgid "Security & ACL"
+msgstr "Security & ACL"
+
+msgid "Select a panel to continue."
+msgstr "Select a panel to continue."
+
+msgid "Separate experiences for users, managers, and administrators."
+msgstr "Separate experiences for users, managers, and administrators."
+
+msgid "Settings"
+msgstr "تنظیمات"
+
+msgid "Show"
+msgstr "نمایش"
+
+msgid "Show password"
+msgstr "Show password"
+
+msgid "Sign in or create an account to access your panel."
+msgstr "Sign in or create an account to access your panel."
+
+msgid "Sign in with your username or email address."
+msgstr "Sign in with your username or email address."
+
+msgid "Strong password"
+msgstr "Strong password"
+
+msgid "Team"
+msgstr "Team"
+
+msgid "Team Members"
+msgstr "Team Members"
+
+msgid "Team management will be available when a team module is installed."
+msgstr "Team management will be available when a team module is installed."
+
+msgid "The page you are looking for does not exist."
+msgstr "The page you are looking for does not exist."
+
+msgid "Toggle navigation"
+msgstr "Toggle navigation"
+
+msgid "User"
+msgstr "User"
+
+msgid "User / Manager / Admin panels"
+msgstr "User / Manager / Admin panels"
+
+msgid "User Panel"
+msgstr "User Panel"
+
+msgid "User panel navigation"
+msgstr "User panel navigation"
+
+msgid "Username"
+msgstr "Username"
+
+msgid "Username or Email"
+msgstr "Username or Email"
+
+msgid "Username:"
+msgstr "Username:"
+
+msgid "Users"
+msgstr "کاربران"
+
+msgid "View and update your account profile information."
+msgstr "View and update your account profile information."
+
+msgid "Weak password"
+msgstr "Weak password"
+
+msgid "Welcome back, %s."
+msgstr "Welcome back, %s."
+
+msgid "WordPress Core"
+msgstr "WordPress Core"
+
+msgid "WordPress foundation"
+msgstr "WordPress foundation"
+
+msgid "You do not have permission to access this page."
+msgstr "You do not have permission to access this page."
+
+msgid "You have view-only access to settings."
+msgstr "You have view-only access to settings."
+
+msgid "Your manager actions will be listed here."
+msgstr "Your manager actions will be listed here."
+
+msgid "Your personal workspace, account summary, and module widgets."
+msgstr "Your personal workspace, account summary, and module widgets."
+
+msgid "Your recent platform actions will appear here."
+msgstr "Your recent platform actions will appear here."

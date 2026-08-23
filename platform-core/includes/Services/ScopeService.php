@@ -62,8 +62,11 @@ class ScopeService {
 	 */
 	public function assignable() {
 		$availability = array(
-			'all' => true,
-			'own' => true,
+			'all'          => true,
+			'own'          => true,
+			'department'   => true,
+			'team'         => true,
+			'organization' => true,
 		);
 
 		/**
@@ -86,5 +89,15 @@ class ScopeService {
 		}
 
 		return $rows;
+	}
+
+	/**
+	 * Whether a scope type requires resource context at enforcement time.
+	 *
+	 * @param string $scope_type Scope slug.
+	 * @return bool
+	 */
+	public function requires_resource_context( $scope_type ) {
+		return in_array( sanitize_key( $scope_type ), array( 'own', 'department', 'team', 'project', 'organization' ), true );
 	}
 }
