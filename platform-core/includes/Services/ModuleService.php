@@ -61,6 +61,8 @@ class ModuleService {
 				'requires_core_version'  => $module->get_requires_core_version(),
 				'status'                 => 'active',
 				'permission_count'       => $this->count_module_permissions( $slug, $grouped ),
+				'route_count'            => $this->count_module_routes( $slug ),
+				'description'            => apply_filters( 'mpp_module_description', '', $slug, $module ),
 			);
 		}
 
@@ -103,6 +105,29 @@ class ModuleService {
 
 		foreach ( $grouped[ $slug ] as $actions ) {
 			$count += count( $actions );
+		}
+
+		return $count;
+	}
+
+	/**
+	 * Count routes registered by a module slug prefix.
+	 *
+	 * @param string $slug Module slug.
+	 * @return int
+	 */
+	private function count_module_routes( $slug ) {
+		if ( ! function_exists( 'mpp' ) ) {
+			return 0;
+		}
+
+		$router = mpp()->get( \MPP\Core\Router::class );
+		$count  = 0;
+
+		foreach ( array_keys( $router->get_routes() ) as $route_slug ) {
+			if ( 0 === strpos( $route_slug, 'app/' . $slug ) || $route_slug === 'app/' . $slug ) {
+				$count++;
+			}
 		}
 
 		return $count;

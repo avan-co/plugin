@@ -5,7 +5,11 @@
 
 define( 'ABSPATH', __DIR__ . '/../' );
 define( 'MPP_PLUGIN_DIR', dirname( __DIR__ ) . '/' );
-define( 'MPP_VERSION', '1.4.3' );
+define( 'MPP_VERSION', '1.5.0' );
+
+if ( ! defined( 'ARRAY_A' ) ) {
+	define( 'ARRAY_A', 'ARRAY_A' );
+}
 
 require_once dirname( __DIR__ ) . '/includes/Core/Autoloader.php';
 MPP\Core\Autoloader::register( dirname( __DIR__ ) . '/includes/' );

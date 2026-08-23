@@ -11,6 +11,7 @@ use MPP\ACL\AclEngine;
 use MPP\ACL\PermissionRegistry;
 use MPP\ACL\RoleManager;
 use MPP\Services\AuditLogService;
+use MPP\Settings\PlatformSettings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -50,18 +51,27 @@ class FormHandler {
 	private $audit;
 
 	/**
+	 * Platform settings.
+	 *
+	 * @var PlatformSettings
+	 */
+	private $settings;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param AclEngine          $acl      ACL engine.
 	 * @param RoleManager        $roles    Role manager.
 	 * @param PermissionRegistry $registry Permission registry.
 	 * @param AuditLogService    $audit    Audit log service.
+	 * @param PlatformSettings   $settings Platform settings.
 	 */
-	public function __construct( AclEngine $acl, RoleManager $roles, PermissionRegistry $registry, AuditLogService $audit ) {
+	public function __construct( AclEngine $acl, RoleManager $roles, PermissionRegistry $registry, AuditLogService $audit, PlatformSettings $settings ) {
 		$this->acl      = $acl;
 		$this->roles    = $roles;
 		$this->registry = $registry;
 		$this->audit    = $audit;
+		$this->settings = $settings;
 	}
 
 	/**
@@ -133,6 +143,8 @@ class FormHandler {
 				return $this->revoke_permission();
 			case 'update_permission_scope':
 				return $this->update_permission_scope();
+			case 'save_settings':
+				return $this->save_settings();
 			default:
 				return array(
 					'success' => false,
@@ -395,6 +407,29 @@ class FormHandler {
 		return array(
 			'success' => (bool) $result,
 			'message' => $result ? __( 'Scope updated.', 'platform-core' ) : __( 'Could not update scope.', 'platform-core' ),
+		);
+	}
+
+	/**
+	 * Save platform settings.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function save_settings() {
+		$errors = $this->settings->save( wp_unslash( $_POST ) );
+
+		if ( ! empty( $errors ) ) {
+			return array(
+				'success' => false,
+				'message' => implode( ' ', $errors ),
+			);
+		}
+
+		$this->audit->log( 'settings.updated', 'settings', 0, array(), $this->settings->all() );
+
+		return array(
+			'success' => true,
+			'message' => __( 'Settings saved.', 'platform-core' ),
 		);
 	}
 

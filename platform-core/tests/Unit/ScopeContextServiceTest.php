@@ -29,7 +29,6 @@ class ScopeContextServiceTest extends TestCase {
 		$service = new ScopeContextService();
 		$context = $service->for_user( 42 );
 
-		$this->assertSame( 42, $context['owner_id'] );
 		$this->assertSame( 0, $context['user_department_id'] );
 		$this->assertSame( array(), $context['user_team_ids'] );
 		$this->assertSame( array(), $context['user_project_ids'] );

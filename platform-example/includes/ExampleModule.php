@@ -1,6 +1,6 @@
 <?php
 /**
- * Example external module.
+ * Example external module — canonical reference implementation.
  *
  * @package PlatformExample
  */
@@ -57,7 +57,8 @@ class ExampleModule extends AbstractModule {
 			'example',
 			array(
 				'demo' => array(
-					'view' => __( 'View example demo page', 'platform-example' ),
+					'view'   => __( 'View Example Demo', 'platform-example' ),
+					'manage' => __( 'Manage Example Demo', 'platform-example' ),
 				),
 			)
 		);
@@ -70,10 +71,11 @@ class ExampleModule extends AbstractModule {
 		$router->add_route(
 			'app/example',
 			array(
-				'template'       => 'templates/example-demo.php',
-				'template_file'  => MPP_EXAMPLE_DIR . 'templates/demo.php',
-				'permission'     => 'example.demo.view',
-				'title'          => __( 'Example Demo', 'platform-example' ),
+				'template'      => 'templates/demo.php',
+				'template_file' => MPP_EXAMPLE_DIR . 'templates/demo.php',
+				'permission'    => 'example.demo.view',
+				'title'         => __( 'Example Demo', 'platform-example' ),
+				'description'   => __( 'Demonstration page for the Example module.', 'platform-example' ),
 			)
 		);
 	}
@@ -91,6 +93,21 @@ class ExampleModule extends AbstractModule {
 				'route'      => 'app/example',
 				'permission' => 'example.demo.view',
 				'panel'      => 'user',
+			),
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_dashboard_widgets() {
+		return array(
+			array(
+				'id'         => 'example_demo_status',
+				'title'      => __( 'Example Module', 'platform-example' ),
+				'panel'      => 'user',
+				'permission' => 'example.demo.view',
+				'value'      => __( 'Active', 'platform-example' ),
 			),
 		);
 	}

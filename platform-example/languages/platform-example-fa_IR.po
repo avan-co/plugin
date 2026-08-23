@@ -1,0 +1,61 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: platform-example\n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Demonstrates how an external module registers a protected route and navigation item."
+msgstr "Demonstrates how an external module registers a protected route and navigation item."
+
+msgid "Demonstration page for the Example module."
+msgstr "Demonstration page for the Example module."
+
+msgid "Example"
+msgstr "Example"
+
+msgid "Example Demo"
+msgstr "دموی نمونه"
+
+msgid "Example Module"
+msgstr "Example Module"
+
+msgid "Example Module Demo"
+msgstr "Example Module Demo"
+
+msgid "Grant example.demo.view to a role, assign the role to a user, then open this page from the user panel navigation."
+msgstr "Grant example.demo.view to a role, assign the role to a user, then open this page from the user panel navigation."
+
+msgid "Manage Example Demo"
+msgstr "مدیریت دموی نمونه"
+
+msgid "Manage Permission"
+msgstr "Manage Permission"
+
+msgid "Module"
+msgstr "Module"
+
+msgid "Platform Example requires Platform Core %s or newer."
+msgstr "Platform Example requires Platform Core %s or newer."
+
+msgid "Platform Example requires Platform Core to be installed and activated."
+msgstr "Platform Example requires Platform Core to be installed and activated."
+
+msgid "Reference module demonstrating permissions, routes, navigation, and dashboard widgets."
+msgstr "Reference module demonstrating permissions, routes, navigation, and dashboard widgets."
+
+msgid "Route"
+msgstr "Route"
+
+msgid "This page is served by the platform-example plugin through the core module contract."
+msgstr "This page is served by the platform-example plugin through the core module contract."
+
+msgid "View Example Demo"
+msgstr "مشاهده دموی نمونه"
+
+msgid "View Permission"
+msgstr "View Permission"
