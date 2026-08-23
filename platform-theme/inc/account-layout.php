@@ -16,7 +16,7 @@ require_once get_template_directory() . '/inc/panel-layout.php';
  * @param string $title   Page title.
  * @param string $content HTML content.
  */
-function platform_render_account_page( $panel, $title, $content ) {
+function platform_render_account_page( $panel, $title, $content, $description = '', array $breadcrumb = array() ) {
 	ob_start();
 
 	if ( function_exists( 'mpp_render_account_notice' ) ) {
@@ -27,5 +27,12 @@ function platform_render_account_page( $panel, $title, $content ) {
 
 	$body = ob_get_clean();
 
-	platform_render_panel( $panel, $title, $body );
+	if ( empty( $breadcrumb ) ) {
+		$breadcrumb = array(
+			__( 'Account', 'platform-theme' ),
+			$title,
+		);
+	}
+
+	platform_render_panel( $panel, $title, $body, $description, $breadcrumb );
 }

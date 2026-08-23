@@ -12,8 +12,8 @@
 
 .mpp-home-hero {
 	padding: 4rem 0 3rem;
-	background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 60%, #ffffff 100%);
-	border-bottom: 1px solid var(--mpp-color-border);
+	background: var(--mpp-surface-card);
+	border-bottom: 1px solid var(--mpp-border);
 }
 
 .mpp-home-hero__title {

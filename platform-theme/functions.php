@@ -86,6 +86,27 @@ function platform_theme_enqueue_assets() {
 
 	if ( function_exists( 'mpp_get_current_route' ) ) {
 		$route = mpp_get_current_route();
+		if ( $route && in_array( $route['slug'], array( 'login', 'register' ), true ) ) {
+			wp_enqueue_script(
+				'platform-theme-forms',
+				get_template_directory_uri() . '/assets/js/forms.js',
+				array(),
+				wp_get_theme()->get( 'Version' ),
+				true
+			);
+			wp_localize_script(
+				'platform-theme-forms',
+				'mppForms',
+				array(
+					'show'   => __( 'Show', 'platform-theme' ),
+					'hide'   => __( 'Hide', 'platform-theme' ),
+					'weak'   => __( 'Weak password', 'platform-theme' ),
+					'fair'   => __( 'Fair password', 'platform-theme' ),
+					'good'   => __( 'Good password', 'platform-theme' ),
+					'strong' => __( 'Strong password', 'platform-theme' ),
+				)
+			);
+		}
 		if ( $route && 0 === strpos( $route['slug'], 'app/admin' ) ) {
 			wp_enqueue_style(
 				'platform-theme-admin',

@@ -243,3 +243,65 @@
 [dir="rtl"] .mpp-page-header__breadcrumb li + li::before {
 	content: "\\";
 }
+
+.mpp-btn--block {
+	width: 100%;
+}
+
+.mpp-lead,
+.mpp-section-title {
+	margin: 0 0 var(--mpp-space-md);
+}
+
+.mpp-section-title {
+	font-size: 1.125rem;
+}
+
+.mpp-password-field {
+	display: flex;
+	gap: var(--mpp-space-sm);
+	align-items: center;
+}
+
+.mpp-password-field .mpp-input {
+	flex: 1;
+}
+
+.mpp-form-footer {
+	margin-top: var(--mpp-space-md);
+	font-size: var(--mpp-font-small);
+	color: var(--mpp-muted-foreground);
+}
+
+.mpp-alert--warning {
+	background: var(--mpp-warning-foreground);
+	border-color: #fde68a;
+	color: var(--mpp-warning);
+}
+
+.mpp-placeholder-section {
+	margin-bottom: var(--mpp-space-md);
+	padding: var(--mpp-space-lg);
+}
+
+.mpp-profile-header {
+	display: flex;
+	align-items: center;
+	gap: var(--mpp-space-md);
+	margin-bottom: var(--mpp-space-lg);
+}
+
+.mpp-profile-header__name {
+	margin: 0 0 var(--mpp-space-xs);
+	font-size: 1.125rem;
+}
+
+[dir="rtl"] .mpp-panel-card__arrow {
+	transform: scaleX(-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mpp-btn {
+		transition: none;
+	}
+}

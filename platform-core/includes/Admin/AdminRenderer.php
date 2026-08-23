@@ -349,13 +349,20 @@ class AdminRenderer {
 		}
 
 		$roles = $this->roles->all();
+
+		if ( empty( $roles ) ) {
+			echo '<div class="mpp-empty-state"><h3 class="mpp-empty-state__title">' . esc_html__( 'No roles found', 'platform-core' ) . '</h3><p>' . esc_html__( 'Default platform roles are created during installation.', 'platform-core' ) . '</p></div>';
+			return;
+		}
 		?>
 		<p><a class="mpp-btn mpp-btn--primary" href="<?php echo esc_url( add_query_arg( 'action', 'create', mpp_route_url( 'app/admin/roles' ) ) ); ?>"><?php esc_html_e( 'Create Role', 'platform-core' ); ?></a></p>
+		<div class="mpp-table-wrap">
 		<table class="mpp-admin-table">
 			<thead>
 				<tr>
 					<th><?php esc_html_e( 'Name', 'platform-core' ); ?></th>
 					<th><?php esc_html_e( 'Slug', 'platform-core' ); ?></th>
+					<th><?php esc_html_e( 'Permissions', 'platform-core' ); ?></th>
 					<th><?php esc_html_e( 'Status', 'platform-core' ); ?></th>
 					<th><?php esc_html_e( 'System', 'platform-core' ); ?></th>
 					<th></th>
@@ -364,8 +371,14 @@ class AdminRenderer {
 			<tbody>
 				<?php foreach ( $roles as $role ) : ?>
 					<tr>
-						<td><?php echo esc_html( $role['name'] ); ?></td>
+						<td>
+							<strong><?php echo esc_html( $role['name'] ); ?></strong>
+							<?php if ( ! empty( $role['description'] ) ) : ?>
+								<p class="mpp-muted"><?php echo esc_html( $role['description'] ); ?></p>
+							<?php endif; ?>
+						</td>
 						<td><code><?php echo esc_html( $role['slug'] ); ?></code></td>
+						<td><?php echo esc_html( (string) count( $this->roles->get_permissions( (int) $role['id'] ) ) ); ?></td>
 						<td><?php echo esc_html( $role['status'] ?? 'active' ); ?></td>
 						<td><?php echo ! empty( $role['is_system'] ) ? esc_html__( 'Yes', 'platform-core' ) : esc_html__( 'No', 'platform-core' ); ?></td>
 						<td>
@@ -376,6 +389,7 @@ class AdminRenderer {
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+		</div>
 		<?php
 	}
 
@@ -579,7 +593,14 @@ class AdminRenderer {
 	 */
 	private function render_modules() {
 		$modules = $this->modules->list_modules();
+
+		if ( empty( $modules ) ) {
+			echo '<div class="mpp-empty-state"><h3 class="mpp-empty-state__title">' . esc_html__( 'No modules registered', 'platform-core' ) . '</h3><p>' . esc_html__( 'Install and activate platform module plugins in WordPress to extend the platform.', 'platform-core' ) . '</p></div>';
+			return;
+		}
 		?>
+		<p class="mpp-muted"><?php esc_html_e( 'Module availability is controlled by WordPress plugin activation. Deactivating a plugin removes its runtime routes and widgets.', 'platform-core' ); ?></p>
+		<div class="mpp-table-wrap">
 		<table class="mpp-admin-table">
 			<thead>
 				<tr>
@@ -604,6 +625,7 @@ class AdminRenderer {
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+		</div>
 		<?php
 	}
 
@@ -630,7 +652,13 @@ class AdminRenderer {
 		$entries = $this->audit->query( $query );
 		$total   = $this->audit->count( $filters );
 		$scopes  = $this->scopes->all();
+		$effective = function_exists( 'mpp' ) ? count( mpp()->acl()->get_user_permissions( get_current_user_id() ) ) : 0;
 		?>
+		<div class="mpp-stats mpp-admin-stats">
+			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'Your Effective Permissions', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( (string) $effective ); ?></span></div>
+			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'Scope Types', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( (string) count( $scopes ) ); ?></span></div>
+		</div>
+
 		<h3><?php esc_html_e( 'Scope Types', 'platform-core' ); ?></h3>
 		<ul class="mpp-admin-list">
 			<?php foreach ( $scopes as $scope ) : ?>
@@ -638,7 +666,7 @@ class AdminRenderer {
 			<?php endforeach; ?>
 		</ul>
 
-		<h3><?php esc_html_e( 'Recent Audit Log', 'platform-core' ); ?></h3>
+		<h3><?php esc_html_e( 'Audit Log', 'platform-core' ); ?></h3>
 		<form method="get" action="<?php echo esc_url( mpp_route_url( 'app/admin/acl' ) ); ?>" class="mpp-form mpp-form--inline mpp-admin-filters">
 			<label>
 				<?php esc_html_e( 'User ID', 'platform-core' ); ?>
@@ -676,6 +704,9 @@ class AdminRenderer {
 				</tr>
 			</thead>
 			<tbody>
+				<?php if ( empty( $entries ) ) : ?>
+					<tr><td colspan="5"><?php esc_html_e( 'No audit entries matched your filters.', 'platform-core' ); ?></td></tr>
+				<?php else : ?>
 				<?php foreach ( $entries as $entry ) : ?>
 					<tr>
 						<td><?php echo esc_html( $entry['created_at'] ); ?></td>
@@ -685,6 +716,7 @@ class AdminRenderer {
 						<td><?php echo esc_html( $entry['ip_address'] ); ?></td>
 					</tr>
 				<?php endforeach; ?>
+				<?php endif; ?>
 			</tbody>
 		</table>
 		<?php
@@ -705,30 +737,48 @@ class AdminRenderer {
 		?>
 		<div class="mpp-settings-sections">
 			<section class="mpp-card">
-				<h2><?php esc_html_e( 'Platform', 'platform-core' ); ?></h2>
+				<h2><?php esc_html_e( 'General', 'platform-core' ); ?></h2>
 				<dl class="mpp-profile-list">
+					<dt><?php esc_html_e( 'Site Name', 'platform-core' ); ?></dt>
+					<dd><?php echo esc_html( get_bloginfo( 'name' ) ); ?></dd>
 					<dt><?php esc_html_e( 'Platform Core Version', 'platform-core' ); ?></dt>
 					<dd><?php echo esc_html( $summary['platform_version'] ); ?></dd>
+				</dl>
+			</section>
+			<section class="mpp-card">
+				<h2><?php esc_html_e( 'Appearance', 'platform-core' ); ?></h2>
+				<dl class="mpp-profile-list">
+					<dt><?php esc_html_e( 'Text Direction', 'platform-core' ); ?></dt>
+					<dd><?php echo is_rtl() ? esc_html__( 'Right-to-left (RTL)', 'platform-core' ) : esc_html__( 'Left-to-right (LTR)', 'platform-core' ); ?></dd>
+					<dt><?php esc_html_e( 'Locale', 'platform-core' ); ?></dt>
+					<dd><?php echo esc_html( get_locale() ); ?></dd>
+				</dl>
+			</section>
+			<section class="mpp-card">
+				<h2><?php esc_html_e( 'Registration', 'platform-core' ); ?></h2>
+				<p><?php echo $summary['registration_enabled'] ? esc_html__( 'Public registration is enabled.', 'platform-core' ) : esc_html__( 'Public registration is disabled.', 'platform-core' ); ?></p>
+			</section>
+			<section class="mpp-card">
+				<h2><?php esc_html_e( 'Security', 'platform-core' ); ?></h2>
+				<p><?php esc_html_e( 'WordPress administrators with manage_options receive effective platform_admin access for all core permissions without changing their WordPress role.', 'platform-core' ); ?></p>
+			</section>
+			<section class="mpp-card">
+				<h2><?php esc_html_e( 'Localization', 'platform-core' ); ?></h2>
+				<dl class="mpp-profile-list">
+					<dt><?php esc_html_e( 'Routing Mode', 'platform-core' ); ?></dt>
+					<dd><?php echo esc_html( $summary['permalink_mode'] ); ?></dd>
+				</dl>
+			</section>
+			<section class="mpp-card">
+				<h2><?php esc_html_e( 'System Information', 'platform-core' ); ?></h2>
+				<dl class="mpp-profile-list">
 					<dt><?php esc_html_e( 'WordPress Version', 'platform-core' ); ?></dt>
 					<dd><?php echo esc_html( $summary['wordpress_version'] ); ?></dd>
 					<dt><?php esc_html_e( 'Database Schema', 'platform-core' ); ?></dt>
 					<dd><?php echo esc_html( $summary['database_version'] ?: __( 'Not installed', 'platform-core' ) ); ?></dd>
-					<dt><?php esc_html_e( 'Routing Mode', 'platform-core' ); ?></dt>
-					<dd><?php echo esc_html( $summary['permalink_mode'] ); ?></dd>
-					<dt><?php esc_html_e( 'Registration', 'platform-core' ); ?></dt>
-					<dd><?php echo $summary['registration_enabled'] ? esc_html__( 'Enabled', 'platform-core' ) : esc_html__( 'Disabled', 'platform-core' ); ?></dd>
-				</dl>
-			</section>
-			<section class="mpp-card">
-				<h2><?php esc_html_e( 'Account', 'platform-core' ); ?></h2>
-				<dl class="mpp-profile-list">
 					<dt><?php esc_html_e( 'Logged in as', 'platform-core' ); ?></dt>
 					<dd><?php echo esc_html( $summary['current_user'] ?: __( 'Guest', 'platform-core' ) ); ?></dd>
 				</dl>
-			</section>
-			<section class="mpp-card">
-				<h2><?php esc_html_e( 'Bootstrap Access', 'platform-core' ); ?></h2>
-				<p><?php esc_html_e( 'WordPress administrators with manage_options receive effective platform_admin access for all core permissions without changing their WordPress role.', 'platform-core' ); ?></p>
 			</section>
 		</div>
 		<?php
