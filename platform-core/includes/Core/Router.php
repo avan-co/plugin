@@ -230,6 +230,15 @@ class Router {
 		);
 
 		$this->add_route(
+			'register',
+			array(
+				'template' => 'templates/page-register.php',
+				'auth'     => false,
+				'title'    => __( 'Register', 'platform-core' ),
+			)
+		);
+
+		$this->add_route(
 			'app',
 			array(
 				'template'   => 'templates/page-app.php',

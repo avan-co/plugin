@@ -433,6 +433,14 @@ body.mpp-body {
 }
 
 /* Footer */
+.mpp-dashboard-welcome h2 {
+	margin: 0 0 0.5rem;
+}
+
+.mpp-muted {
+	color: var(--mpp-color-text-muted);
+}
+
 .mpp-footer {
 	background: var(--mpp-color-surface);
 	border-top: 1px solid var(--mpp-color-border);

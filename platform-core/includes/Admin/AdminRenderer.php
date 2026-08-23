@@ -137,22 +137,39 @@ class AdminRenderer {
 	 * Dashboard overview.
 	 */
 	private function render_dashboard() {
-		$role_count = count( $this->roles->all() );
+		$summary = mpp()->get( \MPP\Panels\DashboardService::class )->get_admin_summary();
 		$user_count = $this->users->count_users();
-		$module_count = count( $this->modules->list_modules() );
 		$audit_count = $this->audit->count();
 		?>
 		<div class="mpp-admin-stats">
+			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'Platform Version', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( $summary['platform_version'] ); ?></span></div>
+			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'WordPress Version', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( $summary['wordpress_version'] ); ?></span></div>
 			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'Users', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( (string) $user_count ); ?></span></div>
-			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'Roles', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( (string) $role_count ); ?></span></div>
-			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'Modules', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( (string) $module_count ); ?></span></div>
+			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'Platform Roles', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( (string) $summary['role_count'] ); ?></span></div>
+			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'Modules', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( (string) $summary['module_count'] ); ?></span></div>
 			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'Audit Entries', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( (string) $audit_count ); ?></span></div>
 		</div>
 		<div class="mpp-admin-links">
-			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( home_url( '/app/admin/users' ) ); ?>"><?php esc_html_e( 'Manage Users', 'platform-core' ); ?></a>
-			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( home_url( '/app/admin/roles' ) ); ?>"><?php esc_html_e( 'Manage Roles', 'platform-core' ); ?></a>
-			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( home_url( '/app/admin/acl' ) ); ?>"><?php esc_html_e( 'ACL Overview', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/users' ) ); ?>"><?php esc_html_e( 'Manage Users', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/roles' ) ); ?>"><?php esc_html_e( 'Manage Roles', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/acl' ) ); ?>"><?php esc_html_e( 'ACL Overview', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/settings' ) ); ?>"><?php esc_html_e( 'Settings', 'platform-core' ); ?></a>
 		</div>
+		<?php if ( ! empty( $summary['recent_audit'] ) ) : ?>
+			<h3><?php esc_html_e( 'Recent ACL Activity', 'platform-core' ); ?></h3>
+			<table class="mpp-admin-table">
+				<thead><tr><th><?php esc_html_e( 'Time', 'platform-core' ); ?></th><th><?php esc_html_e( 'Action', 'platform-core' ); ?></th><th><?php esc_html_e( 'Object', 'platform-core' ); ?></th></tr></thead>
+				<tbody>
+					<?php foreach ( $summary['recent_audit'] as $entry ) : ?>
+						<tr>
+							<td><?php echo esc_html( $entry['created_at'] ); ?></td>
+							<td><code><?php echo esc_html( $entry['action'] ); ?></code></td>
+							<td><?php echo esc_html( $entry['object_type'] . ( $entry['object_id'] ? ':' . $entry['object_id'] : '' ) ); ?></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		<?php endif; ?>
 		<?php
 	}
 
@@ -203,7 +220,7 @@ class AdminRenderer {
 						<td><?php echo esc_html( $user['display_name'] ); ?></td>
 						<td><?php echo esc_html( $user['email'] ); ?></td>
 						<td><span class="mpp-badge"><?php echo esc_html( $user['status'] ); ?></span></td>
-						<td><?php echo esc_html( implode( ', ', wp_list_pluck( $user['platform_roles'], 'name' ) ) ); ?></td>
+						<td><?php echo esc_html( ! empty( $user['platform_roles'] ) ? implode( ', ', wp_list_pluck( $user['platform_roles'], 'name' ) ) : '—' ); ?></td>
 						<td><a href="<?php echo esc_url( add_query_arg( 'user_id', $user['id'], home_url( '/app/admin/users' ) ) ); ?>"><?php esc_html_e( 'View', 'platform-core' ); ?></a></td>
 					</tr>
 				<?php endforeach; ?>
@@ -234,6 +251,8 @@ class AdminRenderer {
 
 		$all_roles = $this->roles->all();
 		$assigned  = wp_list_pluck( $user['platform_roles'], 'id' );
+		$wp_user   = get_userdata( $user_id );
+		$wp_roles  = $wp_user ? array_values( (array) $wp_user->roles ) : array();
 		?>
 		<p><a href="<?php echo esc_url( home_url( '/app/admin/users' ) ); ?>">&larr; <?php esc_html_e( 'Back to users', 'platform-core' ); ?></a></p>
 		<div class="mpp-card">
@@ -243,10 +262,14 @@ class AdminRenderer {
 				<dt><?php esc_html_e( 'Username', 'platform-core' ); ?></dt><dd><?php echo esc_html( $user['username'] ); ?></dd>
 				<dt><?php esc_html_e( 'Email', 'platform-core' ); ?></dt><dd><?php echo esc_html( $user['email'] ); ?></dd>
 				<dt><?php esc_html_e( 'Status', 'platform-core' ); ?></dt><dd><?php echo esc_html( $user['status'] ); ?></dd>
+				<dt><?php esc_html_e( 'WordPress Role', 'platform-core' ); ?></dt><dd><?php echo esc_html( ! empty( $wp_roles ) ? implode( ', ', $wp_roles ) : '—' ); ?></dd>
 			</dl>
 		</div>
 
 		<h3><?php esc_html_e( 'Assigned Platform Roles', 'platform-core' ); ?></h3>
+		<?php if ( empty( $user['platform_roles'] ) ) : ?>
+			<p><?php esc_html_e( 'No platform roles assigned yet.', 'platform-core' ); ?></p>
+		<?php endif; ?>
 		<ul class="mpp-admin-list">
 			<?php foreach ( $user['platform_roles'] as $role ) : ?>
 				<li>
@@ -482,6 +505,8 @@ class AdminRenderer {
 				<tr>
 					<th><?php esc_html_e( 'Module', 'platform-core' ); ?></th>
 					<th><?php esc_html_e( 'Name', 'platform-core' ); ?></th>
+					<th><?php esc_html_e( 'Version', 'platform-core' ); ?></th>
+					<th><?php esc_html_e( 'Requires Core', 'platform-core' ); ?></th>
 					<th><?php esc_html_e( 'Status', 'platform-core' ); ?></th>
 					<th><?php esc_html_e( 'Permissions', 'platform-core' ); ?></th>
 				</tr>
@@ -491,6 +516,8 @@ class AdminRenderer {
 					<tr>
 						<td><code><?php echo esc_html( $module['slug'] ); ?></code></td>
 						<td><?php echo esc_html( $module['name'] ); ?></td>
+						<td><?php echo esc_html( $module['version'] ?? '—' ); ?></td>
+						<td><?php echo esc_html( $module['requires_core_version'] ?? '—' ); ?></td>
 						<td><?php echo esc_html( $module['status'] ); ?></td>
 						<td><?php echo esc_html( (string) $module['permission_count'] ); ?></td>
 					</tr>
@@ -594,11 +621,29 @@ class AdminRenderer {
 	 * Admin settings placeholder.
 	 */
 	private function render_settings() {
+		$summary = mpp()->get( \MPP\Panels\DashboardService::class )->get_admin_summary();
 		?>
-		<div class="mpp-card">
-			<p><?php esc_html_e( 'Platform administration settings will be expanded in future phases.', 'platform-core' ); ?></p>
-			<p><?php esc_html_e( 'WordPress administrator sync to platform_admin is disabled by default. Enable with:', 'platform-core' ); ?></p>
-			<pre><code>add_filter( 'mpp_sync_wp_admin_to_platform_admin', '__return_true' );</code></pre>
+		<div class="mpp-settings-sections">
+			<section class="mpp-card">
+				<h2><?php esc_html_e( 'Platform', 'platform-core' ); ?></h2>
+				<dl class="mpp-profile-list">
+					<dt><?php esc_html_e( 'Platform Core Version', 'platform-core' ); ?></dt>
+					<dd><?php echo esc_html( $summary['platform_version'] ); ?></dd>
+					<dt><?php esc_html_e( 'WordPress Version', 'platform-core' ); ?></dt>
+					<dd><?php echo esc_html( $summary['wordpress_version'] ); ?></dd>
+					<dt><?php esc_html_e( 'Registration', 'platform-core' ); ?></dt>
+					<dd><?php echo $summary['registration_enabled'] ? esc_html__( 'Enabled', 'platform-core' ) : esc_html__( 'Disabled', 'platform-core' ); ?></dd>
+				</dl>
+			</section>
+			<section class="mpp-card">
+				<h2><?php esc_html_e( 'Security', 'platform-core' ); ?></h2>
+				<p><?php esc_html_e( 'WordPress administrator sync to platform_admin is disabled by default.', 'platform-core' ); ?></p>
+				<pre><code>add_filter( 'mpp_sync_wp_admin_to_platform_admin', '__return_true' );</code></pre>
+			</section>
+			<section class="mpp-card">
+				<h2><?php esc_html_e( 'Account', 'platform-core' ); ?></h2>
+				<p><?php esc_html_e( 'Platform administration settings will be expanded in future phases.', 'platform-core' ); ?></p>
+			</section>
 		</div>
 		<?php
 	}

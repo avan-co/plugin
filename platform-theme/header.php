@@ -26,13 +26,18 @@ defined( 'ABSPATH' ) || exit;
 		<?php if ( is_user_logged_in() ) : ?>
 			<div class="mpp-header__actions">
 				<?php platform_render_panel_switcher(); ?>
-				<a href="<?php echo esc_url( home_url( '/profile' ) ); ?>" class="mpp-header__link">
+				<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'profile' ) : home_url( '/profile' ) ); ?>" class="mpp-header__link">
 					<?php echo esc_html( wp_get_current_user()->display_name ); ?>
 				</a>
 				<a href="<?php echo esc_url( function_exists( 'mpp_logout_url' ) ? mpp_logout_url() : wp_logout_url() ); ?>" class="mpp-header__link mpp-header__link--logout">
 					<?php esc_html_e( 'Logout', 'platform-theme' ); ?>
 				</a>
 			</div>
+		<?php else : ?>
+			<nav class="mpp-public-nav" aria-label="<?php esc_attr_e( 'Public navigation', 'platform-theme' ); ?>">
+				<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'login' ) : home_url( '/login' ) ); ?>" class="mpp-header__link"><?php esc_html_e( 'Login', 'platform-theme' ); ?></a>
+				<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'register' ) : home_url( '/register' ) ); ?>" class="mpp-header__link"><?php esc_html_e( 'Register', 'platform-theme' ); ?></a>
+			</nav>
 		<?php endif; ?>
 
 		<button class="mpp-nav-toggle" aria-label="<?php esc_attr_e( 'Toggle navigation', 'platform-theme' ); ?>" aria-expanded="false">

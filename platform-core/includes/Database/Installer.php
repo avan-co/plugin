@@ -51,6 +51,7 @@ class Installer {
 			self::seed_permissions_and_roles();
 			delete_option( 'mpp_permissions_hash' );
 			update_option( Schema::VERSION_OPTION, Schema::DB_VERSION );
+			delete_option( 'mpp_routes_version' );
 		}
 	}
 

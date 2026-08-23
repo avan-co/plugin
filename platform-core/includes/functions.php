@@ -38,6 +38,29 @@ function mpp_get_accessible_panels() {
 }
 
 /**
+ * Build a platform route URL.
+ *
+ * @param string $slug Route slug.
+ * @return string
+ */
+function mpp_route_url( $slug ) {
+	return home_url( '/' . trim( $slug, '/' ) );
+}
+
+/**
+ * Get registered platform routes.
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function mpp_get_registered_routes() {
+	if ( ! function_exists( 'mpp' ) ) {
+		return array();
+	}
+
+	return mpp()->get( \MPP\Core\Router::class )->get_routes();
+}
+
+/**
  * Get current route data.
  *
  * @return array<string, mixed>|null
@@ -115,39 +138,44 @@ function mpp_get_panel_navigation( $panel ) {
 		'user' => array(
 			array(
 				'label'      => __( 'Dashboard', 'platform-core' ),
-				'url'        => home_url( '/app/user' ),
+				'url'        => mpp_route_url( 'app/user' ),
 				'route'      => 'app/user',
 				'permission' => 'core.panel.user.access',
 			),
 			array(
 				'label'      => __( 'Profile', 'platform-core' ),
-				'url'        => home_url( '/profile' ),
+				'url'        => mpp_route_url( 'profile' ),
 				'route'      => 'profile',
 				'permission' => 'core.profile.view',
 			),
 			array(
 				'label'      => __( 'Settings', 'platform-core' ),
-				'url'        => home_url( '/settings' ),
+				'url'        => mpp_route_url( 'settings' ),
 				'route'      => 'settings',
 				'permission' => 'core.settings.view',
+			),
+			array(
+				'label' => __( 'Logout', 'platform-core' ),
+				'url'   => mpp_logout_url(),
+				'route' => '',
 			),
 		),
 		'manager' => array(
 			array(
 				'label'      => __( 'Dashboard', 'platform-core' ),
-				'url'        => home_url( '/app/manager' ),
+				'url'        => mpp_route_url( 'app/manager' ),
 				'route'      => 'app/manager',
 				'permission' => 'core.panel.manager.access',
 			),
 			array(
 				'label'      => __( 'Profile', 'platform-core' ),
-				'url'        => home_url( '/app/manager/profile' ),
+				'url'        => mpp_route_url( 'app/manager/profile' ),
 				'route'      => 'app/manager/profile',
 				'permission' => 'core.profile.view',
 			),
 			array(
 				'label'      => __( 'Settings', 'platform-core' ),
-				'url'        => home_url( '/settings' ),
+				'url'        => mpp_route_url( 'settings' ),
 				'route'      => 'settings',
 				'permission' => 'core.settings.view',
 			),
@@ -183,6 +211,83 @@ function mpp_get_panel_navigation( $panel ) {
 	 * @param string                            $panel    Panel slug.
 	 */
 	return apply_filters( 'mpp_panel_navigation', $filtered, $panel );
+}
+
+/**
+ * Get permission-filtered admin navigation items.
+ *
+ * @return array<int, array<string, string>>
+ */
+function mpp_get_admin_navigation() {
+	$items = array(
+		array(
+			'label'      => __( 'Dashboard', 'platform-core' ),
+			'route'      => 'app/admin',
+			'permission' => 'core.panel.admin.access',
+		),
+		array(
+			'label'      => __( 'Users', 'platform-core' ),
+			'route'      => 'app/admin/users',
+			'permission' => 'core.acl.manage',
+		),
+		array(
+			'label'      => __( 'Roles', 'platform-core' ),
+			'route'      => 'app/admin/roles',
+			'permission' => 'core.acl.manage',
+		),
+		array(
+			'label'      => __( 'Permissions', 'platform-core' ),
+			'route'      => 'app/admin/permissions',
+			'permission' => 'core.acl.manage',
+		),
+		array(
+			'label'      => __( 'Modules', 'platform-core' ),
+			'route'      => 'app/admin/modules',
+			'permission' => 'core.acl.manage',
+		),
+		array(
+			'label'      => __( 'ACL', 'platform-core' ),
+			'route'      => 'app/admin/acl',
+			'permission' => 'core.acl.manage',
+		),
+		array(
+			'label'      => __( 'Settings', 'platform-core' ),
+			'route'      => 'app/admin/settings',
+			'permission' => 'core.acl.manage',
+		),
+	);
+
+	$filtered = array();
+
+	foreach ( $items as $item ) {
+		if ( ! empty( $item['permission'] ) && ! mpp_can( $item['permission'] ) ) {
+			continue;
+		}
+
+		$item['url'] = mpp_route_url( $item['route'] );
+		$filtered[]  = $item;
+	}
+
+	return apply_filters( 'mpp_admin_navigation', $filtered );
+}
+
+/**
+ * Get recent activity for the current user.
+ *
+ * @param int $user_id User ID.
+ * @return array<int, array<string, mixed>>
+ */
+function mpp_get_user_recent_activity( $user_id = 0 ) {
+	return mpp()->get( \MPP\Panels\DashboardService::class )->get_user_recent_activity( $user_id );
+}
+
+/**
+ * Get admin dashboard summary.
+ *
+ * @return array<string, mixed>
+ */
+function mpp_get_admin_summary() {
+	return mpp()->get( \MPP\Panels\DashboardService::class )->get_admin_summary();
 }
 
 /**

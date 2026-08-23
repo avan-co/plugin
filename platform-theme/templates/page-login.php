@@ -25,7 +25,7 @@ get_header();
 			</div>
 		<?php endif; ?>
 
-		<form method="post" action="<?php echo esc_url( home_url( '/login' ) ); ?>" class="mpp-form">
+		<form method="post" action="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'login' ) : home_url( '/login' ) ); ?>" class="mpp-form">
 			<?php wp_nonce_field( 'mpp_login', 'mpp_login_nonce' ); ?>
 			<input type="hidden" name="mpp_login" value="1">
 			<input type="hidden" name="redirect_to" value="<?php echo esc_url( home_url( '/app' ) ); ?>">
@@ -43,6 +43,13 @@ get_header();
 
 			<button type="submit" class="mpp-btn mpp-btn--primary"><?php esc_html_e( 'Log In', 'platform-theme' ); ?></button>
 		</form>
+
+		<?php if ( class_exists( '\MPP\Auth\RegistrationHandler' ) && \MPP\Auth\RegistrationHandler::is_enabled() ) : ?>
+			<p class="mpp-form-footer">
+				<?php esc_html_e( 'Need an account?', 'platform-theme' ); ?>
+				<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'register' ) : home_url( '/register' ) ); ?>"><?php esc_html_e( 'Register', 'platform-theme' ); ?></a>
+			</p>
+		<?php endif; ?>
 	</div>
 </main>
 

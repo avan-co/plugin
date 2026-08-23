@@ -8,6 +8,10 @@
 namespace MPP\Panels;
 
 use MPP\ACL\AclEngine;
+use MPP\ACL\RoleManager;
+use MPP\Modules\ModuleManager;
+use MPP\Services\AuditLogService;
+use MPP\Services\ModuleService;
 use MPP\Services\UserRoleService;
 
 defined( 'ABSPATH' ) || exit;
@@ -27,9 +31,27 @@ class DashboardService {
 	 */
 	private $user_roles;
 
-	public function __construct( AclEngine $acl, UserRoleService $user_roles ) {
-		$this->acl        = $acl;
-		$this->user_roles = $user_roles;
+	/**
+	 * @var AuditLogService
+	 */
+	private $audit;
+
+	/**
+	 * @var ModuleService
+	 */
+	private $modules;
+
+	/**
+	 * @var RoleManager
+	 */
+	private $role_manager;
+
+	public function __construct( AclEngine $acl, UserRoleService $user_roles, AuditLogService $audit, ModuleService $modules, RoleManager $role_manager ) {
+		$this->acl          = $acl;
+		$this->user_roles   = $user_roles;
+		$this->audit        = $audit;
+		$this->modules      = $modules;
+		$this->role_manager = $role_manager;
 	}
 
 	/**
@@ -71,5 +93,47 @@ class DashboardService {
 		 * @param int                  $user_id Manager user ID.
 		 */
 		return apply_filters( 'mpp_manager_dashboard_stats', $stats, $user_id );
+	}
+
+	/**
+	 * Get recent activity for a user.
+	 *
+	 * @param int $user_id User ID.
+	 * @param int $limit   Entry limit.
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function get_user_recent_activity( $user_id = 0, $limit = 5 ) {
+		$user_id = $user_id ? (int) $user_id : get_current_user_id();
+
+		if ( ! $user_id ) {
+			return array();
+		}
+
+		return $this->audit->query(
+			array(
+				'user_id' => $user_id,
+				'limit'   => $limit,
+				'offset'  => 0,
+			)
+		);
+	}
+
+	/**
+	 * Get admin dashboard summary.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function get_admin_summary() {
+		$roles   = $this->role_manager->all();
+		$modules = $this->modules->list_modules();
+
+		return array(
+			'platform_version'     => defined( 'MPP_VERSION' ) ? MPP_VERSION : '',
+			'wordpress_version'      => get_bloginfo( 'version' ),
+			'role_count'             => count( $roles ),
+			'module_count'           => count( $modules ),
+			'recent_audit'           => $this->audit->query( array( 'limit' => 5 ) ),
+			'registration_enabled'   => \MPP\Auth\RegistrationHandler::is_enabled(),
+		);
 	}
 }

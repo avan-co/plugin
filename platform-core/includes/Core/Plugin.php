@@ -25,6 +25,7 @@ use MPP\API\ScopesController;
 use MPP\API\UsersController;
 use MPP\Auth\AccessGuard;
 use MPP\Auth\AuthIntegration;
+use MPP\Auth\RegistrationHandler;
 use MPP\Database\Installer;
 use MPP\Modules\ModuleManager;
 use MPP\Panels\DashboardService;
@@ -105,10 +106,12 @@ class Plugin {
 		$module_manager->register_module_routes( $router );
 		AdminRoutes::register( $router );
 		$router->register();
+		$this->maybe_flush_rewrite_rules();
 
 		$this->container->get( FormHandler::class )->register();
 		$this->container->get( AccountFormHandler::class )->register();
 		$this->container->get( AuthIntegration::class )->register();
+		$this->container->get( RegistrationHandler::class )->register();
 		$this->container->get( AccessGuard::class )->register();
 		$this->container->get( RolesController::class )->register();
 		$this->container->get( PermissionsController::class )->register();
@@ -159,7 +162,10 @@ class Plugin {
 		$this->container->set( DashboardService::class, function ( Container $c ) {
 			return new DashboardService(
 				$c->get( AclEngine::class ),
-				$c->get( UserRoleService::class )
+				$c->get( UserRoleService::class ),
+				$c->get( AuditLogService::class ),
+				$c->get( ModuleService::class ),
+				$c->get( RoleManager::class )
 			);
 		} );
 
@@ -223,6 +229,13 @@ class Plugin {
 			return new AuthIntegration( $c->get( AclEngine::class ) );
 		} );
 
+		$this->container->set( RegistrationHandler::class, function ( Container $c ) {
+			return new RegistrationHandler(
+				$c->get( UserRoleService::class ),
+				$c->get( AuditLogService::class )
+			);
+		} );
+
 		$this->container->set( AccessGuard::class, function ( Container $c ) {
 			return new AccessGuard( $c->get( AclEngine::class ) );
 		} );
@@ -283,5 +296,19 @@ class Plugin {
 	 */
 	public function acl() {
 		return $this->get( AclEngine::class );
+	}
+
+	/**
+	 * Flush rewrite rules when plugin routes version changes.
+	 */
+	private function maybe_flush_rewrite_rules() {
+		$stored = get_option( 'mpp_routes_version', '' );
+
+		if ( $stored === MPP_VERSION ) {
+			return;
+		}
+
+		flush_rewrite_rules( false );
+		update_option( 'mpp_routes_version', MPP_VERSION, false );
 	}
 }

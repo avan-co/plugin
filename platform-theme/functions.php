@@ -51,6 +51,15 @@ function platform_theme_enqueue_assets() {
 		true
 	);
 
+	if ( is_front_page() ) {
+		wp_enqueue_style(
+			'platform-theme-home',
+			get_template_directory_uri() . '/assets/css/home.css',
+			array( 'platform-theme-main' ),
+			wp_get_theme()->get( 'Version' )
+		);
+	}
+
 	if ( function_exists( 'mpp_get_current_route' ) ) {
 		$route = mpp_get_current_route();
 		if ( $route && 0 === strpos( $route['slug'], 'app/admin' ) ) {
@@ -64,6 +73,21 @@ function platform_theme_enqueue_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'platform_theme_enqueue_assets' );
+
+/**
+ * Add body classes for platform pages.
+ *
+ * @param array<int, string> $classes Body classes.
+ * @return array<int, string>
+ */
+function platform_theme_body_classes( $classes ) {
+	if ( is_rtl() ) {
+		$classes[] = 'mpp-rtl';
+	}
+
+	return $classes;
+}
+add_filter( 'body_class', 'platform_theme_body_classes' );
 
 /**
  * Get platform page title from current route.
@@ -111,7 +135,7 @@ function platform_render_panel_switcher() {
 
 		printf(
 			'<li><a href="%s">%s</a></li>',
-			esc_url( home_url( '/app/' . $panel ) ),
+			esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app/' . $panel ) : home_url( '/app/' . $panel ) ),
 			esc_html( $labels[ $panel ] )
 		);
 	}
