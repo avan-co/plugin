@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 
 <header class="mpp-header">
 	<div class="mpp-header__inner">
-		<a href="<?php echo esc_url( home_url( '/app' ) ); ?>" class="mpp-logo">
+		<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app' ) : home_url( '/app' ) ); ?>" class="mpp-logo">
 			<?php bloginfo( 'name' ); ?>
 		</a>
 

@@ -7,6 +7,7 @@
 
 namespace MPP\Auth;
 
+use MPP\Database\Installer;
 use MPP\Services\AuditLogService;
 use MPP\Services\UserRoleService;
 
@@ -97,6 +98,13 @@ class RegistrationHandler {
 			return;
 		}
 
+		if ( strlen( $password ) < 8 ) {
+			$GLOBALS['mpp_register_error'] = __( 'Password must be at least 8 characters.', 'platform-core' );
+			return;
+		}
+
+		Installer::ensure_defaults();
+
 		$user_id = wp_create_user( $username, $password, $email );
 
 		if ( is_wp_error( $user_id ) ) {
@@ -105,6 +113,13 @@ class RegistrationHandler {
 		}
 
 		$this->user_roles->assign_role_by_slug( (int) $user_id, 'platform_user' );
+
+		if ( empty( $this->user_roles->get_roles( (int) $user_id ) ) ) {
+			require_once ABSPATH . 'wp-admin/includes/user.php';
+			wp_delete_user( (int) $user_id );
+			$GLOBALS['mpp_register_error'] = __( 'Registration could not be completed. Please contact the site administrator.', 'platform-core' );
+			return;
+		}
 
 		$this->audit->log(
 			'user.registered',

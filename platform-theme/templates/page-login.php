@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( is_user_logged_in() ) {
-	wp_safe_redirect( home_url( '/app' ) );
+	wp_safe_redirect( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app' ) : home_url( '/app' ) );
 	exit;
 }
 
@@ -28,7 +28,7 @@ get_header();
 		<form method="post" action="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'login' ) : home_url( '/login' ) ); ?>" class="mpp-form">
 			<?php wp_nonce_field( 'mpp_login', 'mpp_login_nonce' ); ?>
 			<input type="hidden" name="mpp_login" value="1">
-			<input type="hidden" name="redirect_to" value="<?php echo esc_url( home_url( '/app' ) ); ?>">
+			<input type="hidden" name="redirect_to" value="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app' ) : home_url( '/app' ) ); ?>">
 
 			<label for="log"><?php esc_html_e( 'Username or Email', 'platform-theme' ); ?></label>
 			<input type="text" name="log" id="log" required autocomplete="username">

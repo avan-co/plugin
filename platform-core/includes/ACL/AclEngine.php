@@ -220,6 +220,10 @@ class AclEngine {
 	 * @return bool
 	 */
 	private function evaluate( $user_id, $permission, array $context ) {
+		if ( $this->has_effective_platform_admin( $user_id, $permission ) ) {
+			return true;
+		}
+
 		$perm_row = $this->registry->find_by_key( $permission );
 
 		if ( ! $perm_row ) {
@@ -255,5 +259,29 @@ class AclEngine {
 		}
 
 		return false;
+	}
+
+	/**
+	 * WordPress administrators receive effective platform_admin access for core permissions.
+	 *
+	 * @param int    $user_id    User ID.
+	 * @param string $permission Permission key.
+	 * @return bool
+	 */
+	private function has_effective_platform_admin( $user_id, $permission ) {
+		if ( 0 !== strpos( $permission, 'core.' ) ) {
+			return false;
+		}
+
+		$effective = function_exists( 'user_can' ) && user_can( (int) $user_id, 'manage_options' );
+
+		/**
+		 * Filter effective platform admin access for WordPress administrators.
+		 *
+		 * @param bool   $effective  Whether the user has effective platform admin access.
+		 * @param int    $user_id    User ID.
+		 * @param string $permission Permission key.
+		 */
+		return (bool) apply_filters( 'mpp_effective_platform_admin', $effective, $user_id, $permission );
 	}
 }

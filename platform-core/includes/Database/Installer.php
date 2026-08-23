@@ -108,6 +108,24 @@ class Installer {
 	}
 
 	/**
+	 * Ensure default scopes, permissions, and platform roles exist.
+	 */
+	public static function ensure_defaults() {
+		$roles = new RoleManager();
+
+		if ( ! $roles->find_by_slug( 'platform_user' ) || ! $roles->find_by_slug( 'platform_manager' ) || ! $roles->find_by_slug( 'platform_admin' ) ) {
+			self::seed_scopes();
+			self::seed_permissions_and_roles();
+			return;
+		}
+
+		$registry = new PermissionRegistry();
+		$manager  = new ModuleManager( $registry );
+		$manager->register_core_module();
+		$registry->sync_if_needed();
+	}
+
+	/**
 	 * Seed core permissions and default roles.
 	 */
 	private static function seed_permissions_and_roles() {

@@ -150,9 +150,11 @@ class AdminRenderer {
 			<div class="mpp-stat-card"><span class="mpp-stat-card__label"><?php esc_html_e( 'Audit Entries', 'platform-core' ); ?></span><span class="mpp-stat-card__value"><?php echo esc_html( (string) $audit_count ); ?></span></div>
 		</div>
 		<div class="mpp-admin-links">
-			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/users' ) ); ?>"><?php esc_html_e( 'Manage Users', 'platform-core' ); ?></a>
-			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/roles' ) ); ?>"><?php esc_html_e( 'Manage Roles', 'platform-core' ); ?></a>
-			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/acl' ) ); ?>"><?php esc_html_e( 'ACL Overview', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/users' ) ); ?>"><?php esc_html_e( 'Users', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/roles' ) ); ?>"><?php esc_html_e( 'Roles', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/permissions' ) ); ?>"><?php esc_html_e( 'Permissions', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/modules' ) ); ?>"><?php esc_html_e( 'Modules', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/acl' ) ); ?>"><?php esc_html_e( 'ACL', 'platform-core' ); ?></a>
 			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/settings' ) ); ?>"><?php esc_html_e( 'Settings', 'platform-core' ); ?></a>
 		</div>
 		<?php if ( ! empty( $summary['recent_audit'] ) ) : ?>
@@ -631,18 +633,24 @@ class AdminRenderer {
 					<dd><?php echo esc_html( $summary['platform_version'] ); ?></dd>
 					<dt><?php esc_html_e( 'WordPress Version', 'platform-core' ); ?></dt>
 					<dd><?php echo esc_html( $summary['wordpress_version'] ); ?></dd>
+					<dt><?php esc_html_e( 'Database Schema', 'platform-core' ); ?></dt>
+					<dd><?php echo esc_html( $summary['database_version'] ?: __( 'Not installed', 'platform-core' ) ); ?></dd>
+					<dt><?php esc_html_e( 'Routing Mode', 'platform-core' ); ?></dt>
+					<dd><?php echo esc_html( $summary['permalink_mode'] ); ?></dd>
 					<dt><?php esc_html_e( 'Registration', 'platform-core' ); ?></dt>
 					<dd><?php echo $summary['registration_enabled'] ? esc_html__( 'Enabled', 'platform-core' ) : esc_html__( 'Disabled', 'platform-core' ); ?></dd>
 				</dl>
 			</section>
 			<section class="mpp-card">
-				<h2><?php esc_html_e( 'Security', 'platform-core' ); ?></h2>
-				<p><?php esc_html_e( 'WordPress administrator sync to platform_admin is disabled by default.', 'platform-core' ); ?></p>
-				<pre><code>add_filter( 'mpp_sync_wp_admin_to_platform_admin', '__return_true' );</code></pre>
+				<h2><?php esc_html_e( 'Account', 'platform-core' ); ?></h2>
+				<dl class="mpp-profile-list">
+					<dt><?php esc_html_e( 'Logged in as', 'platform-core' ); ?></dt>
+					<dd><?php echo esc_html( $summary['current_user'] ?: __( 'Guest', 'platform-core' ) ); ?></dd>
+				</dl>
 			</section>
 			<section class="mpp-card">
-				<h2><?php esc_html_e( 'Account', 'platform-core' ); ?></h2>
-				<p><?php esc_html_e( 'Platform administration settings will be expanded in future phases.', 'platform-core' ); ?></p>
+				<h2><?php esc_html_e( 'Bootstrap Access', 'platform-core' ); ?></h2>
+				<p><?php esc_html_e( 'WordPress administrators with manage_options receive effective platform_admin access for all core permissions without changing their WordPress role.', 'platform-core' ); ?></p>
 			</section>
 		</div>
 		<?php
