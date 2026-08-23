@@ -62,19 +62,26 @@ class UsersController extends RestController {
 	}
 
 	public function get_items( $request ) {
-		$search = $request->get_param( 'search' );
-		$page   = max( 1, (int) $request->get_param( 'page' ) );
+		$search   = $request->get_param( 'search' );
+		$page     = max( 1, (int) $request->get_param( 'page' ) );
 		$per_page = min( 100, max( 1, (int) $request->get_param( 'per_page' ) ?: 20 ) );
+		$search   = $search ? sanitize_text_field( $search ) : '';
 
 		$users = $this->users->list_users(
 			array(
 				'number' => $per_page,
 				'offset' => ( $page - 1 ) * $per_page,
-				'search' => $search ? sanitize_text_field( $search ) : '',
+				'search' => $search,
 			)
 		);
 
-		return rest_ensure_response( $users );
+		$total = $this->users->count_users( array( 'search' => $search ) );
+
+		$response = rest_ensure_response( $users );
+		$response->header( 'X-WP-Total', (string) $total );
+		$response->header( 'X-WP-TotalPages', (string) (int) ceil( $total / $per_page ) );
+
+		return $response;
 	}
 
 	public function get_item( $request ) {

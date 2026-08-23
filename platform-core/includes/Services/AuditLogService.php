@@ -61,17 +61,69 @@ class AuditLogService {
 	public function query( array $args = array() ) {
 		global $wpdb;
 
+		$args   = $this->normalize_args( $args );
+		$table  = Schema::table( 'audit_log' );
+		$built  = $this->build_where( $args );
+		$values = $built['values'];
+		$values[] = (int) $args['limit'];
+		$values[] = (int) $args['offset'];
+
+		$sql = "SELECT * FROM {$table} WHERE {$built['where']} ORDER BY created_at DESC LIMIT %d OFFSET %d";
+		$sql = $wpdb->prepare( $sql, $values );
+
+		return $wpdb->get_results( $sql, ARRAY_A );
+	}
+
+	/**
+	 * Count audit log entries.
+	 *
+	 * @param array<string, mixed> $args Filter arguments.
+	 * @return int
+	 */
+	public function count( array $args = array() ) {
+		global $wpdb;
+
+		$args  = $this->normalize_args( $args );
+		$table = Schema::table( 'audit_log' );
+		$built = $this->build_where( $args );
+
+		$sql = "SELECT COUNT(*) FROM {$table} WHERE {$built['where']}";
+
+		if ( ! empty( $built['values'] ) ) {
+			$sql = $wpdb->prepare( $sql, $built['values'] );
+		}
+
+		return (int) $wpdb->get_var( $sql );
+	}
+
+	/**
+	 * Normalize query arguments.
+	 *
+	 * @param array<string, mixed> $args Raw args.
+	 * @return array<string, mixed>
+	 */
+	private function normalize_args( array $args ) {
 		$defaults = array(
 			'limit'       => 50,
 			'offset'      => 0,
 			'action'      => '',
 			'object_type' => '',
 			'user_id'     => 0,
+			'date_from'   => '',
+			'date_to'     => '',
 		);
 
-		$args  = wp_parse_args( $args, $defaults );
-		$table = Schema::table( 'audit_log' );
-		$where = array( '1=1' );
+		return wp_parse_args( $args, $defaults );
+	}
+
+	/**
+	 * Build WHERE clause for queries.
+	 *
+	 * @param array<string, mixed> $args Normalized args.
+	 * @return array{where: string, values: array<int, mixed>}
+	 */
+	private function build_where( array $args ) {
+		$where  = array( '1=1' );
 		$values = array();
 
 		if ( ! empty( $args['action'] ) ) {
@@ -89,27 +141,20 @@ class AuditLogService {
 			$values[] = (int) $args['user_id'];
 		}
 
-		$values[] = (int) $args['limit'];
-		$values[] = (int) $args['offset'];
-
-		$sql = "SELECT * FROM {$table} WHERE " . implode( ' AND ', $where ) . ' ORDER BY created_at DESC LIMIT %d OFFSET %d';
-
-		if ( ! empty( $values ) ) {
-			$sql = $wpdb->prepare( $sql, $values );
+		if ( ! empty( $args['date_from'] ) ) {
+			$where[]  = 'created_at >= %s';
+			$values[] = sanitize_text_field( $args['date_from'] ) . ' 00:00:00';
 		}
 
-		return $wpdb->get_results( $sql, ARRAY_A );
-	}
+		if ( ! empty( $args['date_to'] ) ) {
+			$where[]  = 'created_at <= %s';
+			$values[] = sanitize_text_field( $args['date_to'] ) . ' 23:59:59';
+		}
 
-	/**
-	 * Count audit log entries.
-	 *
-	 * @return int
-	 */
-	public function count() {
-		global $wpdb;
-
-		return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . Schema::table( 'audit_log' ) );
+		return array(
+			'where'  => implode( ' AND ', $where ),
+			'values' => $values,
+		);
 	}
 
 	/**

@@ -140,6 +140,36 @@
 	min-width: 180px;
 }
 
+.mpp-admin-filters {
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+}
+
+.mpp-admin-filters label {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	font-size: 0.8125rem;
+}
+
+.mpp-pagination {
+	margin-top: 1rem;
+}
+
+.mpp-pagination__list {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.mpp-pagination__info {
+	color: var(--mpp-color-text-muted);
+	font-size: 0.875rem;
+}
+
 @media (max-width: 768px) {
 	.mpp-admin-table {
 		display: block;

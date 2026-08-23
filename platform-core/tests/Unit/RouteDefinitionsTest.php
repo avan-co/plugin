@@ -35,6 +35,9 @@ class RouteDefinitionsTest extends TestCase {
 			$this->assertSame( $permission, $routes[ $slug ]['permission'] );
 			$this->assertTrue( $routes[ $slug ]['auth'] );
 		}
+
+		$this->assertArrayHasKey( 'app/manager/profile', $routes );
+		$this->assertSame( 'core.profile.view', $routes['app/manager/profile']['permission'] );
 	}
 
 	public function test_public_routes_do_not_require_auth(): void {

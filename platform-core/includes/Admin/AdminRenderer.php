@@ -7,7 +7,6 @@
 
 namespace MPP\Admin;
 
-use MPP\ACL\AclEngine;
 use MPP\ACL\PermissionRegistry;
 use MPP\ACL\RoleManager;
 use MPP\Services\AuditLogService;
@@ -59,11 +58,6 @@ class AdminRenderer {
 	private $audit;
 
 	/**
-	 * @var AclEngine
-	 */
-	private $acl;
-
-	/**
 	 * Constructor.
 	 */
 	public function __construct(
@@ -73,8 +67,7 @@ class AdminRenderer {
 		PermissionRegistry $registry,
 		ModuleService $modules,
 		ScopeService $scopes,
-		AuditLogService $audit,
-		AclEngine $acl
+		AuditLogService $audit
 	) {
 		$this->users       = $users;
 		$this->roles       = $roles;
@@ -83,7 +76,6 @@ class AdminRenderer {
 		$this->modules     = $modules;
 		$this->scopes      = $scopes;
 		$this->audit       = $audit;
-		$this->acl         = $acl;
 	}
 
 	/**
@@ -185,6 +177,7 @@ class AdminRenderer {
 				'search' => $search,
 			)
 		);
+		$total = $this->users->count_users( array( 'search' => $search ) );
 		?>
 		<form method="get" action="<?php echo esc_url( home_url( '/app/admin/users' ) ); ?>" class="mpp-admin-search">
 			<input type="search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search users...', 'platform-core' ); ?>">
@@ -217,6 +210,13 @@ class AdminRenderer {
 			</tbody>
 		</table>
 		<?php
+		Pagination::render(
+			$paged,
+			$total,
+			$per_page,
+			home_url( '/app/admin/users' ),
+			array( 's' => $search )
+		);
 	}
 
 	/**
@@ -504,7 +504,24 @@ class AdminRenderer {
 	 * ACL overview with audit log.
 	 */
 	private function render_acl() {
-		$entries = $this->audit->query( array( 'limit' => 25 ) );
+		$filters = array(
+			'user_id'     => isset( $_GET['user_id'] ) ? (int) $_GET['user_id'] : 0,
+			'action'      => isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '',
+			'object_type' => isset( $_GET['object_type'] ) ? sanitize_key( wp_unslash( $_GET['object_type'] ) ) : '',
+			'date_from'   => isset( $_GET['date_from'] ) ? sanitize_text_field( wp_unslash( $_GET['date_from'] ) ) : '',
+			'date_to'     => isset( $_GET['date_to'] ) ? sanitize_text_field( wp_unslash( $_GET['date_to'] ) ) : '',
+		);
+		$paged    = isset( $_GET['paged'] ) ? max( 1, (int) $_GET['paged'] ) : 1;
+		$per_page = 25;
+		$query    = array_merge(
+			$filters,
+			array(
+				'limit'  => $per_page,
+				'offset' => ( $paged - 1 ) * $per_page,
+			)
+		);
+		$entries = $this->audit->query( $query );
+		$total   = $this->audit->count( $filters );
 		$scopes  = $this->scopes->all();
 		?>
 		<h3><?php esc_html_e( 'Scope Types', 'platform-core' ); ?></h3>
@@ -515,6 +532,32 @@ class AdminRenderer {
 		</ul>
 
 		<h3><?php esc_html_e( 'Recent Audit Log', 'platform-core' ); ?></h3>
+		<form method="get" action="<?php echo esc_url( home_url( '/app/admin/acl' ) ); ?>" class="mpp-form mpp-form--inline mpp-admin-filters">
+			<label>
+				<?php esc_html_e( 'User ID', 'platform-core' ); ?>
+				<input type="number" name="user_id" min="0" value="<?php echo esc_attr( $filters['user_id'] ? (string) $filters['user_id'] : '' ); ?>">
+			</label>
+			<label>
+				<?php esc_html_e( 'Action', 'platform-core' ); ?>
+				<input type="text" name="action" value="<?php echo esc_attr( $filters['action'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. role.created', 'platform-core' ); ?>">
+			</label>
+			<label>
+				<?php esc_html_e( 'Object Type', 'platform-core' ); ?>
+				<input type="text" name="object_type" value="<?php echo esc_attr( $filters['object_type'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. role', 'platform-core' ); ?>">
+			</label>
+			<label>
+				<?php esc_html_e( 'From', 'platform-core' ); ?>
+				<input type="date" name="date_from" value="<?php echo esc_attr( $filters['date_from'] ); ?>">
+			</label>
+			<label>
+				<?php esc_html_e( 'To', 'platform-core' ); ?>
+				<input type="date" name="date_to" value="<?php echo esc_attr( $filters['date_to'] ); ?>">
+			</label>
+			<button type="submit" class="mpp-btn mpp-btn--secondary"><?php esc_html_e( 'Filter', 'platform-core' ); ?></button>
+			<?php if ( array_filter( $filters ) ) : ?>
+				<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( home_url( '/app/admin/acl' ) ); ?>"><?php esc_html_e( 'Clear', 'platform-core' ); ?></a>
+			<?php endif; ?>
+		</form>
 		<table class="mpp-admin-table">
 			<thead>
 				<tr>
@@ -538,6 +581,13 @@ class AdminRenderer {
 			</tbody>
 		</table>
 		<?php
+		Pagination::render(
+			$paged,
+			$total,
+			$per_page,
+			home_url( '/app/admin/acl' ),
+			array_filter( $filters )
+		);
 	}
 
 	/**

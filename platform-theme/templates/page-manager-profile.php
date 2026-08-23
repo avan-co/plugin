@@ -1,6 +1,6 @@
 <?php
 /**
- * Profile page template.
+ * Manager profile page template.
  *
  * @package PlatformTheme
  */
@@ -9,9 +9,8 @@ defined( 'ABSPATH' ) || exit;
 
 require_once get_template_directory() . '/inc/account-layout.php';
 
-$user      = wp_get_current_user();
-$can_edit  = function_exists( 'mpp_can' ) && mpp_can( 'core.profile.edit' );
-$summary   = function_exists( 'mpp_get_user_summary' ) ? mpp_get_user_summary() : array();
+$user     = wp_get_current_user();
+$can_edit = function_exists( 'mpp_can' ) && mpp_can( 'core.profile.edit' );
 
 ob_start();
 ?>
@@ -20,7 +19,7 @@ ob_start();
 		<form method="post" class="mpp-form">
 			<?php echo function_exists( 'mpp_account_nonce_field' ) ? mpp_account_nonce_field() : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<input type="hidden" name="mpp_account_action" value="update_profile">
-			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( home_url( '/profile' ) ); ?>">
+			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( home_url( '/app/manager/profile' ) ); ?>">
 
 			<label for="display_name"><?php esc_html_e( 'Display Name', 'platform-theme' ); ?></label>
 			<input type="text" id="display_name" name="display_name" value="<?php echo esc_attr( $user->display_name ); ?>" required>
@@ -45,15 +44,8 @@ ob_start();
 			<dd><?php echo esc_html( $user->user_login ); ?></dd>
 		</dl>
 	<?php endif; ?>
-
-	<?php if ( ! empty( $summary['panels'] ) ) : ?>
-		<dl class="mpp-profile-list">
-			<dt><?php esc_html_e( 'Accessible Panels', 'platform-theme' ); ?></dt>
-			<dd><?php echo esc_html( implode( ', ', $summary['panels'] ) ); ?></dd>
-		</dl>
-	<?php endif; ?>
 </div>
 <?php
 $content = ob_get_clean();
 
-platform_render_account_page( 'user', __( 'Profile', 'platform-theme' ), $content );
+platform_render_account_page( 'manager', __( 'Manager Profile', 'platform-theme' ), $content );

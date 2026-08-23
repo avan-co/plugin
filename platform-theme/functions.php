@@ -7,6 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+require_once get_template_directory() . '/inc/navigation-helpers.php';
+
 /**
  * Theme setup.
  */

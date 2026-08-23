@@ -7,24 +7,34 @@
 
 defined( 'ABSPATH' ) || exit;
 
-get_header();
+require_once get_template_directory() . '/inc/account-layout.php';
+
+$user_id        = get_current_user_id();
+$can_edit       = function_exists( 'mpp_can' ) && mpp_can( 'core.settings.edit' );
+$notifications  = (bool) get_user_meta( $user_id, 'mpp_notifications', true );
+
+ob_start();
 ?>
+<div class="mpp-card">
+	<?php if ( $can_edit ) : ?>
+		<form method="post" class="mpp-form">
+			<?php echo function_exists( 'mpp_account_nonce_field' ) ? mpp_account_nonce_field() : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<input type="hidden" name="mpp_account_action" value="update_settings">
+			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( home_url( '/settings' ) ); ?>">
 
-<main class="mpp-main">
-	<div class="mpp-content mpp-content--narrow">
-		<h1><?php esc_html_e( 'Settings', 'platform-theme' ); ?></h1>
+			<label class="mpp-checkbox">
+				<input type="checkbox" name="mpp_notifications" value="1" <?php checked( $notifications ); ?>>
+				<?php esc_html_e( 'Enable email notifications', 'platform-theme' ); ?>
+			</label>
 
-		<div class="mpp-card">
-			<p><?php esc_html_e( 'User settings will be available in a future phase. This page confirms routing and permission checks are working.', 'platform-theme' ); ?></p>
-
-			<?php if ( function_exists( 'mpp_can' ) && mpp_can( 'core.settings.edit' ) ) : ?>
-				<p class="mpp-badge mpp-badge--success"><?php esc_html_e( 'You have edit permissions.', 'platform-theme' ); ?></p>
-			<?php else : ?>
-				<p class="mpp-badge"><?php esc_html_e( 'View only.', 'platform-theme' ); ?></p>
-			<?php endif; ?>
-		</div>
-	</div>
-</main>
-
+			<button type="submit" class="mpp-btn mpp-btn--primary"><?php esc_html_e( 'Save Settings', 'platform-theme' ); ?></button>
+		</form>
+	<?php else : ?>
+		<p><?php esc_html_e( 'You have view-only access to settings.', 'platform-theme' ); ?></p>
+		<p class="mpp-badge"><?php esc_html_e( 'Notifications:', 'platform-theme' ); ?> <?php echo $notifications ? esc_html__( 'Enabled', 'platform-theme' ) : esc_html__( 'Disabled', 'platform-theme' ); ?></p>
+	<?php endif; ?>
+</div>
 <?php
-get_footer();
+$content = ob_get_clean();
+
+platform_render_account_page( 'user', __( 'Settings', 'platform-theme' ), $content );

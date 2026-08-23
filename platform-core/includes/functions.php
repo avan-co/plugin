@@ -81,3 +81,137 @@ function mpp_render_admin_page( $page ) {
 function mpp_can_manage_acl() {
 	return mpp_can( 'core.acl.manage' );
 }
+
+/**
+ * Get user dashboard summary data.
+ *
+ * @param int $user_id User ID.
+ * @return array<string, mixed>
+ */
+function mpp_get_user_summary( $user_id = 0 ) {
+	return mpp()->get( \MPP\Panels\DashboardService::class )->get_user_summary( $user_id );
+}
+
+/**
+ * Get manager dashboard stats.
+ *
+ * @param int $user_id User ID.
+ * @return array<string, mixed>
+ */
+function mpp_get_manager_stats( $user_id = 0 ) {
+	return mpp()->get( \MPP\Panels\DashboardService::class )->get_manager_stats( $user_id );
+}
+
+/**
+ * Get permission-filtered navigation items for a panel.
+ *
+ * @param string $panel Panel slug (user, manager, admin).
+ * @return array<int, array<string, string>>
+ */
+function mpp_get_panel_navigation( $panel ) {
+	$panel = sanitize_key( $panel );
+
+	$core_items = array(
+		'user' => array(
+			array(
+				'label'      => __( 'Dashboard', 'platform-core' ),
+				'url'        => home_url( '/app/user' ),
+				'route'      => 'app/user',
+				'permission' => 'core.panel.user.access',
+			),
+			array(
+				'label'      => __( 'Profile', 'platform-core' ),
+				'url'        => home_url( '/profile' ),
+				'route'      => 'profile',
+				'permission' => 'core.profile.view',
+			),
+			array(
+				'label'      => __( 'Settings', 'platform-core' ),
+				'url'        => home_url( '/settings' ),
+				'route'      => 'settings',
+				'permission' => 'core.settings.view',
+			),
+		),
+		'manager' => array(
+			array(
+				'label'      => __( 'Dashboard', 'platform-core' ),
+				'url'        => home_url( '/app/manager' ),
+				'route'      => 'app/manager',
+				'permission' => 'core.panel.manager.access',
+			),
+			array(
+				'label'      => __( 'Profile', 'platform-core' ),
+				'url'        => home_url( '/app/manager/profile' ),
+				'route'      => 'app/manager/profile',
+				'permission' => 'core.profile.view',
+			),
+			array(
+				'label'      => __( 'Settings', 'platform-core' ),
+				'url'        => home_url( '/settings' ),
+				'route'      => 'settings',
+				'permission' => 'core.settings.view',
+			),
+		),
+	);
+
+	$items = isset( $core_items[ $panel ] ) ? $core_items[ $panel ] : array();
+
+	if ( 'admin' !== $panel ) {
+		$module_items = mpp()->get( \MPP\Modules\ModuleManager::class )->get_navigation_items();
+		foreach ( $module_items as $item ) {
+			if ( empty( $item['panel'] ) || $item['panel'] !== $panel ) {
+				continue;
+			}
+			$items[] = $item;
+		}
+	}
+
+	$filtered = array();
+
+	foreach ( $items as $item ) {
+		if ( ! empty( $item['permission'] ) && ! mpp_can( $item['permission'] ) ) {
+			continue;
+		}
+
+		$filtered[] = $item;
+	}
+
+	/**
+	 * Filter panel navigation items after permission checks.
+	 *
+	 * @param array<int, array<string, string>> $filtered Items.
+	 * @param string                            $panel    Panel slug.
+	 */
+	return apply_filters( 'mpp_panel_navigation', $filtered, $panel );
+}
+
+/**
+ * Render account flash notice from query string.
+ */
+function mpp_render_account_notice() {
+	if ( empty( $_GET['mpp_notice'] ) ) {
+		return;
+	}
+
+	$type    = sanitize_key( wp_unslash( $_GET['mpp_notice'] ) );
+	$message = isset( $_GET['mpp_message'] ) ? sanitize_text_field( wp_unslash( $_GET['mpp_message'] ) ) : '';
+
+	if ( empty( $message ) ) {
+		return;
+	}
+
+	printf(
+		'<div class="mpp-alert mpp-alert--%s" role="alert">%s</div>',
+		esc_attr( 'success' === $type ? 'success' : 'error' ),
+		esc_html( $message )
+	);
+}
+
+/**
+ * Output account form nonce field.
+ *
+ * @return string
+ */
+function mpp_account_nonce_field() {
+	return \MPP\Account\AccountFormHandler::nonce_field();
+}

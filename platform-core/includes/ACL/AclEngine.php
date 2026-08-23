@@ -36,6 +36,13 @@ class AclEngine {
 	private $scopes;
 
 	/**
+	 * Scope context service.
+	 *
+	 * @var ScopeContextService|null
+	 */
+	private $scope_context;
+
+	/**
 	 * Per-request permission cache.
 	 *
 	 * @var array<string, bool>
@@ -45,14 +52,16 @@ class AclEngine {
 	/**
 	 * Constructor.
 	 *
-	 * @param PermissionRegistry $registry Permission registry.
-	 * @param RoleManager        $roles    Role manager.
-	 * @param ScopeResolver      $scopes   Scope resolver.
+	 * @param PermissionRegistry    $registry      Permission registry.
+	 * @param RoleManager           $roles         Role manager.
+	 * @param ScopeResolver         $scopes        Scope resolver.
+	 * @param ScopeContextService|null $scope_context Scope context service.
 	 */
-	public function __construct( PermissionRegistry $registry, RoleManager $roles, ScopeResolver $scopes ) {
-		$this->registry = $registry;
-		$this->roles    = $roles;
-		$this->scopes   = $scopes;
+	public function __construct( PermissionRegistry $registry, RoleManager $roles, ScopeResolver $scopes, ScopeContextService $scope_context = null ) {
+		$this->registry      = $registry;
+		$this->roles         = $roles;
+		$this->scopes        = $scopes;
+		$this->scope_context = $scope_context;
 	}
 
 	/**
@@ -90,6 +99,10 @@ class AclEngine {
 		if ( null !== $override ) {
 			$this->cache[ $cache_key ] = (bool) $override;
 			return $this->cache[ $cache_key ];
+		}
+
+		if ( $this->scope_context ) {
+			$context = array_merge( $this->scope_context->for_user( $user_id ), $context );
 		}
 
 		$allowed = $this->evaluate( $user_id, $permission, $context );

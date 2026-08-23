@@ -8,7 +8,7 @@
 namespace MPP\Modules\Examples;
 
 use MPP\ACL\PermissionRegistry;
-use MPP\Modules\ModuleInterface;
+use MPP\Modules\AbstractModule;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example module — register via mpp_register_modules hook in production.
  */
-class FinanceModule implements ModuleInterface {
+class FinanceModule extends AbstractModule {
 
 	/**
 	 * Permission registry.

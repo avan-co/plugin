@@ -52,19 +52,33 @@ class AuditLogController extends RestController {
 	}
 
 	public function get_items( $request ) {
-		$limit  = min( 100, max( 1, (int) $request->get_param( 'per_page' ) ?: 50 ) );
-		$offset = max( 0, (int) $request->get_param( 'offset' ) );
+		$page     = max( 1, (int) $request->get_param( 'page' ) );
+		$per_page = min( 100, max( 1, (int) $request->get_param( 'per_page' ) ?: 50 ) );
+
+		$filters = array(
+			'action'      => $request->get_param( 'action' ) ? sanitize_key( $request->get_param( 'action' ) ) : '',
+			'object_type' => $request->get_param( 'object_type' ) ? sanitize_key( $request->get_param( 'object_type' ) ) : '',
+			'user_id'     => (int) $request->get_param( 'user_id' ),
+			'date_from'   => $request->get_param( 'date_from' ) ? sanitize_text_field( $request->get_param( 'date_from' ) ) : '',
+			'date_to'     => $request->get_param( 'date_to' ) ? sanitize_text_field( $request->get_param( 'date_to' ) ) : '',
+		);
 
 		$entries = $this->audit->query(
-			array(
-				'limit'       => $limit,
-				'offset'      => $offset,
-				'action'      => $request->get_param( 'action' ) ? sanitize_key( $request->get_param( 'action' ) ) : '',
-				'object_type' => $request->get_param( 'object_type' ) ? sanitize_key( $request->get_param( 'object_type' ) ) : '',
-				'user_id'     => (int) $request->get_param( 'user_id' ),
+			array_merge(
+				$filters,
+				array(
+					'limit'  => $per_page,
+					'offset' => ( $page - 1 ) * $per_page,
+				)
 			)
 		);
 
-		return rest_ensure_response( $entries );
+		$total = $this->audit->count( $filters );
+
+		$response = rest_ensure_response( $entries );
+		$response->header( 'X-WP-Total', (string) $total );
+		$response->header( 'X-WP-TotalPages', (string) (int) ceil( $total / $per_page ) );
+
+		return $response;
 	}
 }

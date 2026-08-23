@@ -70,3 +70,45 @@ if ( ! function_exists( 'wp_parse_args' ) ) {
 		return array_merge( $defaults, (array) $args );
 	}
 }
+
+if ( ! function_exists( 'esc_html' ) ) {
+	function esc_html( $text ) {
+		return htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' );
+	}
+}
+
+if ( ! function_exists( 'esc_html__' ) ) {
+	function esc_html__( $text, $domain = 'default' ) {
+		unset( $domain );
+		return htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' );
+	}
+}
+
+if ( ! function_exists( 'esc_attr__' ) ) {
+	function esc_attr__( $text, $domain = 'default' ) {
+		unset( $domain );
+		return htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' );
+	}
+}
+
+if ( ! function_exists( 'esc_url' ) ) {
+	function esc_url( $url ) {
+		return $url;
+	}
+}
+
+if ( ! function_exists( 'add_query_arg' ) ) {
+	function add_query_arg( $key, $value = false, $url = false ) {
+		if ( is_array( $key ) ) {
+			$query = $key;
+			$url   = $value;
+		} else {
+			$query = array( $key => $value );
+			$url   = $url ?: '';
+		}
+
+		$separator = strpos( $url, '?' ) === false ? '?' : '&';
+
+		return $url . $separator . http_build_query( $query );
+	}
+}

@@ -264,6 +264,15 @@ class Router {
 		);
 
 		$this->add_route(
+			'app/manager/profile',
+			array(
+				'template'   => 'templates/page-manager-profile.php',
+				'permission' => 'core.profile.view',
+				'title'      => __( 'Manager Profile', 'platform-core' ),
+			)
+		);
+
+		$this->add_route(
 			'profile',
 			array(
 				'template'   => 'templates/page-profile.php',

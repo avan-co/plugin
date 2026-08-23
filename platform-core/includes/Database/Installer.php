@@ -47,6 +47,7 @@ class Installer {
 
 		if ( version_compare( $installed, Schema::DB_VERSION, '<' ) ) {
 			self::create_tables();
+			self::seed_scopes();
 			self::seed_permissions_and_roles();
 			delete_option( 'mpp_permissions_hash' );
 			update_option( Schema::VERSION_OPTION, Schema::DB_VERSION );

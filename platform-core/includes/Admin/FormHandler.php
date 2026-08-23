@@ -100,7 +100,7 @@ class FormHandler {
 		$redirect = add_query_arg(
 			array(
 				'mpp_notice' => $result['notice'] ?? ( $result['success'] ? 'success' : 'error' ),
-				'mpp_message' => rawurlencode( $result['message'] ?? '' ),
+				'mpp_message' => $result['message'] ?? '',
 			),
 			$redirect
 		);

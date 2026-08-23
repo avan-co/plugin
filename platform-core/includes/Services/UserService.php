@@ -48,12 +48,7 @@ class UserService {
 			'fields'  => 'all',
 		);
 
-		$query_args = wp_parse_args( $args, $defaults );
-
-		if ( ! empty( $query_args['search'] ) ) {
-			$query_args['search'] = '*' . $query_args['search'] . '*';
-		}
-
+		$query_args = $this->prepare_query_args( wp_parse_args( $args, $defaults ) );
 		$query = new \WP_User_Query( $query_args );
 		$users = array();
 
@@ -71,9 +66,10 @@ class UserService {
 	 * @return int
 	 */
 	public function count_users( array $args = array() ) {
-		$args['number'] = 1;
-		$args['count_total'] = true;
-		$query = new \WP_User_Query( $args );
+		$query_args = $this->prepare_query_args( $args );
+		$query_args['number']      = 1;
+		$query_args['count_total'] = true;
+		$query = new \WP_User_Query( $query_args );
 		return (int) $query->get_total();
 	}
 
@@ -91,6 +87,20 @@ class UserService {
 		}
 
 		return $this->format_user( $user );
+	}
+
+	/**
+	 * Normalize WP_User_Query arguments.
+	 *
+	 * @param array<string, mixed> $args Query args.
+	 * @return array<string, mixed>
+	 */
+	private function prepare_query_args( array $args ) {
+		if ( ! empty( $args['search'] ) ) {
+			$args['search'] = '*' . $args['search'] . '*';
+		}
+
+		return $args;
 	}
 
 	/**

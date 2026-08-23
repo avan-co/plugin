@@ -10,7 +10,9 @@ namespace MPP\Core;
 use MPP\ACL\AclEngine;
 use MPP\ACL\PermissionRegistry;
 use MPP\ACL\RoleManager;
+use MPP\ACL\ScopeContextService;
 use MPP\ACL\ScopeResolver;
+use MPP\Account\AccountFormHandler;
 use MPP\Admin\AdminRenderer;
 use MPP\Admin\AdminRoutes;
 use MPP\Admin\FormHandler;
@@ -25,6 +27,7 @@ use MPP\Auth\AccessGuard;
 use MPP\Auth\AuthIntegration;
 use MPP\Database\Installer;
 use MPP\Modules\ModuleManager;
+use MPP\Panels\DashboardService;
 use MPP\Services\AuditLogService;
 use MPP\Services\ModuleService;
 use MPP\Services\PermissionService;
@@ -95,13 +98,16 @@ class Plugin {
 
 		Installer::maybe_upgrade();
 
-		$this->container->get( ModuleManager::class )->boot();
+		$module_manager = $this->container->get( ModuleManager::class );
+		$module_manager->boot();
 
 		$router = $this->container->get( Router::class );
+		$module_manager->register_module_routes( $router );
 		AdminRoutes::register( $router );
 		$router->register();
 
 		$this->container->get( FormHandler::class )->register();
+		$this->container->get( AccountFormHandler::class )->register();
 		$this->container->get( AuthIntegration::class )->register();
 		$this->container->get( AccessGuard::class )->register();
 		$this->container->get( RolesController::class )->register();
@@ -127,6 +133,10 @@ class Plugin {
 			return new ScopeResolver();
 		} );
 
+		$this->container->set( ScopeContextService::class, function () {
+			return new ScopeContextService();
+		} );
+
 		$this->container->set( RoleManager::class, function () {
 			return new RoleManager();
 		} );
@@ -139,7 +149,15 @@ class Plugin {
 			return new AclEngine(
 				$c->get( PermissionRegistry::class ),
 				$c->get( RoleManager::class ),
-				$c->get( ScopeResolver::class )
+				$c->get( ScopeResolver::class ),
+				$c->get( ScopeContextService::class )
+			);
+		} );
+
+		$this->container->set( DashboardService::class, function ( Container $c ) {
+			return new DashboardService(
+				$c->get( AclEngine::class ),
+				$c->get( UserRoleService::class )
 			);
 		} );
 
@@ -175,8 +193,14 @@ class Plugin {
 				$c->get( PermissionRegistry::class ),
 				$c->get( ModuleService::class ),
 				$c->get( ScopeService::class ),
-				$c->get( AuditLogService::class ),
-				$c->get( AclEngine::class )
+				$c->get( AuditLogService::class )
+			);
+		} );
+
+		$this->container->set( AccountFormHandler::class, function ( Container $c ) {
+			return new AccountFormHandler(
+				$c->get( AclEngine::class ),
+				$c->get( AuditLogService::class )
 			);
 		} );
 

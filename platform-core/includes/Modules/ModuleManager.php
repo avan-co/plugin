@@ -61,6 +61,57 @@ class ModuleManager {
 	}
 
 	/**
+	 * Register routes from all modules.
+	 *
+	 * @param \MPP\Core\Router $router Router instance.
+	 */
+	public function register_module_routes( $router ) {
+		foreach ( $this->modules as $module ) {
+			$module->register_routes( $router );
+		}
+	}
+
+	/**
+	 * Get merged navigation items from modules.
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	public function get_navigation_items() {
+		$items = array();
+
+		foreach ( $this->modules as $module ) {
+			$items = array_merge( $items, $module->get_navigation_items() );
+		}
+
+		/**
+		 * Filter module navigation items.
+		 *
+		 * @param array<int, array<string, string>> $items Navigation items.
+		 */
+		return apply_filters( 'mpp_module_navigation_items', $items );
+	}
+
+	/**
+	 * Get merged dashboard widgets from modules.
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	public function get_dashboard_widgets() {
+		$widgets = array();
+
+		foreach ( $this->modules as $module ) {
+			$widgets = array_merge( $widgets, $module->get_dashboard_widgets() );
+		}
+
+		/**
+		 * Filter module dashboard widgets.
+		 *
+		 * @param array<int, array<string, string>> $widgets Dashboard widgets.
+		 */
+		return apply_filters( 'mpp_module_dashboard_widgets', $widgets );
+	}
+
+	/**
 	 * Register a module.
 	 *
 	 * @param ModuleInterface $module Module instance.
