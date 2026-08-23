@@ -105,6 +105,13 @@ class ExampleModule extends AbstractModule {
 	/**
 	 * @inheritDoc
 	 */
+	public function boot() {
+		// No runtime hooks required for the example module.
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function deactivate() {
 		// No cleanup required for the example module.
 	}

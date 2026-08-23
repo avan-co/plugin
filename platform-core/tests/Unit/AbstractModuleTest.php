@@ -20,9 +20,6 @@ class AbstractModuleTest extends TestCase {
 
 			public function register_permissions() {
 			}
-
-			public function boot() {
-			}
 		};
 
 		$this->assertInstanceOf( ModuleInterface::class, $module );

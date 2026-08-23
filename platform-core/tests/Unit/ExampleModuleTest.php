@@ -30,6 +30,18 @@ class ExampleModuleTest extends TestCase {
 		$this->assertStringContainsString( 'example.demo.view', $source );
 	}
 
+	public function test_example_module_implements_boot_method(): void {
+		$source = file_get_contents( dirname( __DIR__, 3 ) . '/platform-example/includes/ExampleModule.php' );
+
+		$this->assertStringContainsString( 'public function boot()', $source );
+	}
+
+	public function test_abstract_module_provides_default_boot(): void {
+		$source = file_get_contents( dirname( __DIR__, 2 ) . '/includes/Modules/AbstractModule.php' );
+
+		$this->assertStringContainsString( 'public function boot()', $source );
+	}
+
 	public function test_theme_design_tokens_exist(): void {
 		$tokens = file_get_contents( dirname( __DIR__, 3 ) . '/platform-theme/assets/css/tokens.css' );
 

@@ -68,6 +68,13 @@ abstract class AbstractModule implements ModuleInterface {
 	/**
 	 * @inheritDoc
 	 */
+	public function boot() {
+		// Optional.
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function deactivate() {
 		// Optional.
 	}
