@@ -25,5 +25,22 @@ class RouterDispatchTest extends TestCase {
 
 		$this->assertStringContainsString( 'resolve_route_slug', $source );
 		$this->assertStringContainsString( 'REQUEST_URI', $source );
+		$this->assertStringContainsString( 'prevent_canonical_redirect', $source );
+		$this->assertStringContainsString( 'pre_handle_404', $source );
+		$this->assertStringContainsString( 'add_rewrite_tag', $source );
+	}
+
+	public function test_route_urls_support_plain_permalinks(): void {
+		$source = file_get_contents( dirname( __DIR__, 2 ) . '/includes/functions.php' );
+
+		$this->assertStringContainsString( 'mpp_uses_pretty_permalinks', $source );
+		$this->assertStringContainsString( 'index.php?', $source );
+		$this->assertStringContainsString( 'rawurlencode( $slug )', $source );
+	}
+
+	public function test_rewrite_flush_is_hard_flush(): void {
+		$source = file_get_contents( dirname( __DIR__, 2 ) . '/includes/Core/Plugin.php' );
+
+		$this->assertStringContainsString( 'flush_rewrite_rules( true )', $source );
 	}
 }

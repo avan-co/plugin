@@ -121,8 +121,8 @@ class RegistrationHandler {
 		wp_set_current_user( (int) $user_id );
 		wp_set_auth_cookie( (int) $user_id, false, is_ssl() );
 
-		$redirect = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : home_url( '/app/user' );
-		$redirect = wp_validate_redirect( $redirect, home_url( '/app/user' ) );
+		$redirect = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : mpp_route_url( 'app/user' );
+		$redirect = wp_validate_redirect( $redirect, mpp_route_url( 'app/user' ) );
 
 		wp_safe_redirect( $redirect );
 		exit;

@@ -52,8 +52,8 @@ class AccountFormHandler {
 		}
 
 		$action   = sanitize_key( wp_unslash( $_POST['mpp_account_action'] ) );
-		$redirect = isset( $_POST['mpp_redirect'] ) ? esc_url_raw( wp_unslash( $_POST['mpp_redirect'] ) ) : home_url( '/profile' );
-		$redirect = wp_validate_redirect( $redirect, home_url( '/profile' ) );
+		$redirect = isset( $_POST['mpp_redirect'] ) ? esc_url_raw( wp_unslash( $_POST['mpp_redirect'] ) ) : mpp_route_url( 'profile' );
+		$redirect = wp_validate_redirect( $redirect, mpp_route_url( 'profile' ) );
 		$result   = $this->dispatch( $action );
 
 		wp_safe_redirect(

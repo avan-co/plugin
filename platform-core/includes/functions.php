@@ -38,13 +38,38 @@ function mpp_get_accessible_panels() {
 }
 
 /**
+ * Whether WordPress pretty permalinks are enabled.
+ *
+ * @return bool
+ */
+function mpp_uses_pretty_permalinks() {
+	global $wp_rewrite;
+
+	if ( $wp_rewrite instanceof \WP_Rewrite ) {
+		return (bool) $wp_rewrite->using_permalinks();
+	}
+
+	return (bool) get_option( 'permalink_structure' );
+}
+
+/**
  * Build a platform route URL.
  *
  * @param string $slug Route slug.
  * @return string
  */
 function mpp_route_url( $slug ) {
-	return home_url( '/' . trim( $slug, '/' ) );
+	$slug = trim( (string) $slug, '/' );
+
+	if ( '' === $slug ) {
+		return home_url( '/' );
+	}
+
+	if ( mpp_uses_pretty_permalinks() ) {
+		return home_url( '/' . $slug );
+	}
+
+	return home_url( 'index.php?' . \MPP\Core\Router::QUERY_VAR . '=' . rawurlencode( $slug ) );
 }
 
 /**
