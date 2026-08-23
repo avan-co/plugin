@@ -17,7 +17,7 @@ class Schema {
 	/**
 	 * Database version for migrations.
 	 */
-	const DB_VERSION = '1.0.1';
+	const DB_VERSION = '1.2.0';
 
 	/**
 	 * Option key for stored DB version.
@@ -35,6 +35,7 @@ class Schema {
 		'role_permissions'  => 'platform_role_permissions',
 		'user_roles'        => 'platform_user_roles',
 		'scopes'            => 'platform_scopes',
+		'audit_log'         => 'platform_audit_log',
 	);
 
 	/**
@@ -59,11 +60,12 @@ class Schema {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$roles = self::table( 'roles' );
-		$permissions = self::table( 'permissions' );
+		$roles            = self::table( 'roles' );
+		$permissions      = self::table( 'permissions' );
 		$role_permissions = self::table( 'role_permissions' );
-		$user_roles = self::table( 'user_roles' );
-		$scopes = self::table( 'scopes' );
+		$user_roles       = self::table( 'user_roles' );
+		$scopes           = self::table( 'scopes' );
+		$audit_log        = self::table( 'audit_log' );
 
 		return array(
 			'roles' => "CREATE TABLE {$roles} (
@@ -71,11 +73,13 @@ class Schema {
 				slug varchar(100) NOT NULL,
 				name varchar(255) NOT NULL,
 				description text DEFAULT NULL,
+				status varchar(20) NOT NULL DEFAULT 'active',
 				is_system tinyint(1) NOT NULL DEFAULT 0,
 				created_at datetime NOT NULL,
 				updated_at datetime NOT NULL,
 				PRIMARY KEY (id),
-				UNIQUE KEY slug (slug)
+				UNIQUE KEY slug (slug),
+				KEY status (status)
 			) {$charset_collate};",
 
 			'permissions' => "CREATE TABLE {$permissions} (
@@ -122,6 +126,23 @@ class Schema {
 				handler varchar(255) DEFAULT NULL,
 				PRIMARY KEY (id),
 				UNIQUE KEY slug (slug)
+			) {$charset_collate};",
+
+			'audit_log' => "CREATE TABLE {$audit_log} (
+				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+				user_id bigint(20) unsigned NOT NULL DEFAULT 0,
+				action varchar(100) NOT NULL,
+				object_type varchar(100) NOT NULL,
+				object_id varchar(100) DEFAULT NULL,
+				before_data longtext DEFAULT NULL,
+				after_data longtext DEFAULT NULL,
+				ip_address varchar(45) DEFAULT NULL,
+				created_at datetime NOT NULL,
+				PRIMARY KEY (id),
+				KEY user_id (user_id),
+				KEY action (action),
+				KEY object_type (object_type),
+				KEY created_at (created_at)
 			) {$charset_collate};",
 		);
 	}

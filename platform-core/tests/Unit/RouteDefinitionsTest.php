@@ -6,6 +6,7 @@ use MPP\ACL\AclEngine;
 use MPP\ACL\PermissionRegistry;
 use MPP\ACL\RoleManager;
 use MPP\ACL\ScopeResolver;
+use MPP\Admin\AdminRoutes;
 use MPP\Core\Router;
 use PHPUnit\Framework\TestCase;
 
@@ -14,15 +15,19 @@ class RouteDefinitionsTest extends TestCase {
 	public function test_protected_routes_define_server_side_permissions(): void {
 		$engine = new AclEngine( new PermissionRegistry(), new RoleManager(), new ScopeResolver() );
 		$router = new Router( $engine );
+		AdminRoutes::register( $router );
 		$routes = $router->get_routes();
 
 		$protected = array(
-			'app'          => 'core.panel.access',
-			'app/user'     => 'core.panel.user.access',
-			'app/manager'  => 'core.panel.manager.access',
-			'app/admin'    => 'core.panel.admin.access',
-			'profile'      => 'core.profile.view',
-			'settings'     => 'core.settings.view',
+			'app'                 => 'core.panel.access',
+			'app/user'            => 'core.panel.user.access',
+			'app/manager'         => 'core.panel.manager.access',
+			'app/admin'           => 'core.panel.admin.access',
+			'app/admin/users'     => 'core.acl.manage',
+			'app/admin/roles'     => 'core.acl.manage',
+			'app/admin/permissions' => 'core.acl.manage',
+			'profile'             => 'core.profile.view',
+			'settings'            => 'core.settings.view',
 		);
 
 		foreach ( $protected as $slug => $permission ) {

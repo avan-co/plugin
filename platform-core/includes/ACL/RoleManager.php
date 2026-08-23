@@ -37,11 +37,12 @@ class RoleManager {
 				'slug'        => sanitize_key( $slug ),
 				'name'        => sanitize_text_field( $name ),
 				'description' => sanitize_textarea_field( $description ),
+				'status'      => 'active',
 				'is_system'   => $is_system ? 1 : 0,
 				'created_at'  => $now,
 				'updated_at'  => $now,
 			),
-			array( '%s', '%s', '%s', '%d', '%s', '%s' )
+			array( '%s', '%s', '%s', '%s', '%d', '%s', '%s' )
 		);
 
 		return $result ? (int) $wpdb->insert_id : false;
@@ -57,15 +58,20 @@ class RoleManager {
 	public function update( $role_id, array $data ) {
 		global $wpdb;
 
-		$allowed = array( 'name', 'description' );
+		$allowed = array( 'name', 'description', 'status' );
 		$update  = array();
 		$formats = array();
 
 		foreach ( $allowed as $field ) {
 			if ( isset( $data[ $field ] ) ) {
-				$update[ $field ] = 'description' === $field
-					? sanitize_textarea_field( $data[ $field ] )
-					: sanitize_text_field( $data[ $field ] );
+				if ( 'description' === $field ) {
+					$update[ $field ] = sanitize_textarea_field( $data[ $field ] );
+				} elseif ( 'status' === $field ) {
+					$status = sanitize_key( $data[ $field ] );
+					$update[ $field ] = in_array( $status, array( 'active', 'inactive' ), true ) ? $status : 'active';
+				} else {
+					$update[ $field ] = sanitize_text_field( $data[ $field ] );
+				}
 				$formats[] = '%s';
 			}
 		}
@@ -312,9 +318,10 @@ class RoleManager {
 			'SELECT r.*, ur.assigned_at
 			FROM ' . Schema::table( 'user_roles' ) . ' ur
 			INNER JOIN ' . Schema::table( 'roles' ) . ' r ON r.id = ur.role_id
-			WHERE ur.user_id = %d
+			WHERE ur.user_id = %d AND r.status = %s
 			ORDER BY r.name ASC',
-			(int) $user_id
+			(int) $user_id,
+			'active'
 		);
 
 		return $wpdb->get_results( $sql, ARRAY_A );

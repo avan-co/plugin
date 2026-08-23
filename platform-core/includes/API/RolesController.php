@@ -11,6 +11,7 @@ use MPP\ACL\AclEngine;
 use MPP\ACL\RoleManager;
 use MPP\Auth\AccessGuard;
 use MPP\Security\Sanitizer;
+use MPP\Services\AuditLogService;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -48,14 +49,23 @@ class RolesController extends RestController {
 	private $guard;
 
 	/**
+	 * Audit log service.
+	 *
+	 * @var AuditLogService
+	 */
+	private $audit;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param RoleManager $roles Role manager.
-	 * @param AclEngine   $acl   ACL engine.
+	 * @param RoleManager     $roles Role manager.
+	 * @param AclEngine       $acl   ACL engine.
+	 * @param AuditLogService $audit Audit log service.
 	 */
-	public function __construct( RoleManager $roles, AclEngine $acl ) {
+	public function __construct( RoleManager $roles, AclEngine $acl, AuditLogService $audit ) {
 		$this->roles = $roles;
 		$this->acl   = $acl;
+		$this->audit = $audit;
 		$this->guard = new AccessGuard( $acl );
 	}
 
@@ -160,7 +170,14 @@ class RolesController extends RestController {
 			return new \WP_Error( 'create_failed', __( 'Could not create role.', 'platform-core' ), array( 'status' => 500 ) );
 		}
 
-		return rest_ensure_response( $this->roles->find( $id ) );
+		if ( 'inactive' === $data['status'] ) {
+			$this->roles->update( $id, array( 'status' => 'inactive' ) );
+		}
+
+		$role = $this->roles->find( $id );
+		$this->audit->log( 'role.created', 'role', $id, array(), $role );
+
+		return rest_ensure_response( $role );
 	}
 
 	/**
@@ -181,8 +198,10 @@ class RolesController extends RestController {
 		unset( $data['slug'] );
 
 		$this->roles->update( $id, $data );
+		$after = $this->roles->find( $id );
+		$this->audit->log( 'role.updated', 'role', $id, $role, $after );
 
-		return rest_ensure_response( $this->roles->find( $id ) );
+		return rest_ensure_response( $after );
 	}
 
 	/**
@@ -193,10 +212,17 @@ class RolesController extends RestController {
 	 */
 	public function delete_item( $request ) {
 		$id = (int) $request['id'];
+		$role = $this->roles->find( $id );
+
+		if ( ! $role ) {
+			return new \WP_Error( 'not_found', __( 'Role not found.', 'platform-core' ), array( 'status' => 404 ) );
+		}
 
 		if ( ! $this->roles->delete( $id ) ) {
 			return new \WP_Error( 'delete_failed', __( 'Could not delete role. System roles cannot be deleted.', 'platform-core' ), array( 'status' => 400 ) );
 		}
+
+		$this->audit->log( 'role.deleted', 'role', $id, $role, array() );
 
 		return rest_ensure_response( array( 'deleted' => true ) );
 	}

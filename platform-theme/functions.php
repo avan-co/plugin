@@ -48,6 +48,18 @@ function platform_theme_enqueue_assets() {
 		wp_get_theme()->get( 'Version' ),
 		true
 	);
+
+	if ( function_exists( 'mpp_get_current_route' ) ) {
+		$route = mpp_get_current_route();
+		if ( $route && 0 === strpos( $route['slug'], 'app/admin' ) ) {
+			wp_enqueue_style(
+				'platform-theme-admin',
+				get_template_directory_uri() . '/assets/css/admin.css',
+				array( 'platform-theme-main' ),
+				wp_get_theme()->get( 'Version' )
+			);
+		}
+	}
 }
 add_action( 'wp_enqueue_scripts', 'platform_theme_enqueue_assets' );
 

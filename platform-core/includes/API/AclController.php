@@ -11,6 +11,7 @@ use MPP\ACL\AclEngine;
 use MPP\ACL\PermissionRegistry;
 use MPP\ACL\RoleManager;
 use MPP\Auth\AccessGuard;
+use MPP\Services\AuditLogService;
 use MPP\Services\UserRoleService;
 
 defined( 'ABSPATH' ) || exit;
@@ -56,18 +57,27 @@ class AclController extends RestController {
 	private $guard;
 
 	/**
+	 * Audit log service.
+	 *
+	 * @var AuditLogService
+	 */
+	private $audit;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param AclEngine          $acl        ACL engine.
 	 * @param RoleManager        $roles      Role manager.
 	 * @param PermissionRegistry $registry   Permission registry.
 	 * @param UserRoleService    $user_roles User role service.
+	 * @param AuditLogService    $audit      Audit log service.
 	 */
-	public function __construct( AclEngine $acl, RoleManager $roles, PermissionRegistry $registry, UserRoleService $user_roles ) {
+	public function __construct( AclEngine $acl, RoleManager $roles, PermissionRegistry $registry, UserRoleService $user_roles, AuditLogService $audit ) {
 		$this->acl        = $acl;
 		$this->roles      = $roles;
 		$this->registry   = $registry;
 		$this->user_roles = $user_roles;
+		$this->audit      = $audit;
 		$this->guard      = new AccessGuard( $acl );
 	}
 
@@ -210,6 +220,18 @@ class AclController extends RestController {
 			return new \WP_Error( 'assign_failed', __( 'Could not assign permission. Check scope_type.', 'platform-core' ), array( 'status' => 400 ) );
 		}
 
+		$this->audit->log(
+			'permission.granted',
+			'role_permission',
+			$request['role_id'] . ':' . $permission_id,
+			array(),
+			array(
+				'role_id'       => (int) $request['role_id'],
+				'permission_id' => $permission_id,
+				'scope_type'    => $scope_type,
+			)
+		);
+
 		return rest_ensure_response( array( 'success' => true ) );
 	}
 
@@ -228,6 +250,19 @@ class AclController extends RestController {
 		}
 
 		$result = $this->roles->revoke_permission( (int) $request['role_id'], $permission_id );
+
+		if ( $result ) {
+			$this->audit->log(
+				'permission.revoked',
+				'role_permission',
+				$request['role_id'] . ':' . $permission_id,
+				array(
+					'role_id'       => (int) $request['role_id'],
+					'permission_id' => $permission_id,
+				),
+				array()
+			);
+		}
 
 		return rest_ensure_response( array( 'success' => (bool) $result ) );
 	}
@@ -258,6 +293,19 @@ class AclController extends RestController {
 
 		$result = $this->roles->assign_to_user( (int) $request['user_id'], $role_id );
 
+		if ( $result ) {
+			$this->audit->log(
+				'user.role.assigned',
+				'user_role',
+				$request['user_id'] . ':' . $role_id,
+				array(),
+				array(
+					'user_id' => (int) $request['user_id'],
+					'role_id' => $role_id,
+				)
+			);
+		}
+
 		return rest_ensure_response( array( 'success' => (bool) $result ) );
 	}
 
@@ -276,6 +324,19 @@ class AclController extends RestController {
 		}
 
 		$result = $this->roles->revoke_from_user( (int) $request['user_id'], $role_id );
+
+		if ( $result ) {
+			$this->audit->log(
+				'user.role.revoked',
+				'user_role',
+				$request['user_id'] . ':' . $role_id,
+				array(
+					'user_id' => (int) $request['user_id'],
+					'role_id' => $role_id,
+				),
+				array()
+			);
+		}
 
 		return rest_ensure_response( array( 'success' => (bool) $result ) );
 	}

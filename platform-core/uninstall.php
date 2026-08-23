@@ -15,6 +15,7 @@ $tables = array(
 	$wpdb->prefix . 'platform_role_permissions',
 	$wpdb->prefix . 'platform_user_roles',
 	$wpdb->prefix . 'platform_scopes',
+	$wpdb->prefix . 'platform_audit_log',
 );
 
 foreach ( $tables as $table ) {

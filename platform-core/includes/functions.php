@@ -63,3 +63,21 @@ function mpp_logout_url() {
 function mpp_render_panel_nav( $panel ) {
 	get_template_part( 'template-parts/navigation', sanitize_key( $panel ) );
 }
+
+/**
+ * Render an admin sub-page (requires core.acl.manage — enforced by router).
+ *
+ * @param string $page Page slug.
+ */
+function mpp_render_admin_page( $page ) {
+	mpp()->get( \MPP\Admin\AdminRenderer::class )->render( sanitize_key( $page ) );
+}
+
+/**
+ * Check if current user can manage ACL.
+ *
+ * @return bool
+ */
+function mpp_can_manage_acl() {
+	return mpp_can( 'core.acl.manage' );
+}

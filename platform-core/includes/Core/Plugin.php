@@ -11,15 +11,26 @@ use MPP\ACL\AclEngine;
 use MPP\ACL\PermissionRegistry;
 use MPP\ACL\RoleManager;
 use MPP\ACL\ScopeResolver;
+use MPP\Admin\AdminRenderer;
+use MPP\Admin\AdminRoutes;
+use MPP\Admin\FormHandler;
 use MPP\API\AclController;
+use MPP\API\AuditLogController;
+use MPP\API\ModulesController;
 use MPP\API\PermissionsController;
 use MPP\API\RolesController;
+use MPP\API\ScopesController;
+use MPP\API\UsersController;
 use MPP\Auth\AccessGuard;
 use MPP\Auth\AuthIntegration;
 use MPP\Database\Installer;
 use MPP\Modules\ModuleManager;
+use MPP\Services\AuditLogService;
+use MPP\Services\ModuleService;
 use MPP\Services\PermissionService;
+use MPP\Services\ScopeService;
 use MPP\Services\UserRoleService;
+use MPP\Services\UserService;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -85,12 +96,21 @@ class Plugin {
 		Installer::maybe_upgrade();
 
 		$this->container->get( ModuleManager::class )->boot();
-		$this->container->get( Router::class )->register();
+
+		$router = $this->container->get( Router::class );
+		AdminRoutes::register( $router );
+		$router->register();
+
+		$this->container->get( FormHandler::class )->register();
 		$this->container->get( AuthIntegration::class )->register();
 		$this->container->get( AccessGuard::class )->register();
 		$this->container->get( RolesController::class )->register();
 		$this->container->get( PermissionsController::class )->register();
 		$this->container->get( AclController::class )->register();
+		$this->container->get( UsersController::class )->register();
+		$this->container->get( ModulesController::class )->register();
+		$this->container->get( ScopesController::class )->register();
+		$this->container->get( AuditLogController::class )->register();
 
 		do_action( 'mpp_booted', $this );
 	}
@@ -111,6 +131,10 @@ class Plugin {
 			return new RoleManager();
 		} );
 
+		$this->container->set( AuditLogService::class, function () {
+			return new AuditLogService();
+		} );
+
 		$this->container->set( AclEngine::class, function ( Container $c ) {
 			return new AclEngine(
 				$c->get( PermissionRegistry::class ),
@@ -127,8 +151,42 @@ class Plugin {
 			return new UserRoleService( $c->get( RoleManager::class ) );
 		} );
 
+		$this->container->set( UserService::class, function ( Container $c ) {
+			return new UserService( $c->get( RoleManager::class ) );
+		} );
+
+		$this->container->set( ScopeService::class, function ( Container $c ) {
+			return new ScopeService( $c->get( ScopeResolver::class ) );
+		} );
+
+		$this->container->set( ModuleService::class, function ( Container $c ) {
+			return new ModuleService( $c->get( ModuleManager::class ), $c->get( PermissionRegistry::class ) );
+		} );
+
 		$this->container->set( ModuleManager::class, function ( Container $c ) {
 			return new ModuleManager( $c->get( PermissionRegistry::class ) );
+		} );
+
+		$this->container->set( AdminRenderer::class, function ( Container $c ) {
+			return new AdminRenderer(
+				$c->get( UserService::class ),
+				$c->get( RoleManager::class ),
+				$c->get( PermissionService::class ),
+				$c->get( PermissionRegistry::class ),
+				$c->get( ModuleService::class ),
+				$c->get( ScopeService::class ),
+				$c->get( AuditLogService::class ),
+				$c->get( AclEngine::class )
+			);
+		} );
+
+		$this->container->set( FormHandler::class, function ( Container $c ) {
+			return new FormHandler(
+				$c->get( AclEngine::class ),
+				$c->get( RoleManager::class ),
+				$c->get( PermissionRegistry::class ),
+				$c->get( AuditLogService::class )
+			);
 		} );
 
 		$this->container->set( Router::class, function ( Container $c ) {
@@ -144,7 +202,11 @@ class Plugin {
 		} );
 
 		$this->container->set( RolesController::class, function ( Container $c ) {
-			return new RolesController( $c->get( RoleManager::class ), $c->get( AclEngine::class ) );
+			return new RolesController(
+				$c->get( RoleManager::class ),
+				$c->get( AclEngine::class ),
+				$c->get( AuditLogService::class )
+			);
 		} );
 
 		$this->container->set( PermissionsController::class, function ( Container $c ) {
@@ -156,8 +218,25 @@ class Plugin {
 				$c->get( AclEngine::class ),
 				$c->get( RoleManager::class ),
 				$c->get( PermissionRegistry::class ),
-				$c->get( UserRoleService::class )
+				$c->get( UserRoleService::class ),
+				$c->get( AuditLogService::class )
 			);
+		} );
+
+		$this->container->set( UsersController::class, function ( Container $c ) {
+			return new UsersController( $c->get( UserService::class ), $c->get( AclEngine::class ) );
+		} );
+
+		$this->container->set( ModulesController::class, function ( Container $c ) {
+			return new ModulesController( $c->get( ModuleService::class ), $c->get( AclEngine::class ) );
+		} );
+
+		$this->container->set( ScopesController::class, function ( Container $c ) {
+			return new ScopesController( $c->get( ScopeService::class ), $c->get( AclEngine::class ) );
+		} );
+
+		$this->container->set( AuditLogController::class, function ( Container $c ) {
+			return new AuditLogController( $c->get( AuditLogService::class ), $c->get( AclEngine::class ) );
 		} );
 	}
 
