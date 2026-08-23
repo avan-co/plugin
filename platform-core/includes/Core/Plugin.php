@@ -118,6 +118,8 @@ class Plugin {
 		$this->container->get( ScopesController::class )->register();
 		$this->container->get( AuditLogController::class )->register();
 
+		add_action( 'rest_api_init', array( $module_manager, 'register_module_rest_routes' ) );
+
 		do_action( 'mpp_booted', $this );
 	}
 

@@ -163,6 +163,8 @@ class Router {
 
 		if ( $located ) {
 			include $located;
+		} elseif ( ! empty( $definition['template_file'] ) && is_readable( $definition['template_file'] ) ) {
+			include $definition['template_file'];
 		} else {
 			$fallback = MPP_PLUGIN_DIR . 'templates/' . basename( $template );
 

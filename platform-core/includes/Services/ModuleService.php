@@ -55,10 +55,12 @@ class ModuleService {
 		foreach ( $this->modules->all() as $slug => $module ) {
 			$seen[ $slug ] = true;
 			$modules[]     = array(
-				'slug'               => $slug,
-				'name'               => $module->get_name(),
-				'status'             => 'active',
-				'permission_count'   => $this->count_module_permissions( $slug, $grouped ),
+				'slug'                   => $slug,
+				'name'                   => $module->get_name(),
+				'version'                => $module->get_version(),
+				'requires_core_version'  => $module->get_requires_core_version(),
+				'status'                 => 'active',
+				'permission_count'       => $this->count_module_permissions( $slug, $grouped ),
 			);
 		}
 

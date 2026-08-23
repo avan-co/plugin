@@ -110,30 +110,92 @@ if ( mpp()->acl()->can( $user_id, 'finance.invoice.edit', [ 'owner_id' => 42 ] )
 
 ### Registering Module Permissions
 
+Modules should register via the module contract. External plugins use `mpp_register_module()`:
+
+```php
+mpp_register_module( new \MyVendor\Finance\FinanceModule() );
+```
+
+Or the `mpp_register_modules` hook:
+
 ```php
 add_action( 'mpp_register_modules', function ( $manager ) {
-    $manager->register( new \MPP\Modules\Examples\FinanceModule(
-        mpp()->get( \MPP\ACL\PermissionRegistry::class )
-    ) );
+    $manager->register( new \MyVendor\Finance\FinanceModule() );
 });
 ```
 
-Or register directly:
+Permissions are registered in the module's `register_permissions()` method:
 
 ```php
-add_action( 'mpp_booted', function () {
-    $registry = mpp()->get( \MPP\ACL\PermissionRegistry::class );
-    $registry->register_module( 'projects', [
-        'project' => [
-            'view'   => 'View projects',
-            'create' => 'Create projects',
-            'edit'   => 'Edit projects',
-            'delete' => 'Delete projects',
-        ],
-    ]);
-    $registry->sync_to_database();
+mpp()->get( \MPP\ACL\PermissionRegistry::class )->register_module( 'projects', [
+    'project' => [
+        'view'   => 'View projects',
+        'create' => 'Create projects',
+    ],
+]);
+```
+
+## Creating an External Module
+
+Business modules are independent WordPress plugins that depend on **platform-core**.
+
+```
+wp-content/plugins/
+├── platform-core/
+├── platform-theme/
+└── platform-example/    # reference implementation
+```
+
+### Minimum structure
+
+```
+platform-example/
+├── platform-example.php
+├── includes/ExampleModule.php
+└── templates/demo.php
+```
+
+### Registration flow
+
+1. Business plugin loads on `plugins_loaded` (priority `< 10`, before core boots).
+2. Call `mpp_register_module( new ExampleModule() )`.
+3. Core validates identity, version, and duplicates.
+4. Core runs `run_migrations()` → `register_permissions()` → `boot()`.
+5. Core registers module routes and REST endpoints.
+6. `mpp_modules_loaded` fires when all modules are ready.
+
+### Module contract
+
+Extend `MPP\Modules\AbstractModule` and implement:
+
+| Method | Purpose |
+|--------|---------|
+| `get_slug()` | Unique module ID (e.g. `example`) |
+| `get_name()` | Display name |
+| `get_version()` | Module version |
+| `get_requires_core_version()` | Minimum platform-core version |
+| `register_permissions()` | ACL permissions |
+| `register_routes( Router $router )` | Frontend routes (ACL-protected) |
+| `register_rest_routes()` | REST endpoints (use `AccessGuard`) |
+| `get_navigation_items()` | Panel navigation entries |
+| `get_dashboard_widgets()` | Dashboard cards |
+| `run_migrations()` | Module-owned DB migrations |
+| `boot()` | Hooks after permissions sync |
+| `deactivate()` | Cleanup on plugin deactivation |
+
+### Dependency check
+
+Declare the minimum core version in `get_requires_core_version()`. If core is too old, the module is skipped and an error is logged — no fatal error.
+
+### Deactivation
+
+```php
+register_deactivation_hook( __FILE__, function () {
+    mpp_deactivate_module( 'example' );
 });
 ```
+
+See `platform-example/` for a working minimal module.
 
 ### REST API
 
@@ -190,10 +252,11 @@ platform-core/
 │   ├── Database/      # Schema, installer
 │   ├── Security/      # Sanitization
 │   ├── Services/      # Shared services
-│   └── Modules/       # Module manager
-├── modules/examples/  # Example finance module
+│   └── Modules/       # Module manager & contract
 └── templates/         # Fallback templates
 ```
+
+External business modules live in separate plugins (see `platform-example/`).
 
 ## Theme Structure
 

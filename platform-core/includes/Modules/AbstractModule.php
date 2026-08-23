@@ -26,7 +26,21 @@ abstract class AbstractModule implements ModuleInterface {
 	/**
 	 * @inheritDoc
 	 */
+	public function get_requires_core_version() {
+		return '1.0.0';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function register_routes( Router $router ) {
+		// Optional.
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function register_rest_routes() {
 		// Optional.
 	}
 
@@ -42,5 +56,19 @@ abstract class AbstractModule implements ModuleInterface {
 	 */
 	public function get_dashboard_widgets() {
 		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function run_migrations() {
+		// Optional.
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function deactivate() {
+		// Optional.
 	}
 }

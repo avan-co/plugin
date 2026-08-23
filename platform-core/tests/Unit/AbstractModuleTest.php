@@ -27,7 +27,10 @@ class AbstractModuleTest extends TestCase {
 
 		$this->assertInstanceOf( ModuleInterface::class, $module );
 		$this->assertSame( '1.0.0', $module->get_version() );
+		$this->assertSame( '1.0.0', $module->get_requires_core_version() );
 		$this->assertSame( array(), $module->get_navigation_items() );
 		$this->assertSame( array(), $module->get_dashboard_widgets() );
+		$this->assertNull( $module->run_migrations() );
+		$this->assertNull( $module->deactivate() );
 	}
 }

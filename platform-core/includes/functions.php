@@ -215,3 +215,91 @@ function mpp_render_account_notice() {
 function mpp_account_nonce_field() {
 	return \MPP\Account\AccountFormHandler::nonce_field();
 }
+
+/**
+ * Register an external platform module.
+ *
+ * Call from a business plugin on plugins_loaded (priority < 10) or via mpp_register_modules.
+ *
+ * @param \MPP\Modules\ModuleInterface $module Module instance.
+ * @return bool
+ */
+function mpp_register_module( $module ) {
+	if ( ! $module instanceof \MPP\Modules\ModuleInterface ) {
+		return false;
+	}
+
+	if ( function_exists( 'mpp' ) ) {
+		$manager = mpp()->get( \MPP\Modules\ModuleManager::class );
+
+		if ( $manager->is_booted() ) {
+			return $manager->register( $module );
+		}
+	}
+
+	return \MPP\Modules\ModuleManager::enqueue( $module );
+}
+
+/**
+ * Deactivate a registered module (plugin deactivation hook).
+ *
+ * @param string $slug Module slug.
+ * @return bool
+ */
+function mpp_deactivate_module( $slug ) {
+	if ( ! function_exists( 'mpp' ) ) {
+		return false;
+	}
+
+	return mpp()->get( \MPP\Modules\ModuleManager::class )->deactivate_module( $slug );
+}
+
+/**
+ * Get registered module instances.
+ *
+ * @return array<string, \MPP\Modules\ModuleInterface>
+ */
+function mpp_get_registered_modules() {
+	if ( ! function_exists( 'mpp' ) ) {
+		return array();
+	}
+
+	return mpp()->get( \MPP\Modules\ModuleManager::class )->all();
+}
+
+/**
+ * Get permission-filtered dashboard widgets for a panel.
+ *
+ * @param string $panel Panel slug.
+ * @return array<int, array<string, string>>
+ */
+function mpp_get_panel_widgets( $panel ) {
+	$panel = sanitize_key( $panel );
+
+	if ( ! function_exists( 'mpp' ) ) {
+		return array();
+	}
+
+	$widgets  = mpp()->get( \MPP\Modules\ModuleManager::class )->get_dashboard_widgets();
+	$filtered = array();
+
+	foreach ( $widgets as $widget ) {
+		if ( ! empty( $widget['panel'] ) && $widget['panel'] !== $panel ) {
+			continue;
+		}
+
+		if ( ! empty( $widget['permission'] ) && ! mpp_can( $widget['permission'] ) ) {
+			continue;
+		}
+
+		$filtered[] = $widget;
+	}
+
+	/**
+	 * Filter panel dashboard widgets after permission checks.
+	 *
+	 * @param array<int, array<string, string>> $filtered Widgets.
+	 * @param string                            $panel    Panel slug.
+	 */
+	return apply_filters( 'mpp_panel_widgets', $filtered, $panel );
+}

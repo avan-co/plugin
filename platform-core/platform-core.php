@@ -3,7 +3,7 @@
  * Plugin Name:       Platform Core
  * Plugin URI:        https://example.com/platform-core
  * Description:       Core infrastructure for a multi-panel WordPress platform with dynamic ACL.
- * Version:           1.0.0
+ * Version:           1.3.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Platform Team
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MPP_VERSION', '1.0.0' );
+define( 'MPP_VERSION', '1.3.0' );
 define( 'MPP_PLUGIN_FILE', __FILE__ );
 define( 'MPP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MPP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
