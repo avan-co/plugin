@@ -92,8 +92,8 @@ class FormHandler {
 		}
 
 		$action  = sanitize_key( wp_unslash( $_POST['mpp_admin_action'] ) );
-		$redirect = isset( $_POST['mpp_redirect'] ) ? esc_url_raw( wp_unslash( $_POST['mpp_redirect'] ) ) : home_url( '/app/admin' );
-		$redirect = wp_validate_redirect( $redirect, home_url( '/app/admin' ) );
+		$redirect = isset( $_POST['mpp_redirect'] ) ? esc_url_raw( wp_unslash( $_POST['mpp_redirect'] ) ) : mpp_route_url( 'app/admin' );
+		$redirect = wp_validate_redirect( $redirect, mpp_route_url( 'app/admin' ) );
 
 		$result = $this->dispatch( $action );
 

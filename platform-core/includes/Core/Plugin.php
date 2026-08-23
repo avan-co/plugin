@@ -308,7 +308,7 @@ class Plugin {
 			return;
 		}
 
-		flush_rewrite_rules( false );
+		flush_rewrite_rules( true );
 		update_option( 'mpp_routes_version', MPP_VERSION, false );
 	}
 }

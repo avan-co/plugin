@@ -196,7 +196,7 @@ class AdminRenderer {
 		);
 		$total = $this->users->count_users( array( 'search' => $search ) );
 		?>
-		<form method="get" action="<?php echo esc_url( home_url( '/app/admin/users' ) ); ?>" class="mpp-admin-search">
+		<form method="get" action="<?php echo esc_url( mpp_route_url( 'app/admin/users' ) ); ?>" class="mpp-admin-search">
 			<input type="search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search users...', 'platform-core' ); ?>">
 			<button type="submit" class="mpp-btn mpp-btn--secondary"><?php esc_html_e( 'Search', 'platform-core' ); ?></button>
 		</form>
@@ -221,7 +221,7 @@ class AdminRenderer {
 						<td><?php echo esc_html( $user['email'] ); ?></td>
 						<td><span class="mpp-badge"><?php echo esc_html( $user['status'] ); ?></span></td>
 						<td><?php echo esc_html( ! empty( $user['platform_roles'] ) ? implode( ', ', wp_list_pluck( $user['platform_roles'], 'name' ) ) : '—' ); ?></td>
-						<td><a href="<?php echo esc_url( add_query_arg( 'user_id', $user['id'], home_url( '/app/admin/users' ) ) ); ?>"><?php esc_html_e( 'View', 'platform-core' ); ?></a></td>
+						<td><a href="<?php echo esc_url( add_query_arg( 'user_id', $user['id'], mpp_route_url( 'app/admin/users' ) ) ); ?>"><?php esc_html_e( 'View', 'platform-core' ); ?></a></td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
@@ -231,7 +231,7 @@ class AdminRenderer {
 			$paged,
 			$total,
 			$per_page,
-			home_url( '/app/admin/users' ),
+			mpp_route_url( 'app/admin/users' ),
 			array( 's' => $search )
 		);
 	}
@@ -254,7 +254,7 @@ class AdminRenderer {
 		$wp_user   = get_userdata( $user_id );
 		$wp_roles  = $wp_user ? array_values( (array) $wp_user->roles ) : array();
 		?>
-		<p><a href="<?php echo esc_url( home_url( '/app/admin/users' ) ); ?>">&larr; <?php esc_html_e( 'Back to users', 'platform-core' ); ?></a></p>
+		<p><a href="<?php echo esc_url( mpp_route_url( 'app/admin/users' ) ); ?>">&larr; <?php esc_html_e( 'Back to users', 'platform-core' ); ?></a></p>
 		<div class="mpp-card">
 			<h2><?php echo esc_html( $user['display_name'] ); ?></h2>
 			<dl class="mpp-profile-list">
@@ -279,7 +279,7 @@ class AdminRenderer {
 						<input type="hidden" name="mpp_admin_action" value="revoke_user_role">
 						<input type="hidden" name="user_id" value="<?php echo esc_attr( (string) $user_id ); ?>">
 						<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role['id'] ); ?>">
-						<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'user_id', $user_id, home_url( '/app/admin/users' ) ) ); ?>">
+						<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'user_id', $user_id, mpp_route_url( 'app/admin/users' ) ) ); ?>">
 						<button type="submit" class="mpp-btn mpp-btn--danger mpp-btn--sm"><?php esc_html_e( 'Remove', 'platform-core' ); ?></button>
 					</form>
 				</li>
@@ -291,7 +291,7 @@ class AdminRenderer {
 			<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<input type="hidden" name="mpp_admin_action" value="assign_user_role">
 			<input type="hidden" name="user_id" value="<?php echo esc_attr( (string) $user_id ); ?>">
-			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'user_id', $user_id, home_url( '/app/admin/users' ) ) ); ?>">
+			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'user_id', $user_id, mpp_route_url( 'app/admin/users' ) ) ); ?>">
 			<select name="role_id" required>
 				<option value=""><?php esc_html_e( 'Select role...', 'platform-core' ); ?></option>
 				<?php foreach ( $all_roles as $role ) : ?>
@@ -318,7 +318,7 @@ class AdminRenderer {
 
 		$roles = $this->roles->all();
 		?>
-		<p><a class="mpp-btn mpp-btn--primary" href="<?php echo esc_url( add_query_arg( 'action', 'create', home_url( '/app/admin/roles' ) ) ); ?>"><?php esc_html_e( 'Create Role', 'platform-core' ); ?></a></p>
+		<p><a class="mpp-btn mpp-btn--primary" href="<?php echo esc_url( add_query_arg( 'action', 'create', mpp_route_url( 'app/admin/roles' ) ) ); ?>"><?php esc_html_e( 'Create Role', 'platform-core' ); ?></a></p>
 		<table class="mpp-admin-table">
 			<thead>
 				<tr>
@@ -337,8 +337,8 @@ class AdminRenderer {
 						<td><?php echo esc_html( $role['status'] ?? 'active' ); ?></td>
 						<td><?php echo ! empty( $role['is_system'] ) ? esc_html__( 'Yes', 'platform-core' ) : esc_html__( 'No', 'platform-core' ); ?></td>
 						<td>
-							<a href="<?php echo esc_url( add_query_arg( 'edit', $role['id'], home_url( '/app/admin/roles' ) ) ); ?>"><?php esc_html_e( 'Edit', 'platform-core' ); ?></a>
-							| <a href="<?php echo esc_url( add_query_arg( array( 'role_id' => $role['id'] ), home_url( '/app/admin/permissions' ) ) ); ?>"><?php esc_html_e( 'Permissions', 'platform-core' ); ?></a>
+							<a href="<?php echo esc_url( add_query_arg( 'edit', $role['id'], mpp_route_url( 'app/admin/roles' ) ) ); ?>"><?php esc_html_e( 'Edit', 'platform-core' ); ?></a>
+							| <a href="<?php echo esc_url( add_query_arg( array( 'role_id' => $role['id'] ), mpp_route_url( 'app/admin/permissions' ) ) ); ?>"><?php esc_html_e( 'Permissions', 'platform-core' ); ?></a>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -356,11 +356,11 @@ class AdminRenderer {
 		$role = $role_id ? $this->roles->find( $role_id ) : null;
 		$is_edit = (bool) $role;
 		?>
-		<p><a href="<?php echo esc_url( home_url( '/app/admin/roles' ) ); ?>">&larr; <?php esc_html_e( 'Back to roles', 'platform-core' ); ?></a></p>
+		<p><a href="<?php echo esc_url( mpp_route_url( 'app/admin/roles' ) ); ?>">&larr; <?php esc_html_e( 'Back to roles', 'platform-core' ); ?></a></p>
 		<form method="post" class="mpp-form mpp-card">
 			<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<input type="hidden" name="mpp_admin_action" value="<?php echo $is_edit ? 'update_role' : 'create_role'; ?>">
-			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( home_url( '/app/admin/roles' ) ); ?>">
+			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( mpp_route_url( 'app/admin/roles' ) ); ?>">
 			<?php if ( $is_edit ) : ?>
 				<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
 			<?php endif; ?>
@@ -390,7 +390,7 @@ class AdminRenderer {
 				<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<input type="hidden" name="mpp_admin_action" value="delete_role">
 				<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
-				<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( home_url( '/app/admin/roles' ) ); ?>">
+				<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( mpp_route_url( 'app/admin/roles' ) ); ?>">
 				<button type="submit" class="mpp-btn mpp-btn--danger"><?php esc_html_e( 'Delete Role', 'platform-core' ); ?></button>
 			</form>
 		<?php endif; ?>
@@ -417,7 +417,7 @@ class AdminRenderer {
 			}
 		}
 		?>
-		<form method="get" action="<?php echo esc_url( home_url( '/app/admin/permissions' ) ); ?>" class="mpp-form mpp-form--inline">
+		<form method="get" action="<?php echo esc_url( mpp_route_url( 'app/admin/permissions' ) ); ?>" class="mpp-form mpp-form--inline">
 			<label for="role_id"><?php esc_html_e( 'Manage permissions for role:', 'platform-core' ); ?></label>
 			<select name="role_id" id="role_id" onchange="this.form.submit()">
 				<?php foreach ( $roles as $role ) : ?>
@@ -454,7 +454,7 @@ class AdminRenderer {
 														<input type="hidden" name="mpp_admin_action" value="update_permission_scope">
 														<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
 														<input type="hidden" name="permission_id" value="<?php echo esc_attr( (string) $pid ); ?>">
-														<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'role_id', $role_id, home_url( '/app/admin/permissions' ) ) ); ?>">
+														<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'role_id', $role_id, mpp_route_url( 'app/admin/permissions' ) ) ); ?>">
 														<select name="scope_type">
 															<?php foreach ( $scope_types as $st ) : ?>
 																<option value="<?php echo esc_attr( $st['slug'] ); ?>" <?php selected( $scope, $st['slug'] ); ?>><?php echo esc_html( $st['name'] ); ?></option>
@@ -467,7 +467,7 @@ class AdminRenderer {
 														<input type="hidden" name="mpp_admin_action" value="revoke_permission">
 														<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
 														<input type="hidden" name="permission_id" value="<?php echo esc_attr( (string) $pid ); ?>">
-														<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'role_id', $role_id, home_url( '/app/admin/permissions' ) ) ); ?>">
+														<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'role_id', $role_id, mpp_route_url( 'app/admin/permissions' ) ) ); ?>">
 														<button type="submit" class="mpp-btn mpp-btn--sm mpp-btn--danger"><?php esc_html_e( 'Revoke', 'platform-core' ); ?></button>
 													</form>
 												<?php else : ?>
@@ -477,7 +477,7 @@ class AdminRenderer {
 														<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
 														<input type="hidden" name="permission_id" value="<?php echo esc_attr( (string) $pid ); ?>">
 														<input type="hidden" name="scope_type" value="all">
-														<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'role_id', $role_id, home_url( '/app/admin/permissions' ) ) ); ?>">
+														<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'role_id', $role_id, mpp_route_url( 'app/admin/permissions' ) ) ); ?>">
 														<button type="submit" class="mpp-btn mpp-btn--sm mpp-btn--primary"><?php esc_html_e( 'Grant', 'platform-core' ); ?></button>
 													</form>
 												<?php endif; ?>
@@ -559,7 +559,7 @@ class AdminRenderer {
 		</ul>
 
 		<h3><?php esc_html_e( 'Recent Audit Log', 'platform-core' ); ?></h3>
-		<form method="get" action="<?php echo esc_url( home_url( '/app/admin/acl' ) ); ?>" class="mpp-form mpp-form--inline mpp-admin-filters">
+		<form method="get" action="<?php echo esc_url( mpp_route_url( 'app/admin/acl' ) ); ?>" class="mpp-form mpp-form--inline mpp-admin-filters">
 			<label>
 				<?php esc_html_e( 'User ID', 'platform-core' ); ?>
 				<input type="number" name="user_id" min="0" value="<?php echo esc_attr( $filters['user_id'] ? (string) $filters['user_id'] : '' ); ?>">
@@ -582,7 +582,7 @@ class AdminRenderer {
 			</label>
 			<button type="submit" class="mpp-btn mpp-btn--secondary"><?php esc_html_e( 'Filter', 'platform-core' ); ?></button>
 			<?php if ( array_filter( $filters ) ) : ?>
-				<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( home_url( '/app/admin/acl' ) ); ?>"><?php esc_html_e( 'Clear', 'platform-core' ); ?></a>
+				<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/admin/acl' ) ); ?>"><?php esc_html_e( 'Clear', 'platform-core' ); ?></a>
 			<?php endif; ?>
 		</form>
 		<table class="mpp-admin-table">
@@ -612,7 +612,7 @@ class AdminRenderer {
 			$paged,
 			$total,
 			$per_page,
-			home_url( '/app/admin/acl' ),
+			mpp_route_url( 'app/admin/acl' ),
 			array_filter( $filters )
 		);
 	}

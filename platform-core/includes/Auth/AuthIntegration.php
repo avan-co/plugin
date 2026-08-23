@@ -76,8 +76,8 @@ class AuthIntegration {
 			return;
 		}
 
-		$redirect = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : home_url( '/app' );
-		$redirect = wp_validate_redirect( $redirect, home_url( '/app' ) );
+		$redirect = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : mpp_route_url( 'app' );
+		$redirect = wp_validate_redirect( $redirect, mpp_route_url( 'app' ) );
 		wp_safe_redirect( $redirect );
 		exit;
 	}
@@ -91,14 +91,14 @@ class AuthIntegration {
 		}
 
 		if ( ! is_user_logged_in() ) {
-			wp_safe_redirect( home_url( '/login' ) );
+			wp_safe_redirect( mpp_route_url( 'login' ) );
 			exit;
 		}
 
 		check_admin_referer( 'mpp_logout' );
 
 		wp_logout();
-		wp_safe_redirect( home_url( '/login' ) );
+		wp_safe_redirect( mpp_route_url( 'login' ) );
 		exit;
 	}
 
@@ -116,13 +116,13 @@ class AuthIntegration {
 		}
 
 		if ( ! empty( $request ) ) {
-			$validated = wp_validate_redirect( $request, home_url( '/app' ) );
+			$validated = wp_validate_redirect( $request, mpp_route_url( 'app' ) );
 			if ( $validated ) {
 				return $validated;
 			}
 		}
 
-		return home_url( '/app' );
+		return mpp_route_url( 'app' );
 	}
 
 	/**

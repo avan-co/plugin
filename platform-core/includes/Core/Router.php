@@ -51,6 +51,8 @@ class Router {
 	public function register() {
 		add_action( 'init', array( $this, 'add_rewrite_rules' ) );
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
+		add_filter( 'redirect_canonical', array( $this, 'prevent_canonical_redirect' ), 10, 2 );
+		add_filter( 'pre_handle_404', array( $this, 'pre_handle_404' ), 10, 2 );
 		add_action( 'template_redirect', array( $this, 'dispatch' ) );
 	}
 
@@ -86,6 +88,8 @@ class Router {
 	 * Add rewrite rules on init.
 	 */
 	public function add_rewrite_rules() {
+		add_rewrite_tag( '%' . self::QUERY_VAR . '%', '(.+)', self::QUERY_VAR . '=' );
+
 		foreach ( array_keys( $this->get_routes() ) as $slug ) {
 			add_rewrite_rule(
 				'^' . preg_quote( $slug, '/' ) . '/?$',
@@ -125,7 +129,7 @@ class Router {
 		}
 
 		if ( ! empty( $definition['auth'] ) && ! is_user_logged_in() ) {
-			wp_safe_redirect( home_url( '/login' ) );
+			wp_safe_redirect( mpp_route_url( 'login' ) );
 			exit;
 		}
 
@@ -176,6 +180,40 @@ class Router {
 		}
 
 		exit;
+	}
+
+	/**
+	 * Prevent WordPress from canonicalizing platform route URLs away from index.php.
+	 *
+	 * @param string $redirect_url  Canonical redirect URL.
+	 * @param string $requested_url Requested URL.
+	 * @return string|false
+	 */
+	public function prevent_canonical_redirect( $redirect_url, $requested_url ) {
+		unset( $requested_url );
+
+		if ( $this->resolve_route_slug() ) {
+			return false;
+		}
+
+		return $redirect_url;
+	}
+
+	/**
+	 * Keep platform routes out of WordPress core 404 handling.
+	 *
+	 * @param bool      $preempt Whether to short-circuit 404 handling.
+	 * @param \WP_Query $query   Main query.
+	 * @return bool
+	 */
+	public function pre_handle_404( $preempt, $query ) {
+		unset( $query );
+
+		if ( $this->resolve_route_slug() ) {
+			return true;
+		}
+
+		return $preempt;
 	}
 
 	/**
