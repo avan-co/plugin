@@ -123,9 +123,12 @@ class RolesController extends RestController {
 	/**
 	 * List roles.
 	 *
+	 * @param \WP_REST_Request $request Request.
 	 * @return \WP_REST_Response
 	 */
-	public function get_items() {
+	public function get_items( $request ) {
+		unset( $request );
+
 		return rest_ensure_response( $this->roles->all() );
 	}
 

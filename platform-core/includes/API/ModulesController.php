@@ -51,7 +51,9 @@ class ModulesController extends RestController {
 		);
 	}
 
-	public function get_items() {
+	public function get_items( $request ) {
+		unset( $request );
+
 		return rest_ensure_response( $this->modules->list_modules() );
 	}
 }
