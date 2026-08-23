@@ -98,6 +98,7 @@ class Plugin {
 		load_plugin_textdomain( 'platform-core', false, dirname( MPP_PLUGIN_BASENAME ) . '/languages' );
 
 		Installer::maybe_upgrade();
+		Installer::ensure_defaults();
 
 		$module_manager = $this->container->get( ModuleManager::class );
 		$module_manager->boot();

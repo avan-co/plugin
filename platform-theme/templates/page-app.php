@@ -31,7 +31,7 @@ $panels = function_exists( 'mpp_get_accessible_panels' ) ? mpp_get_accessible_pa
 						continue;
 					}
 					?>
-					<a href="<?php echo esc_url( home_url( '/app/' . $panel ) ); ?>" class="mpp-panel-card">
+					<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app/' . $panel ) : home_url( '/app/' . $panel ) ); ?>" class="mpp-panel-card">
 						<h2><?php echo esc_html( $labels[ $panel ] ); ?></h2>
 						<span class="mpp-panel-card__arrow">&rarr;</span>
 					</a>

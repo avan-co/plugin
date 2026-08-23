@@ -20,7 +20,7 @@ ob_start();
 		<form method="post" class="mpp-form">
 			<?php echo function_exists( 'mpp_account_nonce_field' ) ? mpp_account_nonce_field() : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<input type="hidden" name="mpp_account_action" value="update_profile">
-			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( home_url( '/profile' ) ); ?>">
+			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'profile' ) : home_url( '/profile' ) ); ?>">
 
 			<label for="display_name"><?php esc_html_e( 'Display Name', 'platform-theme' ); ?></label>
 			<input type="text" id="display_name" name="display_name" value="<?php echo esc_attr( $user->display_name ); ?>" required>

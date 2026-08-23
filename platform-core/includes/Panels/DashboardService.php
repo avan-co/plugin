@@ -128,12 +128,17 @@ class DashboardService {
 		$modules = $this->modules->list_modules();
 
 		return array(
-			'platform_version'     => defined( 'MPP_VERSION' ) ? MPP_VERSION : '',
-			'wordpress_version'      => get_bloginfo( 'version' ),
-			'role_count'             => count( $roles ),
-			'module_count'           => count( $modules ),
-			'recent_audit'           => $this->audit->query( array( 'limit' => 5 ) ),
-			'registration_enabled'   => \MPP\Auth\RegistrationHandler::is_enabled(),
+			'platform_version'       => defined( 'MPP_VERSION' ) ? MPP_VERSION : '',
+			'wordpress_version'    => get_bloginfo( 'version' ),
+			'role_count'           => count( $roles ),
+			'module_count'         => count( $modules ),
+			'recent_audit'         => $this->audit->query( array( 'limit' => 5 ) ),
+			'registration_enabled' => \MPP\Auth\RegistrationHandler::is_enabled(),
+			'permalink_mode'       => function_exists( 'mpp_uses_pretty_permalinks' ) && mpp_uses_pretty_permalinks()
+				? __( 'Pretty permalinks', 'platform-core' )
+				: __( 'Plain permalinks (index.php routes)', 'platform-core' ),
+			'current_user'         => is_user_logged_in() ? wp_get_current_user()->user_login : '',
+			'database_version'     => get_option( \MPP\Database\Schema::VERSION_OPTION, '' ),
 		);
 	}
 }

@@ -59,7 +59,17 @@ class AuthIntegration {
 			return;
 		}
 
-		$username = isset( $_POST['log'] ) ? sanitize_user( wp_unslash( $_POST['log'] ) ) : '';
+		$username = isset( $_POST['log'] ) ? wp_unslash( $_POST['log'] ) : '';
+		$username = is_string( $username ) ? trim( $username ) : '';
+
+		if ( is_email( $username ) ) {
+			$user = get_user_by( 'email', sanitize_email( $username ) );
+			if ( $user ) {
+				$username = $user->user_login;
+			}
+		} else {
+			$username = sanitize_user( $username );
+		}
 		$password = isset( $_POST['pwd'] ) ? (string) wp_unslash( $_POST['pwd'] ) : '';
 		$remember = ! empty( $_POST['rememberme'] );
 
