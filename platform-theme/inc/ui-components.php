@@ -179,3 +179,44 @@ function platform_ui_module_card( array $module ) {
 function platform_ui_form_field( array $args ) {
 	return UIComponents::form_field( $args );
 }
+
+/**
+ * Render a dashboard welcome header.
+ *
+ * @param string $name        Display name.
+ * @param string $description Description.
+ * @return string
+ */
+function platform_ui_dashboard_welcome( $name, $description = '' ) {
+	return UIComponents::dashboard_welcome( $name, $description );
+}
+
+/**
+ * Render a module shortcut grid.
+ *
+ * @param array<int, array<string, string>> $shortcuts Shortcuts.
+ * @return string
+ */
+function platform_ui_module_shortcut_grid( array $shortcuts ) {
+	return UIComponents::module_shortcut_grid( $shortcuts );
+}
+
+/**
+ * Render a pending items list.
+ *
+ * @param array<int, array<string, string>> $items Items.
+ * @return string
+ */
+function platform_ui_pending_list( array $items ) {
+	return UIComponents::pending_list( $items );
+}
+
+/**
+ * Render a recent activity list.
+ *
+ * @param array<int, array<string, mixed>> $entries Entries.
+ * @return string
+ */
+function platform_ui_activity_list( array $entries ) {
+	return UIComponents::activity_list( $entries );
+}

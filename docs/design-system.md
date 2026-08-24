@@ -69,6 +69,10 @@ Rendered by `PanelNavigation` with `.mpp-nav__sublist`.
 | Filter bar | `platform_ui_filter_bar()` | `.mpp-filter-bar` |
 | Form field | `platform_ui_form_field()` | `.mpp-form-field` |
 | Module card | `platform_ui_module_card()` | `.mpp-module-card` |
+| Module shortcuts | `platform_ui_module_shortcut_grid()` | `.mpp-module-shortcut-grid` |
+| Activity list | `platform_ui_activity_list()` | `.mpp-activity-list` |
+| Pending list | `platform_ui_pending_list()` | `.mpp-pending-list` |
+| Dashboard welcome | `platform_ui_dashboard_welcome()` | `.mpp-dashboard-welcome` |
 | Avatar | `platform_ui_avatar()` | `.mpp-avatar` |
 
 ## Data display
@@ -149,7 +153,8 @@ Used by: login, register, forgot-password (Phase 10).
 - [x] Permission tree CSS (`.mpp-perm-tree`)
 - [x] Page implementations (Phase 4 admin shell)
 - [x] Permissions role editor on Role Details (Phase 5)
-- [ ] Panels, auth, responsive/RTL, testing (Phase 9+)
+- [ ] Auth, responsive/RTL, testing (Phase 10+)
 - [x] Modules list/detail pages (Phase 6)
 - [x] Users list filters and detail polish (Phase 7)
 - [x] Admin settings sections, appearance branding, mobile section picker (Phase 8)
+- [x] User and manager panel dashboards with module shortcuts (Phase 9)

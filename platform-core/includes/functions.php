@@ -615,3 +615,30 @@ function mpp_get_accent_color() {
 
 	return (string) $settings->get( 'accent_color', '' );
 }
+
+/**
+ * Get module shortcut links for a panel dashboard.
+ *
+ * @param string $panel Panel slug.
+ * @return array<int, array<string, string>>
+ */
+function mpp_get_panel_module_shortcuts( $panel ) {
+	if ( ! function_exists( 'mpp' ) ) {
+		return array();
+	}
+
+	return mpp()->get( \MPP\Panels\DashboardService::class )->get_module_shortcuts( $panel );
+}
+
+/**
+ * Get pending items for the manager dashboard.
+ *
+ * @return array<int, array<string, string>>
+ */
+function mpp_get_manager_pending_items() {
+	if ( ! function_exists( 'mpp' ) ) {
+		return array();
+	}
+
+	return mpp()->get( \MPP\Panels\DashboardService::class )->get_pending_items();
+}

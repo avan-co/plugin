@@ -380,4 +380,5 @@ Account section (footer): Profile, Logout
 - **Phase 6 (Modules):** Complete
 - **Phase 7 (Users):** Complete — list filters (role, status), role chips, effective access source labels
 - **Phase 8 (Settings):** Complete — appearance section, timezone, form fields, mobile section picker, header branding
-- **Phase 9+:** Pending — panels, auth, responsive/RTL, testing
+- **Phase 9 (Panels):** Complete — user/manager dashboards with welcome, stats, module shortcuts, activity
+- **Phase 10+:** Pending — auth, responsive/RTL, testing

@@ -159,16 +159,19 @@ final class UIComponents {
 	 * Render a responsive stats grid.
 	 *
 	 * @param array<int, array<string, string>> $items Stat cards.
+	 * @param string                            $class Optional extra class names.
 	 * @return string
 	 */
-	public static function stat_grid( array $items ) {
+	public static function stat_grid( array $items, $class = '' ) {
 		if ( empty( $items ) ) {
 			return '';
 		}
 
+		$classes = trim( 'mpp-stats ' . $class );
+
 		ob_start();
 		?>
-		<div class="mpp-stats">
+		<div class="<?php echo esc_attr( $classes ); ?>">
 			<?php foreach ( $items as $item ) : ?>
 				<div class="mpp-stat-card">
 					<span class="mpp-stat-card__label"><?php echo esc_html( $item['label'] ?? '' ); ?></span>
@@ -226,6 +229,133 @@ final class UIComponents {
 			echo self::button( $action ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 		echo '</div>';
+		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Render a dashboard welcome header.
+	 *
+	 * @param string $name        User display name.
+	 * @param string $description Optional subtitle.
+	 * @return string
+	 */
+	public static function dashboard_welcome( $name, $description = '' ) {
+		ob_start();
+		?>
+		<header class="mpp-dashboard-welcome">
+			<h1 class="mpp-dashboard-welcome__title"><?php echo esc_html( sprintf( __( 'Welcome back, %s', 'platform-theme' ), $name ) ); ?></h1>
+			<?php if ( $description ) : ?>
+				<p class="mpp-dashboard-welcome__description mpp-muted"><?php echo esc_html( $description ); ?></p>
+			<?php endif; ?>
+		</header>
+		<?php
+		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Render a grid of module shortcut links.
+	 *
+	 * @param array<int, array<string, string>> $shortcuts Shortcut definitions.
+	 * @return string
+	 */
+	public static function module_shortcut_grid( array $shortcuts ) {
+		if ( empty( $shortcuts ) ) {
+			ob_start();
+			self::empty_state(
+				__( 'No modules available', 'platform-theme' ),
+				__( 'Installed modules with routes you can access will appear here.', 'platform-theme' )
+			);
+			return (string) ob_get_clean();
+		}
+
+		ob_start();
+		?>
+		<div class="mpp-module-shortcut-grid">
+			<?php foreach ( $shortcuts as $shortcut ) : ?>
+				<a class="mpp-module-shortcut" href="<?php echo esc_url( $shortcut['url'] ); ?>">
+					<span class="mpp-module-shortcut__icon" aria-hidden="true"><?php echo esc_html( $shortcut['icon'] ?? mb_strtoupper( mb_substr( $shortcut['label'], 0, 1 ) ) ); ?></span>
+					<span class="mpp-module-shortcut__label"><?php echo esc_html( $shortcut['label'] ); ?></span>
+					<?php if ( ! empty( $shortcut['description'] ) ) : ?>
+						<span class="mpp-module-shortcut__description mpp-muted"><?php echo esc_html( $shortcut['description'] ); ?></span>
+					<?php endif; ?>
+				</a>
+			<?php endforeach; ?>
+		</div>
+		<?php
+		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Render a pending items list for manager dashboards.
+	 *
+	 * @param array<int, array<string, string>> $items Pending items.
+	 * @return string
+	 */
+	public static function pending_list( array $items ) {
+		if ( empty( $items ) ) {
+			ob_start();
+			self::empty_state(
+				__( 'No pending items', 'platform-theme' ),
+				__( 'Open tasks from installed modules will appear here.', 'platform-theme' )
+			);
+			return (string) ob_get_clean();
+		}
+
+		ob_start();
+		?>
+		<ul class="mpp-pending-list">
+			<?php foreach ( $items as $item ) : ?>
+				<li class="mpp-pending-list__item">
+					<div class="mpp-pending-list__content">
+						<strong class="mpp-pending-list__title"><?php echo esc_html( $item['title'] ?? '' ); ?></strong>
+						<?php if ( ! empty( $item['description'] ) ) : ?>
+							<p class="mpp-pending-list__description mpp-muted"><?php echo esc_html( $item['description'] ); ?></p>
+						<?php endif; ?>
+					</div>
+					<?php if ( ! empty( $item['url'] ) ) : ?>
+						<?php echo self::button( array( 'label' => $item['action_label'] ?? __( 'Review', 'platform-theme' ), 'url' => $item['url'], 'variant' => 'secondary', 'size' => 'sm' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php endif; ?>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+		<?php
+		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Render a recent activity list.
+	 *
+	 * @param array<int, array<string, mixed>> $entries Activity entries.
+	 * @return string
+	 */
+	public static function activity_list( array $entries ) {
+		if ( empty( $entries ) ) {
+			ob_start();
+			self::empty_state(
+				__( 'No activity yet', 'platform-theme' ),
+				__( 'Your recent platform actions will appear here.', 'platform-theme' )
+			);
+			return (string) ob_get_clean();
+		}
+
+		ob_start();
+		?>
+		<ul class="mpp-activity-list">
+			<?php foreach ( $entries as $entry ) : ?>
+				<li class="mpp-activity-list__item">
+					<div class="mpp-activity-list__main">
+						<code class="mpp-activity-list__action"><?php echo esc_html( $entry['action'] ?? '' ); ?></code>
+						<?php if ( ! empty( $entry['object_type'] ) ) : ?>
+							<span class="mpp-activity-list__object"><?php echo esc_html( $entry['object_type'] . ( ! empty( $entry['object_id'] ) ? ':' . $entry['object_id'] : '' ) ); ?></span>
+						<?php endif; ?>
+					</div>
+					<time class="mpp-activity-list__time mpp-muted" datetime="<?php echo esc_attr( $entry['created_at'] ?? '' ); ?>">
+						<?php echo esc_html( $entry['created_at'] ?? '' ); ?>
+					</time>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+		<?php
 		return (string) ob_get_clean();
 	}
 
