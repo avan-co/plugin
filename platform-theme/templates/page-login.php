@@ -24,6 +24,10 @@ ob_start();
 if ( ! empty( $GLOBALS['mpp_login_error'] ) ) {
 	platform_ui_alert( (string) $GLOBALS['mpp_login_error'], 'error' );
 }
+
+if ( isset( $_GET['password_reset'] ) && '1' === sanitize_text_field( wp_unslash( $_GET['password_reset'] ) ) ) {
+	platform_ui_alert( __( 'Your password has been reset. You can now log in.', 'platform-theme' ), 'success' );
+}
 ?>
 <form method="post" action="<?php echo esc_url( mpp_route_url( 'login' ) ); ?>" class="mpp-form" novalidate>
 	<?php wp_nonce_field( 'mpp_login', 'mpp_login_nonce' ); ?>

@@ -15,10 +15,10 @@ msgstr ""
 "and admin panels with a modular, secure architecture."
 
 msgid "ACL"
-msgstr "ACL"
+msgstr "کنترل دسترسی"
 
 msgid "ACL Overview"
-msgstr "ACL Overview"
+msgstr "نمای ACL"
 
 msgid "Access the panel that matches your permissions."
 msgstr "Access the panel that matches your permissions."
@@ -36,22 +36,22 @@ msgid "Active"
 msgstr "Active"
 
 msgid "Activity"
-msgstr "Activity"
+msgstr "فعالیت"
 
 msgid "Add independent modules without changing the platform core."
 msgstr "Add independent modules without changing the platform core."
 
 msgid "Admin"
-msgstr "Admin"
+msgstr "مدیریت"
 
 msgid "Admin Dashboard"
-msgstr "Admin Dashboard"
+msgstr "داشبورد ادمین"
 
 msgid "Admin Panel"
 msgstr "پنل ادمین"
 
 msgid "Admin Settings"
-msgstr "Admin Settings"
+msgstr "تنظیمات ادمین"
 
 msgid "Admin panel navigation"
 msgstr "Admin panel navigation"
@@ -81,7 +81,7 @@ msgid "Breadcrumb"
 msgstr "Breadcrumb"
 
 msgid "Confirm Password"
-msgstr "Confirm Password"
+msgstr "تأیید رمز"
 
 msgid "Core capabilities"
 msgstr "Core capabilities"
@@ -115,7 +115,7 @@ msgstr ""
 "experience."
 
 msgid "Email"
-msgstr "Email"
+msgstr "ایمیل"
 
 msgid "Enable email notifications"
 msgstr "فعال‌سازی اعلان‌های ایمیل"
@@ -124,7 +124,7 @@ msgid "Enabled"
 msgstr "فعال"
 
 msgid "Fair password"
-msgstr "Fair password"
+msgstr "رمز متوسط"
 
 msgid "Forgot password?"
 msgstr "رمز عبور را فراموش کرده‌اید؟"
@@ -136,7 +136,7 @@ msgid "Go to Dashboard"
 msgstr "رفتن به داشبورد"
 
 msgid "Good password"
-msgstr "Good password"
+msgstr "رمز خوب"
 
 msgid "Grant and revoke permissions with scope controls."
 msgstr "Grant and revoke permissions with scope controls."
@@ -173,7 +173,7 @@ msgid "Logout"
 msgstr "خروج"
 
 msgid "Manage WordPress users and platform role assignments."
-msgstr "Manage WordPress users and platform role assignments."
+msgstr "مدیریت کاربران وردپرس و تخصیص نقش پلتفرم."
 
 msgid "Manage users, roles, permissions, modules, and ACL."
 msgstr "Manage users, roles, permissions, modules, and ACL."
@@ -236,7 +236,7 @@ msgid "No Platform Role"
 msgstr "No Platform Role"
 
 msgid "No activity yet"
-msgstr "No activity yet"
+msgstr "هنوز فعالیتی نیست"
 
 msgid "No content found."
 msgstr "No content found."
@@ -267,7 +267,7 @@ msgid "Open Settings"
 msgstr "Open Settings"
 
 msgid "Overview of users, roles, modules, and recent activity."
-msgstr "Overview of users, roles, modules, and recent activity."
+msgstr "نمای کلی کاربران، نقش‌ها، ماژول‌ها و فعالیت اخیر."
 
 msgid "Panel navigation"
 msgstr "ناوبری پنل"
@@ -279,7 +279,7 @@ msgid "Password changes are managed through your WordPress account profile."
 msgstr "Password changes are managed through your WordPress account profile."
 
 msgid "Pending Tasks"
-msgstr "Pending Tasks"
+msgstr "وظایف در انتظار"
 
 msgid "Permission matrix"
 msgstr "Permission matrix"
@@ -349,7 +349,7 @@ msgid "Review core platform configuration and runtime status."
 msgstr "Review core platform configuration and runtime status."
 
 msgid "Review registered platform modules and their capabilities."
-msgstr "Review registered platform modules and their capabilities."
+msgstr "بررسی ماژول‌های ثبت‌شده و قابلیت‌های آن‌ها."
 
 msgid "Role and access management"
 msgstr "Role and access management"
@@ -394,13 +394,13 @@ msgid "Sign in with your username or email address."
 msgstr "با نام کاربری یا ایمیل وارد شوید."
 
 msgid "Strong password"
-msgstr "Strong password"
+msgstr "رمز قوی"
 
 msgid "Team"
 msgstr "Team"
 
 msgid "Team Members"
-msgstr "Team Members"
+msgstr "اعضای تیم"
 
 msgid "Team management will be available when a team module is installed."
 msgstr "Team management will be available when a team module is installed."
@@ -412,7 +412,7 @@ msgid "Toggle navigation"
 msgstr "باز و بسته کردن منو"
 
 msgid "User"
-msgstr "User"
+msgstr "کاربر"
 
 msgid "User / Manager / Admin panels"
 msgstr "User / Manager / Admin panels"
@@ -424,7 +424,7 @@ msgid "User panel navigation"
 msgstr "User panel navigation"
 
 msgid "Username"
-msgstr "Username"
+msgstr "نام کاربری"
 
 msgid "Username or Email"
 msgstr "نام کاربری یا ایمیل"
@@ -439,7 +439,7 @@ msgid "View and update your account profile information."
 msgstr "View and update your account profile information."
 
 msgid "Weak password"
-msgstr "Weak password"
+msgstr "رمز ضعیف"
 
 msgid "Welcome back, %s."
 msgstr "Welcome back, %s."

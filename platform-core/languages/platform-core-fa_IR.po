@@ -24,10 +24,10 @@ msgid "A valid role_id is required."
 msgstr "A valid role_id is required."
 
 msgid "ACL"
-msgstr "ACL"
+msgstr "کنترل دسترسی"
 
 msgid "ACL Overview"
-msgstr "ACL Overview"
+msgstr "نمای ACL"
 
 msgid "Access Denied"
 msgstr "Access Denied"
@@ -36,7 +36,7 @@ msgid "Access admin panel"
 msgstr "Access admin panel"
 
 msgid "Access denied."
-msgstr "Access denied."
+msgstr "دسترسی رد شد."
 
 msgid "Access manager panel"
 msgstr "Access manager panel"
@@ -66,7 +66,7 @@ msgid "Access within user team."
 msgstr "Access within user team."
 
 msgid "Action"
-msgstr "Action"
+msgstr "عملیات"
 
 msgid "Active"
 msgstr "Active"
@@ -81,7 +81,7 @@ msgid "Admin Panel"
 msgstr "پنل ادمین"
 
 msgid "Admin Settings"
-msgstr "Admin Settings"
+msgstr "تنظیمات ادمین"
 
 msgid "Administrator with full panel access."
 msgstr "Administrator with full panel access."
@@ -108,13 +108,13 @@ msgid "Audit Entries"
 msgstr "Audit Entries"
 
 msgid "Audit Log"
-msgstr "Audit Log"
+msgstr "گزارش ممیزی"
 
 msgid "Back to permissions"
-msgstr "Back to permissions"
+msgstr "بازگشت به مجوزها"
 
 msgid "Back to roles"
-msgstr "Back to roles"
+msgstr "بازگشت به نقش‌ها"
 
 msgid "Back to users"
 msgstr "Back to users"
@@ -123,7 +123,7 @@ msgid "Category"
 msgstr "Category"
 
 msgid "Clear"
-msgstr "Clear"
+msgstr "پاک کردن"
 
 msgid "Core"
 msgstr "Core"
@@ -186,7 +186,7 @@ msgid "Default platform roles are created during installation."
 msgstr "Default platform roles are created during installation."
 
 msgid "Delete Role"
-msgstr "Delete Role"
+msgstr "حذف نقش"
 
 msgid "Delete this role?"
 msgstr "Delete this role?"
@@ -219,13 +219,13 @@ msgid "Effective Access"
 msgstr "دسترسی نهایی"
 
 msgid "Email"
-msgstr "Email"
+msgstr "ایمیل"
 
 msgid "Enable public registration"
 msgstr "Enable public registration"
 
 msgid "Filter"
-msgstr "Filter"
+msgstr "فیلتر"
 
 msgid "From"
 msgstr "From"
@@ -262,7 +262,7 @@ msgid "Invalid role or permission."
 msgstr "Invalid role or permission."
 
 msgid "Invalid security token."
-msgstr "Invalid security token."
+msgstr "توکن امنیتی نامعتبر است."
 
 msgid "Invalid user or role."
 msgstr "Invalid user or role."
@@ -335,7 +335,7 @@ msgid "No audit entries for this role."
 msgstr "No audit entries for this role."
 
 msgid "No audit entries matched your filters."
-msgstr "No audit entries matched your filters."
+msgstr "هیچ ردیف ممیزی با فیلترهای شما مطابقت نداشت."
 
 msgid "No description provided."
 msgstr "No description provided."
@@ -371,7 +371,7 @@ msgid "Not installed"
 msgstr "Not installed"
 
 msgid "Object"
-msgstr "Object"
+msgstr "مورد"
 
 msgid "Object Type"
 msgstr "Object Type"
@@ -398,7 +398,7 @@ msgid "Password must be at least 8 characters."
 msgstr "Password must be at least 8 characters."
 
 msgid "Passwords do not match."
-msgstr "Passwords do not match."
+msgstr "رمزها یکسان نیستند."
 
 msgid "Permission"
 msgstr "Permission"
@@ -474,7 +474,7 @@ msgid "Project"
 msgstr "Project"
 
 msgid "Recent ACL Activity"
-msgstr "Recent ACL Activity"
+msgstr "فعالیت اخیر ACL"
 
 msgid "Recent audit activity"
 msgstr "Recent audit activity"
@@ -500,7 +500,7 @@ msgid "Remember Me Duration (days)"
 msgstr "Remember Me Duration (days)"
 
 msgid "Remove"
-msgstr "Remove"
+msgstr "حذف"
 
 msgid "Revoke"
 msgstr "Revoke"
@@ -515,10 +515,10 @@ msgid "Role assigned."
 msgstr "Role assigned."
 
 msgid "Role created."
-msgstr "Role created."
+msgstr "نقش ایجاد شد."
 
 msgid "Role deleted."
-msgstr "Role deleted."
+msgstr "نقش حذف شد."
 
 msgid "Role not found."
 msgstr "Role not found."
@@ -557,7 +557,7 @@ msgid "Search"
 msgstr "Search"
 
 msgid "Search permissions"
-msgstr "Search permissions"
+msgstr "جستجوی مجوزها"
 
 msgid "Search permissions..."
 msgstr "Search permissions..."
@@ -599,7 +599,7 @@ msgid "Status"
 msgstr "Status"
 
 msgid "System"
-msgstr "System"
+msgstr "سیستم"
 
 msgid "System Information"
 msgstr "System Information"
@@ -623,7 +623,7 @@ msgid "This username is already taken."
 msgstr "This username is already taken."
 
 msgid "Time"
-msgstr "Time"
+msgstr "زمان"
 
 msgid "To"
 msgstr "To"
@@ -647,7 +647,7 @@ msgid "Used by roles:"
 msgstr "Used by roles:"
 
 msgid "User"
-msgstr "User"
+msgstr "کاربر"
 
 msgid "User ID"
 msgstr "User ID"
@@ -662,7 +662,7 @@ msgid "User not found."
 msgstr "User not found."
 
 msgid "Username"
-msgstr "Username"
+msgstr "نام کاربری"
 
 msgid "Users"
 msgstr "کاربران"

@@ -119,7 +119,7 @@ function mpp_is_auth_route() {
 		return false;
 	}
 
-	return in_array( $route['slug'], array( 'login', 'register', 'forgot-password' ), true );
+	return in_array( $route['slug'], array( 'login', 'register', 'forgot-password', 'reset-password' ), true );
 }
 
 /**
@@ -129,6 +129,23 @@ function mpp_is_auth_route() {
  */
 function mpp_forgot_password_url() {
 	return mpp_route_url( 'forgot-password' );
+}
+
+/**
+ * Get the themed reset-password URL.
+ *
+ * @param string $key        Reset key from email.
+ * @param string $user_login User login.
+ * @return string
+ */
+function mpp_reset_password_url( $key, $user_login ) {
+	return add_query_arg(
+		array(
+			'key'   => $key,
+			'login' => $user_login,
+		),
+		mpp_route_url( 'reset-password' )
+	);
 }
 
 /**
@@ -298,18 +315,23 @@ function mpp_get_admin_navigation() {
 					'route'       => 'app/admin/users',
 					'description' => __( 'Accounts and role assignments', 'platform-core' ),
 				),
-				array(
-					'label'       => __( 'Roles', 'platform-core' ),
-					'route'       => 'app/admin/roles',
-					'description' => __( 'Role definitions and members', 'platform-core' ),
-				),
 			),
 		),
 		array(
-			'label'       => __( 'Permissions', 'platform-core' ),
-			'route'       => 'app/admin/permissions',
-			'permission'  => 'core.acl.manage',
-			'description' => __( 'Browse and inspect permissions', 'platform-core' ),
+			'label'      => __( 'Roles & Permissions', 'platform-core' ),
+			'permission' => 'core.acl.manage',
+			'children'   => array(
+				array(
+					'label'       => __( 'Roles', 'platform-core' ),
+					'route'       => 'app/admin/roles',
+					'description' => __( 'Role definitions and permission grants', 'platform-core' ),
+				),
+				array(
+					'label'       => __( 'Permissions', 'platform-core' ),
+					'route'       => 'app/admin/permissions',
+					'description' => __( 'Permission catalog and usage', 'platform-core' ),
+				),
+			),
 		),
 		array(
 			'label'       => __( 'ACL', 'platform-core' ),

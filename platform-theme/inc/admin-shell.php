@@ -17,8 +17,8 @@ require_once get_template_directory() . '/inc/panel-layout.php';
 function platform_render_admin_shell( $page ) {
 	$meta = array(
 		'users'       => array( __( 'Users', 'platform-theme' ), __( 'Manage WordPress users and platform role assignments.', 'platform-theme' ) ),
-		'roles'       => array( __( 'Roles', 'platform-theme' ), __( 'Create and maintain platform roles and permissions.', 'platform-theme' ) ),
-		'permissions' => array( __( 'Permissions', 'platform-theme' ), __( 'Browse and inspect platform permissions.', 'platform-theme' ) ),
+		'roles'       => array( __( 'Roles', 'platform-theme' ), __( 'Create roles and assign permissions.', 'platform-theme' ) ),
+		'permissions' => array( __( 'Permissions', 'platform-theme' ), __( 'Browse the permission catalog and inspect role usage.', 'platform-theme' ) ),
 		'modules'     => array( __( 'Modules', 'platform-theme' ), __( 'Review registered platform modules and their capabilities.', 'platform-theme' ) ),
 		'acl'         => array( __( 'ACL Overview', 'platform-theme' ), __( 'Review access control distribution and scope types.', 'platform-theme' ) ),
 		'settings'    => array( __( 'Admin Settings', 'platform-theme' ), __( 'Configure platform-wide settings.', 'platform-theme' ) ),
@@ -27,7 +27,7 @@ function platform_render_admin_shell( $page ) {
 
 	$title       = $meta[ $page ][0] ?? ucfirst( $page );
 	$description = $meta[ $page ][1] ?? '';
-	$breadcrumb  = function_exists( 'platform_admin_breadcrumb' ) ? platform_admin_breadcrumb( $page ) : array();
+	$breadcrumb  = function_exists( 'platform_admin_breadcrumb_nested' ) ? platform_admin_breadcrumb_nested( $page, in_array( $page, array( 'roles', 'permissions' ), true ) ) : ( function_exists( 'platform_admin_breadcrumb' ) ? platform_admin_breadcrumb( $page ) : array() );
 
 	if ( 'acl' === $page && isset( $_GET['view'] ) && 'audit' === sanitize_key( wp_unslash( $_GET['view'] ) ) ) {
 		$title       = __( 'Audit Log', 'platform-theme' );

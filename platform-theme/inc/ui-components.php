@@ -74,6 +74,7 @@ function platform_admin_breadcrumb( $page ) {
 		'users'       => __( 'Users', 'platform-theme' ),
 		'roles'       => __( 'Roles', 'platform-theme' ),
 		'permissions' => __( 'Permissions', 'platform-theme' ),
+		'access'      => __( 'Roles & Permissions', 'platform-theme' ),
 		'modules'     => __( 'Modules', 'platform-theme' ),
 		'acl'         => __( 'ACL', 'platform-theme' ),
 		'audit-log'   => __( 'Audit Log', 'platform-theme' ),
@@ -84,6 +85,27 @@ function platform_admin_breadcrumb( $page ) {
 		__( 'Admin', 'platform-theme' ),
 		$labels[ $page ] ?? ucfirst( $page ),
 	);
+}
+
+/**
+ * Build admin breadcrumb with optional Roles & Permissions parent.
+ *
+ * @param string $page   Page slug.
+ * @param bool   $nested Whether to include the access parent crumb.
+ * @return array<int, string>
+ */
+function platform_admin_breadcrumb_nested( $page, $nested = false ) {
+	$crumbs = platform_admin_breadcrumb( $page );
+
+	if ( $nested && in_array( $page, array( 'roles', 'permissions' ), true ) ) {
+		return array(
+			__( 'Admin', 'platform-theme' ),
+			__( 'Roles & Permissions', 'platform-theme' ),
+			$crumbs[1],
+		);
+	}
+
+	return $crumbs;
 }
 
 /**

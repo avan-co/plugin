@@ -603,7 +603,31 @@ class AdminRenderer {
 		</form>
 
 		<?php if ( $is_edit && empty( $role['is_system'] ) ) : ?>
-			<form method="post" class="mpp-form mpp-card" style="margin-top:1rem" data-mpp-confirm="<?php echo esc_attr( __( 'Delete this role? Users will lose permissions granted only through this role.', 'platform-core' ) ); ?>">
+			<?php
+			$delete_impact = $this->access->preview_role_delete_impact( $role_id );
+			?>
+			<div class="mpp-impact-preview mpp-card" style="margin-top:1rem">
+				<h3><?php esc_html_e( 'Delete impact', 'platform-core' ); ?></h3>
+				<p class="mpp-muted">
+					<?php
+					printf(
+						/* translators: 1: user count, 2: permission count */
+						esc_html__( '%1$d users and %2$d permissions are linked to this role.', 'platform-core' ),
+						(int) $delete_impact['user_count'],
+						(int) $delete_impact['permission_count']
+					);
+					?>
+				</p>
+				<?php if ( ! empty( $delete_impact['routes'] ) ) : ?>
+					<p class="mpp-muted"><?php esc_html_e( 'Routes that may become inaccessible for affected users:', 'platform-core' ); ?></p>
+					<ul class="mpp-impact-preview__routes">
+						<?php foreach ( $delete_impact['routes'] as $route ) : ?>
+							<li><code><?php echo esc_html( $route['slug'] ); ?></code> — <?php echo esc_html( $route['title'] ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+			</div>
+			<form method="post" class="mpp-form mpp-card" style="margin-top:1rem" data-mpp-confirm="<?php echo esc_attr( sprintf( __( 'Delete the "%s" role? %d users will lose permissions granted only through this role.', 'platform-core' ), $role['name'], (int) $delete_impact['user_count'] ) ); ?>">
 				<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<input type="hidden" name="mpp_admin_action" value="delete_role">
 				<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
@@ -663,7 +687,7 @@ class AdminRenderer {
 			);
 		}
 		?>
-		<div class="mpp-perm-tree">
+		<div class="mpp-perm-tree mpp-perm-tree--responsive">
 			<?php foreach ( $tree as $module => $resources ) : ?>
 				<?php if ( $module_filter && $module_filter !== $module ) { continue; } ?>
 				<section class="mpp-perm-tree__module">
@@ -748,6 +772,17 @@ class AdminRenderer {
 			__( 'Save permission changes for the "%s" role?', 'platform-core' ),
 			$role['name'] ?? ''
 		);
+		$sync_impact    = $this->access->preview_permission_sync_impact( $role_id, $initial_granted );
+		$permission_routes = array();
+
+		foreach ( $tree as $resources ) {
+			foreach ( $resources as $actions ) {
+				foreach ( $actions as $action ) {
+					$pid = (int) $action['id'];
+					$permission_routes[ $pid ] = $this->access->get_routes_for_permission_key( $action['key'] );
+				}
+			}
+		}
 		?>
 		<form method="get" action="<?php echo esc_url( mpp_route_url( 'app/admin/roles' ) ); ?>" class="mpp-filter-bar">
 			<input type="hidden" name="view" value="<?php echo esc_attr( (string) $role_id ); ?>">
@@ -759,7 +794,7 @@ class AdminRenderer {
 			<button type="submit" class="mpp-btn mpp-btn--secondary"><?php esc_html_e( 'Search', 'platform-core' ); ?></button>
 		</form>
 
-		<form method="post" class="mpp-role-permissions" data-mpp-confirm-save="<?php echo esc_attr( $confirm_save ); ?>" data-initial-granted="<?php echo esc_attr( wp_json_encode( $initial_granted ) ); ?>">
+		<form method="post" class="mpp-role-permissions" data-mpp-confirm-save="<?php echo esc_attr( $confirm_save ); ?>" data-initial-granted="<?php echo esc_attr( wp_json_encode( $initial_granted ) ); ?>" data-permission-routes="<?php echo esc_attr( wp_json_encode( $permission_routes ) ); ?>">
 			<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<input type="hidden" name="mpp_admin_action" value="save_role_permissions">
 			<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
@@ -776,6 +811,23 @@ class AdminRenderer {
 					?>
 				</p>
 			<?php endif; ?>
+
+			<div class="mpp-impact-preview" id="mpp-role-perm-impact" data-user-count="<?php echo esc_attr( (string) $sync_impact['user_count'] ); ?>">
+				<p class="mpp-impact-preview__summary mpp-muted">
+					<?php
+					printf(
+						/* translators: %d: user count */
+						esc_html__( '%d users inherit permissions from this role.', 'platform-core' ),
+						(int) $sync_impact['user_count']
+					);
+					?>
+				</p>
+				<p class="mpp-impact-preview__delta mpp-muted" data-impact-delta hidden></p>
+				<div class="mpp-impact-preview__routes" data-impact-revoked hidden>
+					<p class="mpp-muted"><?php esc_html_e( 'Routes that may become inaccessible:', 'platform-core' ); ?></p>
+					<ul data-impact-revoked-list></ul>
+				</div>
+			</div>
 
 			<?php foreach ( $tree as $module => $resources ) : ?>
 				<?php
@@ -1285,6 +1337,7 @@ class AdminRenderer {
 
 		$role_usage = $this->access->get_roles_using_permission( $permission_id );
 		$user_count = $this->access->count_users_with_permission( $permission_id );
+		$routes     = $this->access->get_routes_for_permission_key( $permission['permission_key'] );
 		$audit      = $this->audit->query(
 			array(
 				'object_type' => 'role_permission',
@@ -1304,6 +1357,16 @@ class AdminRenderer {
 				<dt><?php esc_html_e( 'Users with access', 'platform-core' ); ?></dt><dd><?php echo esc_html( (string) $user_count ); ?></dd>
 			</dl>
 			<p class="mpp-muted"><?php esc_html_e( 'A permission alone does not create access. Effective access is calculated from roles, permissions, and scope.', 'platform-core' ); ?></p>
+			<?php if ( ! empty( $routes ) ) : ?>
+				<div class="mpp-impact-preview">
+					<p class="mpp-muted"><?php esc_html_e( 'Routes protected by this permission:', 'platform-core' ); ?></p>
+					<ul class="mpp-impact-preview__routes">
+						<?php foreach ( $routes as $route ) : ?>
+							<li><code><?php echo esc_html( $route['slug'] ); ?></code> — <?php echo esc_html( $route['title'] ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<h3><?php esc_html_e( 'Used by roles', 'platform-core' ); ?></h3>

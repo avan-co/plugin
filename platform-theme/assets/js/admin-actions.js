@@ -29,6 +29,97 @@
 		}
 	}
 
+	function parsePermissionRoutes(form) {
+		var raw = form.getAttribute('data-permission-routes');
+
+		if (!raw) {
+			return {};
+		}
+
+		try {
+			return JSON.parse(raw) || {};
+		} catch (error) {
+			return {};
+		}
+	}
+
+	function collectRevokedRoutes(form, revokedIds) {
+		var routeMap = parsePermissionRoutes(form);
+		var routes = {};
+		var list = revokedIds || [];
+
+		list.forEach(function (id) {
+			var entries = routeMap[id] || [];
+
+			entries.forEach(function (route) {
+				if (route && route.slug) {
+					routes[route.slug] = route;
+				}
+			});
+		});
+
+		return Object.keys(routes).map(function (slug) {
+			return routes[slug];
+		});
+	}
+
+	function updateLiveImpact(form) {
+		var panel = document.getElementById('mpp-role-perm-impact');
+
+		if (!panel || !form.classList.contains('mpp-role-permissions')) {
+			return;
+		}
+
+		var impact = getPermissionImpact(form);
+		var delta = panel.querySelector('[data-impact-delta]');
+		var revokedWrap = panel.querySelector('[data-impact-revoked]');
+		var revokedList = panel.querySelector('[data-impact-revoked-list]');
+		var userCount = parseInt(panel.getAttribute('data-user-count') || '0', 10);
+		var initial = parseInitialGranted(form);
+		var checked = [];
+		var checkboxes = form.querySelectorAll('input[name="permission_ids[]"]');
+
+		checkboxes.forEach(function (input) {
+			if (input.checked) {
+				checked.push(parseInt(input.value, 10));
+			}
+		});
+
+		var revokedIds = initial.filter(function (id) {
+			return checked.indexOf(id) === -1;
+		});
+
+		if (!impact.granted && !impact.revoked) {
+			if (delta) {
+				delta.hidden = true;
+			}
+			if (revokedWrap) {
+				revokedWrap.hidden = true;
+			}
+			return;
+		}
+
+		if (delta) {
+			delta.hidden = false;
+			delta.textContent = t('impactPrefix', 'This will grant') + ' ' + impact.granted + ' ' + t('impactGranted', 'and revoke') + ' ' + impact.revoked + ' ' + t('impactSuffix', 'permissions.') + ' ' + userCount + ' ' + t('impactUsers', 'users may be affected.');
+		}
+
+		var routes = collectRevokedRoutes(form, revokedIds);
+
+		if (revokedWrap && revokedList) {
+			if (!routes.length) {
+				revokedWrap.hidden = true;
+				revokedList.innerHTML = '';
+				return;
+			}
+
+			revokedWrap.hidden = false;
+			revokedList.innerHTML = routes.map(function (route) {
+				return '<li><code>' + route.slug + '</code> — ' + route.title + '</li>';
+			}).join('');
+		}
+	}
+
 	function getPermissionImpact(form) {
 		var initial = parseInitialGranted(form);
 		var checked = [];
@@ -80,6 +171,13 @@
 	}
 
 	document.querySelectorAll('form[data-mpp-confirm], form.mpp-role-permissions').forEach(function (form) {
+		if (form.classList.contains('mpp-role-permissions')) {
+			form.addEventListener('change', function () {
+				updateLiveImpact(form);
+			});
+			updateLiveImpact(form);
+		}
+
 		form.addEventListener('submit', function (event) {
 			var message = getConfirmMessage(form);
 

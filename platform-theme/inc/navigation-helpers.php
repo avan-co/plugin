@@ -53,7 +53,7 @@ function platform_route_has_sidebar() {
 
 	$slug = $route['slug'];
 
-	if ( in_array( $slug, array( 'app', 'login', 'register', 'forgot-password', '403', '404' ), true ) ) {
+	if ( in_array( $slug, array( 'app', 'login', 'register', 'forgot-password', 'reset-password', '403', '404' ), true ) ) {
 		return false;
 	}
 

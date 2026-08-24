@@ -20,6 +20,14 @@ $html_dir       = LanguageSwitcher::get_text_direction();
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		try {
+			var storedTheme = localStorage.getItem('mppTheme');
+			if (storedTheme === 'dark' || storedTheme === 'light') {
+				document.documentElement.setAttribute('data-theme', storedTheme);
+			}
+		} catch (error) {}
+	</script>
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class( 'mpp-body' ); ?>>
@@ -39,11 +47,13 @@ $html_dir       = LanguageSwitcher::get_text_direction();
 		<?php if ( is_user_logged_in() ) : ?>
 			<div class="mpp-header__tools">
 				<?php platform_render_panel_switcher(); ?>
+				<button type="button" class="mpp-btn mpp-btn--ghost mpp-btn--sm mpp-theme-toggle" data-mpp-theme-toggle aria-label="<?php esc_attr_e( 'Toggle color theme', 'platform-theme' ); ?>"><?php esc_html_e( 'Theme', 'platform-theme' ); ?></button>
 				<?php LanguageSwitcher::render(); ?>
 				<?php platform_render_account_menu(); ?>
 			</div>
 		<?php else : ?>
 			<div class="mpp-header__tools mpp-header__tools--public">
+				<button type="button" class="mpp-btn mpp-btn--ghost mpp-btn--sm mpp-theme-toggle" data-mpp-theme-toggle aria-label="<?php esc_attr_e( 'Toggle color theme', 'platform-theme' ); ?>"><?php esc_html_e( 'Theme', 'platform-theme' ); ?></button>
 				<?php LanguageSwitcher::render(); ?>
 				<?php if ( ! $is_auth_page ) : ?>
 					<nav class="mpp-public-nav" aria-label="<?php esc_attr_e( 'Public navigation', 'platform-theme' ); ?>">

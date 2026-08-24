@@ -73,3 +73,25 @@
 	--mpp-shadow: var(--mpp-shadow-card);
 	--mpp-font: var(--mpp-font-body);
 }
+
+[data-theme="dark"] {
+	color-scheme: dark;
+	--mpp-background: #0f172a;
+	--mpp-foreground: #f8fafc;
+	--mpp-muted: #1e293b;
+	--mpp-muted-foreground: #94a3b8;
+	--mpp-border: #334155;
+	--mpp-input: #334155;
+	--mpp-primary: #f8fafc;
+	--mpp-primary-foreground: #0f172a;
+	--mpp-secondary: #1e293b;
+	--mpp-secondary-foreground: #f8fafc;
+	--mpp-surface-page: #020617;
+	--mpp-surface-card: #0f172a;
+	--mpp-surface-sidebar: #0f172a;
+	--mpp-surface-popover: #1e293b;
+	--mpp-ring: rgba(96, 165, 250, 0.45);
+	--mpp-shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.35);
+	--mpp-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
+	--mpp-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.5);
+}

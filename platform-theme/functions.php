@@ -122,6 +122,24 @@ function platform_theme_enqueue_assets() {
 		true
 	);
 
+	wp_enqueue_script(
+		'platform-theme-preference',
+		get_template_directory_uri() . '/assets/js/theme-preference.js',
+		array(),
+		wp_get_theme()->get( 'Version' ),
+		true
+	);
+	wp_localize_script(
+		'platform-theme-preference',
+		'mppThemePreference',
+		array(
+			'dark'      => __( 'Switch to dark mode', 'platform-theme' ),
+			'light'     => __( 'Switch to light mode', 'platform-theme' ),
+			'darkShort' => __( 'Dark', 'platform-theme' ),
+			'lightShort'=> __( 'Light', 'platform-theme' ),
+		)
+	);
+
 	if ( is_user_logged_in() ) {
 		wp_enqueue_script(
 			'platform-theme-account-notice',
@@ -150,7 +168,7 @@ function platform_theme_enqueue_assets() {
 
 	if ( function_exists( 'mpp_get_current_route' ) ) {
 		$route = mpp_get_current_route();
-		if ( $route && in_array( $route['slug'], array( 'login', 'register', 'forgot-password' ), true ) ) {
+		if ( $route && in_array( $route['slug'], array( 'login', 'register', 'forgot-password', 'reset-password' ), true ) ) {
 			wp_enqueue_script(
 				'platform-theme-forms',
 				get_template_directory_uri() . '/assets/js/forms.js',
@@ -201,6 +219,7 @@ function platform_theme_enqueue_assets() {
 					'impactPrefix'    => __( 'This will grant', 'platform-theme' ),
 					'impactGranted'   => __( 'and revoke', 'platform-theme' ),
 					'impactSuffix'    => __( 'permissions.', 'platform-theme' ),
+					'impactUsers'     => __( 'users may be affected.', 'platform-theme' ),
 				)
 			);
 		}

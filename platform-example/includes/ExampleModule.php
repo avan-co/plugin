@@ -94,6 +94,15 @@ class ExampleModule extends AbstractModule {
 				'permission' => 'example.demo.view',
 				'panel'      => 'user',
 			),
+			array(
+				'label'       => __( 'Example Oversight', 'platform-example' ),
+				'url'         => $url,
+				'route'       => 'app/example',
+				'permission'  => 'example.demo.manage',
+				'panel'       => 'manager',
+				'section'     => 'modules',
+				'description' => __( 'Review example module activity for your team.', 'platform-example' ),
+			),
 		);
 	}
 
@@ -109,6 +118,13 @@ class ExampleModule extends AbstractModule {
 				'permission' => 'example.demo.view',
 				'value'      => __( 'Active', 'platform-example' ),
 			),
+			array(
+				'id'         => 'example_manager_open_items',
+				'title'      => __( 'Example Open Items', 'platform-example' ),
+				'panel'      => 'manager',
+				'permission' => 'example.demo.manage',
+				'value'      => '3',
+			),
 		);
 	}
 
@@ -123,7 +139,42 @@ class ExampleModule extends AbstractModule {
 	 * @inheritDoc
 	 */
 	public function boot() {
-		// No runtime hooks required for the example module.
+		add_filter( 'mpp_manager_dashboard_stats', array( $this, 'filter_manager_stats' ), 10, 2 );
+		add_filter( 'mpp_manager_pending_items', array( $this, 'filter_manager_pending_items' ), 10, 2 );
+	}
+
+	/**
+	 * Provide sample manager dashboard stats.
+	 *
+	 * @param array<string, mixed> $stats   Stats map.
+	 * @param int                  $user_id Manager user ID.
+	 * @return array<string, mixed>
+	 */
+	public function filter_manager_stats( array $stats, $user_id ) {
+		$stats['team_members']  = '12';
+		$stats['pending_tasks'] = '3';
+
+		return $stats;
+	}
+
+	/**
+	 * Provide sample pending items for managers.
+	 *
+	 * @param array<int, array<string, string>> $items   Pending items.
+	 * @param int                             $user_id Manager user ID.
+	 * @return array<int, array<string, string>>
+	 */
+	public function filter_manager_pending_items( array $items, $user_id ) {
+		$url = function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app/example' ) : home_url( '/app/example' );
+
+		$items[] = array(
+			'title'        => __( '3 example approvals waiting', 'platform-example' ),
+			'description'  => __( 'Review demo module requests assigned to your scope.', 'platform-example' ),
+			'url'          => $url,
+			'action_label' => __( 'Review', 'platform-example' ),
+		);
+
+		return $items;
 	}
 
 	/**

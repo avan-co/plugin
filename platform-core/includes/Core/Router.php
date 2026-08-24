@@ -324,6 +324,15 @@ class Router {
 		);
 
 		$this->add_route(
+			'reset-password',
+			array(
+				'template' => 'templates/page-reset-password.php',
+				'auth'     => false,
+				'title'    => __( 'Reset Password', 'platform-core' ),
+			)
+		);
+
+		$this->add_route(
 			'app',
 			array(
 				'template'   => 'templates/page-app.php',
