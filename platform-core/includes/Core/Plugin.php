@@ -128,6 +128,8 @@ class Plugin {
 
 		$this->container->get( PlatformSettings::class )->register_hooks();
 
+		add_filter( 'show_admin_bar', array( $this, 'hide_admin_bar_on_platform_routes' ) );
+
 		add_action( 'rest_api_init', array( $module_manager, 'register_module_rest_routes' ) );
 
 		do_action( 'mpp_booted', $this );
@@ -324,6 +326,24 @@ class Plugin {
 	 */
 	public function acl() {
 		return $this->get( AclEngine::class );
+	}
+
+	/**
+	 * Hide the WordPress admin bar on platform routes.
+	 *
+	 * @param bool $show Whether to show the admin bar.
+	 * @return bool
+	 */
+	public function hide_admin_bar_on_platform_routes( $show ) {
+		if ( ! $show ) {
+			return false;
+		}
+
+		if ( function_exists( 'mpp_get_current_route' ) && mpp_get_current_route() ) {
+			return false;
+		}
+
+		return $show;
 	}
 
 	/**

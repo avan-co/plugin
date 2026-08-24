@@ -12,6 +12,39 @@ body.mpp-body {
 	line-height: 1.6;
 }
 
+.screen-reader-text {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal;
+}
+
+.mpp-skip-link:focus {
+	clip: auto;
+	clip-path: none;
+	display: block;
+	height: auto;
+	left: var(--mpp-space-md);
+	margin: 0;
+	overflow: visible;
+	padding: 0.5rem 1rem;
+	position: fixed;
+	top: var(--mpp-space-md);
+	width: auto;
+	z-index: 200;
+	background: var(--mpp-primary);
+	color: var(--mpp-primary-foreground);
+	border-radius: var(--mpp-radius-md);
+	text-decoration: none;
+	font-weight: 600;
+}
+
 /* Centered auth pages */
 .mpp-main--centered {
 	display: flex;

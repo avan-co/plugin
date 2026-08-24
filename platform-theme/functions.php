@@ -92,6 +92,16 @@ function platform_theme_enqueue_assets() {
 		true
 	);
 
+	if ( is_user_logged_in() ) {
+		wp_enqueue_script(
+			'platform-theme-account-notice',
+			get_template_directory_uri() . '/assets/js/account-notice.js',
+			array(),
+			wp_get_theme()->get( 'Version' ),
+			true
+		);
+	}
+
 	if ( is_front_page() ) {
 		wp_enqueue_style(
 			'platform-theme-home',

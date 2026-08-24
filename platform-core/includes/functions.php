@@ -487,9 +487,13 @@ function mpp_render_account_notice() {
 		return;
 	}
 
+	$role = 'success' === $type ? 'status' : 'alert';
+
 	printf(
-		'<div class="mpp-alert mpp-alert--%s" role="alert">%s</div>',
+		'<div class="mpp-alert mpp-alert--%s" role="%s"%s>%s</div>',
 		esc_attr( $alert_type ),
+		esc_attr( $role ),
+		'success' === $type ? ' aria-live="polite"' : '',
 		esc_html( $message )
 	);
 }

@@ -109,9 +109,14 @@ final class UIComponents {
 	 * @param string $type    Alert type.
 	 */
 	public static function alert( $message, $type = 'info' ) {
+		$type = sanitize_html_class( $type );
+		$role = in_array( $type, array( 'error', 'warning' ), true ) ? 'alert' : 'status';
+
 		printf(
-			'<div class="mpp-alert mpp-alert--%s" role="alert">%s</div>',
-			esc_attr( sanitize_html_class( $type ) ),
+			'<div class="mpp-alert mpp-alert--%s" role="%s"%s>%s</div>',
+			esc_attr( $type ),
+			esc_attr( $role ),
+			'status' === $role ? ' aria-live="polite"' : '',
 			esc_html( $message )
 		);
 	}

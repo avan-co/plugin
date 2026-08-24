@@ -147,6 +147,11 @@ class Router {
 			'definition'  => $definition,
 		);
 
+		if ( ! empty( $definition['status'] ) ) {
+			status_header( (int) $definition['status'] );
+			nocache_headers();
+		}
+
 		$template = $definition['template'];
 
 		if ( empty( $template ) ) {
@@ -386,6 +391,7 @@ class Router {
 			array(
 				'template' => 'templates/page-403.php',
 				'auth'     => false,
+				'status'   => 403,
 				'title'    => __( 'Access Denied', 'platform-core' ),
 			)
 		);
@@ -395,6 +401,7 @@ class Router {
 			array(
 				'template' => 'templates/page-404.php',
 				'auth'     => false,
+				'status'   => 404,
 				'title'    => __( 'Not Found', 'platform-core' ),
 			)
 		);

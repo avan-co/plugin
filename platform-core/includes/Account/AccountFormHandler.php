@@ -133,7 +133,7 @@ class AccountFormHandler {
 	}
 
 	private function update_settings() {
-		if ( ! $this->acl->can( get_current_user_id(), 'core.settings.edit' ) ) {
+		if ( ! $this->acl->can( get_current_user_id(), 'core.settings.view' ) ) {
 			return array( 'success' => false, 'message' => __( 'Permission denied.', 'platform-core' ) );
 		}
 

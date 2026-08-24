@@ -11,7 +11,7 @@ require_once get_template_directory() . '/inc/account-layout.php';
 
 $user_id       = get_current_user_id();
 $user          = wp_get_current_user();
-$can_edit      = function_exists( 'mpp_can' ) && mpp_can( 'core.settings.edit' );
+$can_edit      = function_exists( 'mpp_can' ) && mpp_can( 'core.settings.view' );
 $notifications = (bool) get_user_meta( $user_id, 'mpp_notifications', true );
 $panels        = function_exists( 'mpp_get_accessible_panels' ) ? mpp_get_accessible_panels() : array();
 

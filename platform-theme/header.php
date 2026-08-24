@@ -10,12 +10,16 @@ defined( 'ABSPATH' ) || exit;
 use PlatformTheme\DesignSystem\LanguageSwitcher;
 use PlatformTheme\DesignSystem\UIComponents;
 
-$current_user = wp_get_current_user();
-$is_panel     = function_exists( 'mpp_get_current_route' ) && mpp_get_current_route();
-$is_auth_page = function_exists( 'mpp_is_auth_route' ) && mpp_is_auth_route();
+$current_user   = wp_get_current_user();
+$route          = function_exists( 'mpp_get_current_route' ) ? mpp_get_current_route() : null;
+$is_panel       = ! empty( $route );
+$is_auth_page   = function_exists( 'mpp_is_auth_route' ) && mpp_is_auth_route();
+$has_sidebar    = function_exists( 'platform_route_has_sidebar' ) && platform_route_has_sidebar();
+$html_lang      = str_replace( '_', '-', determine_locale() );
+$html_dir       = LanguageSwitcher::get_text_direction();
 ?>
 <!DOCTYPE html>
-<html <?php language_attributes(); ?>>
+<html lang="<?php echo esc_attr( $html_lang ); ?>" dir="<?php echo esc_attr( $html_dir ); ?>">
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,6 +27,8 @@ $is_auth_page = function_exists( 'mpp_is_auth_route' ) && mpp_is_auth_route();
 </head>
 <body <?php body_class( 'mpp-body' ); ?>>
 <?php wp_body_open(); ?>
+
+<a class="mpp-skip-link screen-reader-text" href="#mpp-main-content"><?php esc_html_e( 'Skip to content', 'platform-theme' ); ?></a>
 
 <header class="mpp-header">
 	<div class="mpp-header__inner">
@@ -51,16 +57,19 @@ $is_auth_page = function_exists( 'mpp_is_auth_route' ) && mpp_is_auth_route();
 				</div>
 			</div>
 		<?php else : ?>
-			<?php if ( ! $is_auth_page ) : ?>
-			<nav class="mpp-public-nav" aria-label="<?php esc_attr_e( 'Public navigation', 'platform-theme' ); ?>">
-				<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'login' ) : home_url( '/login' ) ); ?>" class="mpp-header__link"><?php esc_html_e( 'Login', 'platform-theme' ); ?></a>
-				<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'register' ) : home_url( '/register' ) ); ?>" class="mpp-header__link mpp-header__link--cta"><?php esc_html_e( 'Register', 'platform-theme' ); ?></a>
-			</nav>
-			<?php endif; ?>
+			<div class="mpp-header__tools mpp-header__tools--public">
+				<?php LanguageSwitcher::render(); ?>
+				<?php if ( ! $is_auth_page ) : ?>
+					<nav class="mpp-public-nav" aria-label="<?php esc_attr_e( 'Public navigation', 'platform-theme' ); ?>">
+						<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'login' ) : home_url( '/login' ) ); ?>" class="mpp-header__link"><?php esc_html_e( 'Login', 'platform-theme' ); ?></a>
+						<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'register' ) : home_url( '/register' ) ); ?>" class="mpp-header__link mpp-header__link--cta"><?php esc_html_e( 'Register', 'platform-theme' ); ?></a>
+					</nav>
+				<?php endif; ?>
+			</div>
 		<?php endif; ?>
 
-		<?php if ( ! $is_auth_page ) : ?>
-		<button class="mpp-nav-toggle" aria-label="<?php esc_attr_e( 'Toggle navigation', 'platform-theme' ); ?>" aria-expanded="false" aria-controls="mpp-main-content">
+		<?php if ( $has_sidebar ) : ?>
+		<button type="button" class="mpp-nav-toggle" aria-label="<?php esc_attr_e( 'Toggle navigation', 'platform-theme' ); ?>" aria-expanded="false" aria-controls="mpp-sidebar">
 			<span></span>
 		</button>
 		<?php endif; ?>

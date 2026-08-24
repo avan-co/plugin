@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: platform-theme\n"
@@ -6,8 +7,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "A unified infrastructure for users, roles, permissions, and user, manager, and admin panels with a modular, secure architecture."
-msgstr "A unified infrastructure for users, roles, permissions, and user, manager, and admin panels with a modular, secure architecture."
+msgid ""
+"A unified infrastructure for users, roles, permissions, and user, manager, "
+"and admin panels with a modular, secure architecture."
+msgstr ""
+"A unified infrastructure for users, roles, permissions, and user, manager, "
+"and admin panels with a modular, secure architecture."
 
 msgid "ACL"
 msgstr "ACL"
@@ -22,7 +27,7 @@ msgid "Accessible Panels"
 msgstr "Accessible Panels"
 
 msgid "Account"
-msgstr "Account"
+msgstr "حساب کاربری"
 
 msgid "Account Status"
 msgstr "Account Status"
@@ -43,7 +48,7 @@ msgid "Admin Dashboard"
 msgstr "Admin Dashboard"
 
 msgid "Admin Panel"
-msgstr "Admin Panel"
+msgstr "پنل ادمین"
 
 msgid "Admin Settings"
 msgstr "Admin Settings"
@@ -94,7 +99,7 @@ msgid "Dashboard"
 msgstr "داشبورد"
 
 msgid "Disabled"
-msgstr "Disabled"
+msgstr "غیرفعال"
 
 msgid "Display Name"
 msgstr "Display Name"
@@ -102,17 +107,21 @@ msgstr "Display Name"
 msgid "Dynamic ACL with roles, permissions, and scoped access."
 msgstr "Dynamic ACL with roles, permissions, and scoped access."
 
-msgid "Dynamic roles, scoped permissions, audit logging, and a dedicated ACL admin experience."
-msgstr "Dynamic roles, scoped permissions, audit logging, and a dedicated ACL admin experience."
+msgid ""
+"Dynamic roles, scoped permissions, audit logging, and a dedicated ACL admin "
+"experience."
+msgstr ""
+"Dynamic roles, scoped permissions, audit logging, and a dedicated ACL admin "
+"experience."
 
 msgid "Email"
 msgstr "Email"
 
 msgid "Enable email notifications"
-msgstr "Enable email notifications"
+msgstr "فعال‌سازی اعلان‌های ایمیل"
 
 msgid "Enabled"
-msgstr "Enabled"
+msgstr "فعال"
 
 msgid "Fair password"
 msgstr "Fair password"
@@ -121,10 +130,10 @@ msgid "Forgot password?"
 msgstr "رمز عبور را فراموش کرده‌اید؟"
 
 msgid "Go Home"
-msgstr "Go Home"
+msgstr "رفتن به خانه"
 
 msgid "Go to Dashboard"
-msgstr "Go to Dashboard"
+msgstr "رفتن به داشبورد"
 
 msgid "Good password"
 msgstr "Good password"
@@ -136,19 +145,23 @@ msgid "Grant or revoke permissions for each platform role."
 msgstr "Grant or revoke permissions for each platform role."
 
 msgid "Hide"
-msgstr "مخفی"
+msgstr "پنهان"
 
 msgid "How it works"
 msgstr "How it works"
 
-msgid "Independent plugins can register routes, permissions, navigation, and dashboard widgets through Platform Core."
-msgstr "Independent plugins can register routes, permissions, navigation, and dashboard widgets through Platform Core."
+msgid ""
+"Independent plugins can register routes, permissions, navigation, and "
+"dashboard widgets through Platform Core."
+msgstr ""
+"Independent plugins can register routes, permissions, navigation, and "
+"dashboard widgets through Platform Core."
 
 msgid "Installed modules can expose manager widgets here."
 msgstr "Installed modules can expose manager widgets here."
 
 msgid "Log In"
-msgstr "Log In"
+msgstr "ورود"
 
 msgid "Log in"
 msgstr "Log in"
@@ -166,13 +179,13 @@ msgid "Manage users, roles, permissions, modules, and ACL."
 msgstr "Manage users, roles, permissions, modules, and ACL."
 
 msgid "Manage your account preferences and platform access summary."
-msgstr "Manage your account preferences and platform access summary."
+msgstr "ترجیحات حساب و خلاصه دسترسی پلتفرم را مدیریت کنید."
 
 msgid "Manager"
 msgstr "Manager"
 
 msgid "Manager Panel"
-msgstr "Manager Panel"
+msgstr "پنل مدیر"
 
 msgid "Manager Profile"
 msgstr "Manager Profile"
@@ -183,8 +196,10 @@ msgstr "Manager panel navigation"
 msgid "Manager reports will be provided by future modules without fake data."
 msgstr "Manager reports will be provided by future modules without fake data."
 
-msgid "Manager workspace for oversight, module widgets, and future team tools."
-msgstr "Manager workspace for oversight, module widgets, and future team tools."
+msgid ""
+"Manager workspace for oversight, module widgets, and future team tools."
+msgstr ""
+"Manager workspace for oversight, module widgets, and future team tools."
 
 msgid "Manager workspace with placeholders for future team tools."
 msgstr "Manager workspace with placeholders for future team tools."
@@ -207,11 +222,15 @@ msgstr "Multi-panel WordPress platform foundation"
 msgid "Multiple panels"
 msgstr "Multiple panels"
 
-msgid "Native RTL/LTR support with a shared design system for Persian and English interfaces."
-msgstr "Native RTL/LTR support with a shared design system for Persian and English interfaces."
+msgid ""
+"Native RTL/LTR support with a shared design system for Persian and English "
+"interfaces."
+msgstr ""
+"Native RTL/LTR support with a shared design system for Persian and English "
+"interfaces."
 
 msgid "Need an account?"
-msgstr "Need an account?"
+msgstr "حساب کاربری ندارید؟"
 
 msgid "No Platform Role"
 msgstr "No Platform Role"
@@ -231,14 +250,18 @@ msgstr "No panels are available for your account. Contact an administrator."
 msgid "No recent activity"
 msgstr "No recent activity"
 
-msgid "Notification preferences will appear here when notification modules are enabled."
-msgstr "Notification preferences will appear here when notification modules are enabled."
+msgid ""
+"Notification preferences will appear here when notification modules are "
+"enabled."
+msgstr ""
+"Notification preferences will appear here when notification modules are "
+"enabled."
 
 msgid "Notifications"
 msgstr "Notifications"
 
 msgid "Notifications:"
-msgstr "Notifications:"
+msgstr "اعلان‌ها:"
 
 msgid "Open Settings"
 msgstr "Open Settings"
@@ -247,10 +270,10 @@ msgid "Overview of users, roles, modules, and recent activity."
 msgstr "Overview of users, roles, modules, and recent activity."
 
 msgid "Panel navigation"
-msgstr "Panel navigation"
+msgstr "ناوبری پنل"
 
 msgid "Password"
-msgstr "Password"
+msgstr "رمز عبور"
 
 msgid "Password changes are managed through your WordPress account profile."
 msgstr "Password changes are managed through your WordPress account profile."
@@ -268,7 +291,7 @@ msgid "Personal dashboard, profile, and account settings."
 msgstr "Personal dashboard, profile, and account settings."
 
 msgid "Platform"
-msgstr "Platform"
+msgstr "پلتفرم"
 
 msgid "Platform Core"
 msgstr "Platform Core"
@@ -292,13 +315,14 @@ msgid "Profile"
 msgstr "پروفایل"
 
 msgid "Project oversight will appear here when a project module is installed."
-msgstr "Project oversight will appear here when a project module is installed."
+msgstr ""
+"Project oversight will appear here when a project module is installed."
 
 msgid "Projects"
 msgstr "Projects"
 
 msgid "Public navigation"
-msgstr "Public navigation"
+msgstr "ناوبری عمومی"
 
 msgid "Ready to get started?"
 msgstr "Ready to get started?"
@@ -343,7 +367,7 @@ msgid "Save Settings"
 msgstr "ذخیره تنظیمات"
 
 msgid "Security"
-msgstr "Security"
+msgstr "امنیت"
 
 msgid "Security & ACL"
 msgstr "Security & ACL"
@@ -361,13 +385,13 @@ msgid "Show"
 msgstr "نمایش"
 
 msgid "Show password"
-msgstr "Show password"
+msgstr "نمایش رمز عبور"
 
 msgid "Sign in or create an account to access your panel."
 msgstr "Sign in or create an account to access your panel."
 
 msgid "Sign in with your username or email address."
-msgstr "Sign in with your username or email address."
+msgstr "با نام کاربری یا ایمیل وارد شوید."
 
 msgid "Strong password"
 msgstr "Strong password"
@@ -382,10 +406,10 @@ msgid "Team management will be available when a team module is installed."
 msgstr "Team management will be available when a team module is installed."
 
 msgid "The page you are looking for does not exist."
-msgstr "The page you are looking for does not exist."
+msgstr "صفحه مورد نظر شما وجود ندارد."
 
 msgid "Toggle navigation"
-msgstr "Toggle navigation"
+msgstr "باز و بسته کردن منو"
 
 msgid "User"
 msgstr "User"
@@ -394,7 +418,7 @@ msgid "User / Manager / Admin panels"
 msgstr "User / Manager / Admin panels"
 
 msgid "User Panel"
-msgstr "User Panel"
+msgstr "پنل کاربر"
 
 msgid "User panel navigation"
 msgstr "User panel navigation"
@@ -403,7 +427,7 @@ msgid "Username"
 msgstr "Username"
 
 msgid "Username or Email"
-msgstr "Username or Email"
+msgstr "نام کاربری یا ایمیل"
 
 msgid "Username:"
 msgstr "Username:"
@@ -427,10 +451,10 @@ msgid "WordPress foundation"
 msgstr "WordPress foundation"
 
 msgid "You do not have permission to access this page."
-msgstr "You do not have permission to access this page."
+msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
 msgid "You have view-only access to settings."
-msgstr "You have view-only access to settings."
+msgstr "شما فقط دسترسی مشاهده به تنظیمات دارید."
 
 msgid "Your manager actions will be listed here."
 msgstr "Your manager actions will be listed here."

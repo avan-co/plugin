@@ -70,12 +70,30 @@
 	border: 1px solid var(--mpp-border);
 	border-radius: var(--mpp-radius-lg);
 	box-shadow: var(--mpp-shadow-subtle);
+	padding: var(--mpp-space-lg);
 }
 
 .mpp-card--login {
 	max-width: 420px;
 	width: 100%;
 	padding: var(--mpp-space-xl);
+}
+
+.mpp-card--error {
+	border-color: #fecaca;
+	background: var(--mpp-destructive-foreground);
+	text-align: center;
+}
+
+.mpp-card--error h1 {
+	margin: 0 0 var(--mpp-space-sm);
+	font-size: 2.5rem;
+	color: var(--mpp-destructive);
+}
+
+.mpp-card--error p {
+	margin: 0 0 var(--mpp-space-lg);
+	color: var(--mpp-muted-foreground);
 }
 
 .mpp-badge {
@@ -114,6 +132,42 @@
 	background: var(--mpp-success-foreground);
 	border-color: #bbf7d0;
 	color: var(--mpp-success);
+}
+
+.mpp-alert--info {
+	background: #eff6ff;
+	border-color: #bfdbfe;
+	color: #1d4ed8;
+}
+
+.mpp-alert--warning {
+	background: #fffbeb;
+	border-color: #fde68a;
+	color: #b45309;
+}
+
+.mpp-checkbox {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--mpp-space-sm);
+	margin-bottom: var(--mpp-space-md);
+	font-size: var(--mpp-font-label);
+	cursor: pointer;
+}
+
+.mpp-checkbox input[type="checkbox"] {
+	width: 1rem;
+	height: 1rem;
+	margin: 0.125rem 0 0;
+	flex-shrink: 0;
+	accent-color: var(--mpp-primary);
+}
+
+.mpp-table-wrap {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	border: 1px solid var(--mpp-border);
+	border-radius: var(--mpp-radius-md);
 }
 
 .mpp-form label,
