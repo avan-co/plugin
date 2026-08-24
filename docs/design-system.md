@@ -67,6 +67,7 @@ Rendered by `PanelNavigation` with `.mpp-nav__sublist`.
 | Detail header | `platform_ui_detail_header()` | `.mpp-detail-header` |
 | Back link | `platform_ui_back_link()` | `.mpp-back-link` |
 | Filter bar | `platform_ui_filter_bar()` | `.mpp-filter-bar` |
+| Form field | `platform_ui_form_field()` | `.mpp-form-field` |
 | Module card | `platform_ui_module_card()` | `.mpp-module-card` |
 | Avatar | `platform_ui_avatar()` | `.mpp-avatar` |
 
@@ -148,6 +149,7 @@ Used by: login, register, forgot-password (Phase 10).
 - [x] Permission tree CSS (`.mpp-perm-tree`)
 - [x] Page implementations (Phase 4 admin shell)
 - [x] Permissions role editor on Role Details (Phase 5)
-- [ ] Panels, auth, responsive/RTL, testing (Phase 8+)
+- [ ] Panels, auth, responsive/RTL, testing (Phase 9+)
 - [x] Modules list/detail pages (Phase 6)
 - [x] Users list filters and detail polish (Phase 7)
+- [x] Admin settings sections, appearance branding, mobile section picker (Phase 8)

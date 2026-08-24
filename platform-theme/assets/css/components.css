@@ -458,6 +458,51 @@
 	min-width: 0;
 }
 
+.mpp-settings-layout__mobile-label {
+	display: none;
+	margin-bottom: var(--mpp-space-xs);
+	font-size: var(--mpp-font-label);
+	font-weight: 500;
+}
+
+.mpp-settings-layout__select {
+	display: none;
+	width: 100%;
+}
+
+.mpp-settings-section__header {
+	margin-bottom: var(--mpp-space-lg);
+}
+
+.mpp-settings-section__title {
+	margin: 0 0 var(--mpp-space-xs);
+	font-size: 1.25rem;
+}
+
+.mpp-settings-section__description {
+	margin: 0;
+}
+
+.mpp-form-field {
+	margin-bottom: var(--mpp-space-md);
+}
+
+.mpp-form-field__help {
+	margin: var(--mpp-space-xs) 0 0;
+}
+
+.mpp-form-actions {
+	display: flex;
+	justify-content: flex-end;
+	padding-top: var(--mpp-space-md);
+	margin-top: var(--mpp-space-lg);
+	border-top: 1px solid var(--mpp-border);
+}
+
+.mpp-profile-list--compact {
+	margin-top: var(--mpp-space-lg);
+}
+
 /* Chips */
 .mpp-chip {
 	display: inline-flex;
@@ -489,6 +534,18 @@
 
 	.mpp-settings-layout__nav {
 		order: -1;
+	}
+
+	.mpp-settings-layout__mobile-label {
+		display: block;
+	}
+
+	.mpp-settings-layout__select {
+		display: block;
+	}
+
+	.mpp-settings-layout__list {
+		display: none;
 	}
 
 	.mpp-detail-header__meta {

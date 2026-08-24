@@ -409,6 +409,14 @@ final class UIComponents {
 		?>
 		<div class="mpp-settings-layout">
 			<nav class="mpp-settings-layout__nav" aria-label="<?php esc_attr_e( 'Settings sections', 'platform-theme' ); ?>">
+				<label class="mpp-settings-layout__mobile-label" for="mpp-settings-section-select"><?php esc_html_e( 'Settings section', 'platform-theme' ); ?></label>
+				<select id="mpp-settings-section-select" class="mpp-settings-layout__select mpp-select" data-settings-nav>
+					<?php foreach ( $sections as $slug => $label ) : ?>
+						<option value="<?php echo esc_url( add_query_arg( $query_arg, $slug, $base_url ) ); ?>" <?php selected( $current, $slug ); ?>>
+							<?php echo esc_html( $label ); ?>
+						</option>
+					<?php endforeach; ?>
+				</select>
 				<ul class="mpp-settings-layout__list">
 					<?php foreach ( $sections as $slug => $label ) : ?>
 						<?php $is_active = $current === $slug; ?>
@@ -423,6 +431,94 @@ final class UIComponents {
 			<div class="mpp-settings-layout__content">
 				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
+		</div>
+		<?php
+		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Render a labeled form field.
+	 *
+	 * @param array<string, mixed> $args Field arguments.
+	 * @return string
+	 */
+	public static function form_field( array $args ) {
+		$type        = $args['type'] ?? 'text';
+		$id          = $args['id'] ?? ( $args['name'] ?? '' );
+		$name        = $args['name'] ?? '';
+		$label       = $args['label'] ?? '';
+		$value       = $args['value'] ?? '';
+		$description = $args['description'] ?? '';
+		$options     = $args['options'] ?? array();
+		$attributes  = $args['attributes'] ?? array();
+		$classes     = array( 'mpp-form-field' );
+
+		if ( ! empty( $args['class'] ) ) {
+			$classes[] = sanitize_html_class( $args['class'] );
+		}
+
+		$attr_html = '';
+		foreach ( $attributes as $attr_key => $attr_value ) {
+			$attr_html .= sprintf( ' %s="%s"', esc_attr( $attr_key ), esc_attr( (string) $attr_value ) );
+		}
+
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+			<?php if ( $label ) : ?>
+				<label class="mpp-form-field__label" for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
+			<?php endif; ?>
+
+			<?php if ( 'checkbox' === $type ) : ?>
+				<label class="mpp-checkbox">
+					<input
+						type="checkbox"
+						id="<?php echo esc_attr( $id ); ?>"
+						name="<?php echo esc_attr( $name ); ?>"
+						value="1"
+						<?php checked( ! empty( $value ) ); ?>
+						<?php echo $attr_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					>
+					<?php if ( $description ) : ?>
+						<span><?php echo esc_html( $description ); ?></span>
+					<?php endif; ?>
+				</label>
+			<?php elseif ( 'select' === $type ) : ?>
+				<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="mpp-select"<?php echo $attr_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+					<?php foreach ( $options as $option_value => $option_label ) : ?>
+						<option value="<?php echo esc_attr( (string) $option_value ); ?>" <?php selected( (string) $value, (string) $option_value ); ?>>
+							<?php echo esc_html( $option_label ); ?>
+						</option>
+					<?php endforeach; ?>
+				</select>
+				<?php if ( $description ) : ?>
+					<p class="mpp-form-field__help mpp-muted"><?php echo esc_html( $description ); ?></p>
+				<?php endif; ?>
+			<?php elseif ( 'color' === $type ) : ?>
+				<input
+					type="color"
+					id="<?php echo esc_attr( $id ); ?>"
+					name="<?php echo esc_attr( $name ); ?>"
+					value="<?php echo esc_attr( (string) $value ); ?>"
+					class="mpp-input mpp-input--color"
+					<?php echo $attr_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				>
+				<?php if ( $description ) : ?>
+					<p class="mpp-form-field__help mpp-muted"><?php echo esc_html( $description ); ?></p>
+				<?php endif; ?>
+			<?php else : ?>
+				<input
+					type="<?php echo esc_attr( $type ); ?>"
+					id="<?php echo esc_attr( $id ); ?>"
+					name="<?php echo esc_attr( $name ); ?>"
+					value="<?php echo esc_attr( (string) $value ); ?>"
+					class="mpp-input"
+					<?php echo $attr_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				>
+				<?php if ( $description ) : ?>
+					<p class="mpp-form-field__help mpp-muted"><?php echo esc_html( $description ); ?></p>
+				<?php endif; ?>
+			<?php endif; ?>
 		</div>
 		<?php
 		return (string) ob_get_clean();

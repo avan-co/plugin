@@ -169,3 +169,13 @@ function platform_ui_chip( $label, $url = '', $variant = '' ) {
 function platform_ui_module_card( array $module ) {
 	return UIComponents::module_card( $module );
 }
+
+/**
+ * Render a form field.
+ *
+ * @param array<string, mixed> $args Field arguments.
+ * @return string
+ */
+function platform_ui_form_field( array $args ) {
+	return UIComponents::form_field( $args );
+}

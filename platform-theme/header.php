@@ -27,8 +27,8 @@ $is_panel     = function_exists( 'mpp_get_current_route' ) && mpp_get_current_ro
 	<div class="mpp-header__inner">
 		<div class="mpp-header__brand">
 			<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app' ) : home_url( '/app' ) ); ?>" class="mpp-logo">
-				<span class="mpp-logo__mark" aria-hidden="true">P</span>
-				<span class="mpp-logo__text"><?php bloginfo( 'name' ); ?></span>
+				<span class="mpp-logo__mark" aria-hidden="true"><?php echo esc_html( function_exists( 'mpp_get_logo_mark' ) ? mpp_get_logo_mark() : 'P' ); ?></span>
+				<span class="mpp-logo__text"><?php echo esc_html( function_exists( 'mpp_get_platform_name' ) ? mpp_get_platform_name() : get_bloginfo( 'name' ) ); ?></span>
 			</a>
 		</div>
 

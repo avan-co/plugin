@@ -555,3 +555,63 @@ function mpp_get_panel_widgets( $panel ) {
 	 */
 	return apply_filters( 'mpp_panel_widgets', $filtered, $panel );
 }
+
+/**
+ * Get the platform settings service.
+ *
+ * @return \MPP\Settings\PlatformSettings|null
+ */
+function mpp_platform_settings() {
+	if ( ! function_exists( 'mpp' ) ) {
+		return null;
+	}
+
+	return mpp()->get( \MPP\Settings\PlatformSettings::class );
+}
+
+/**
+ * Get the configured platform display name.
+ *
+ * @return string
+ */
+function mpp_get_platform_name() {
+	$settings = mpp_platform_settings();
+
+	if ( ! $settings ) {
+		return get_bloginfo( 'name' );
+	}
+
+	return (string) $settings->get( 'platform_name', get_bloginfo( 'name' ) );
+}
+
+/**
+ * Get the single-character logo mark for the platform brand.
+ *
+ * @return string
+ */
+function mpp_get_logo_mark() {
+	$settings = mpp_platform_settings();
+
+	if ( ! $settings ) {
+		return 'P';
+	}
+
+	$mark = (string) $settings->get( 'logo_mark', 'P' );
+
+	return '' !== $mark ? mb_substr( $mark, 0, 1 ) : 'P';
+}
+
+/**
+ * Get the configured accent color override, if any.
+ *
+ * @return string
+ */
+function mpp_get_accent_color() {
+	$settings = mpp_platform_settings();
+
+	if ( ! $settings ) {
+		return '';
+	}
+
+	return (string) $settings->get( 'accent_color', '' );
+}

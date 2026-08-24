@@ -1396,9 +1396,10 @@ class AdminRenderer {
 		$section  = isset( $_GET['section'] ) ? sanitize_key( wp_unslash( $_GET['section'] ) ) : 'general';
 		$sections = array(
 			'general'      => __( 'General', 'platform-core' ),
+			'appearance'   => __( 'Appearance', 'platform-core' ),
+			'localization' => __( 'Localization', 'platform-core' ),
 			'registration' => __( 'Registration', 'platform-core' ),
 			'security'     => __( 'Security', 'platform-core' ),
-			'localization' => __( 'Localization', 'platform-core' ),
 			'system'       => __( 'System', 'platform-core' ),
 		);
 
@@ -1408,68 +1409,181 @@ class AdminRenderer {
 
 		$base_url = mpp_route_url( 'app/admin/settings' );
 		ob_start();
-		?>
-		<form method="post" class="mpp-form">
-			<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			<input type="hidden" name="mpp_admin_action" value="save_settings">
-			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'section', $section, $base_url ) ); ?>">
 
-			<?php if ( 'general' === $section ) : ?>
-				<h2><?php esc_html_e( 'General Settings', 'platform-core' ); ?></h2>
-				<label for="platform_name"><?php esc_html_e( 'Platform Name', 'platform-core' ); ?></label>
-				<input type="text" id="platform_name" name="platform_name" value="<?php echo esc_attr( $settings['general']['platform_name'] ); ?>">
-				<label for="default_dashboard"><?php esc_html_e( 'Default Dashboard Route', 'platform-core' ); ?></label>
-				<select id="default_dashboard" name="default_dashboard">
-					<option value="app/user" <?php selected( $settings['general']['default_dashboard'], 'app/user' ); ?>><?php esc_html_e( 'User Panel', 'platform-core' ); ?></option>
-					<option value="app/manager" <?php selected( $settings['general']['default_dashboard'], 'app/manager' ); ?>><?php esc_html_e( 'Manager Panel', 'platform-core' ); ?></option>
-					<option value="app/admin" <?php selected( $settings['general']['default_dashboard'], 'app/admin' ); ?>><?php esc_html_e( 'Admin Panel', 'platform-core' ); ?></option>
-				</select>
-			<?php elseif ( 'registration' === $section ) : ?>
-				<h2><?php esc_html_e( 'Registration', 'platform-core' ); ?></h2>
-				<label class="mpp-checkbox">
-					<input type="checkbox" name="registration_enabled" value="1" <?php checked( $settings['registration']['enabled'] ); ?>>
-					<?php esc_html_e( 'Enable public registration', 'platform-core' ); ?>
-				</label>
-				<label for="default_platform_role"><?php esc_html_e( 'Default Platform Role', 'platform-core' ); ?></label>
-				<select id="default_platform_role" name="default_platform_role">
-					<?php foreach ( $roles as $role ) : ?>
-						<option value="<?php echo esc_attr( $role['slug'] ); ?>" <?php selected( $settings['registration']['default_platform_role'], $role['slug'] ); ?>><?php echo esc_html( $role['name'] ); ?></option>
-					<?php endforeach; ?>
-				</select>
-			<?php elseif ( 'security' === $section ) : ?>
-				<h2><?php esc_html_e( 'Security', 'platform-core' ); ?></h2>
-				<label for="session_remember_days"><?php esc_html_e( 'Remember Me Duration (days)', 'platform-core' ); ?></label>
-				<input type="number" id="session_remember_days" name="session_remember_days" min="1" max="365" value="<?php echo esc_attr( (string) $settings['security']['session_remember_days'] ); ?>">
-				<p class="mpp-muted"><?php esc_html_e( 'WordPress administrators with manage_options receive effective platform_admin access for core permissions.', 'platform-core' ); ?></p>
-			<?php elseif ( 'localization' === $section ) : ?>
-				<h2><?php esc_html_e( 'Localization', 'platform-core' ); ?></h2>
-				<label for="date_format"><?php esc_html_e( 'Date Format', 'platform-core' ); ?></label>
-				<input type="text" id="date_format" name="date_format" value="<?php echo esc_attr( $settings['localization']['date_format'] ); ?>">
-				<dl class="mpp-profile-list">
-					<dt><?php esc_html_e( 'Text Direction', 'platform-core' ); ?></dt>
-					<dd><?php echo is_rtl() ? esc_html__( 'Right-to-left (RTL)', 'platform-core' ) : esc_html__( 'Left-to-right (LTR)', 'platform-core' ); ?></dd>
-					<dt><?php esc_html_e( 'Locale', 'platform-core' ); ?></dt>
-					<dd><?php echo esc_html( get_locale() ); ?></dd>
-					<dt><?php esc_html_e( 'Routing Mode', 'platform-core' ); ?></dt>
-					<dd><?php echo esc_html( $summary['permalink_mode'] ); ?></dd>
-				</dl>
-			<?php else : ?>
-				<h2><?php esc_html_e( 'System Information', 'platform-core' ); ?></h2>
-				<dl class="mpp-profile-list">
-					<dt><?php esc_html_e( 'Platform Core Version', 'platform-core' ); ?></dt>
-					<dd><?php echo esc_html( $summary['platform_version'] ); ?></dd>
-					<dt><?php esc_html_e( 'WordPress Version', 'platform-core' ); ?></dt>
-					<dd><?php echo esc_html( $summary['wordpress_version'] ); ?></dd>
-					<dt><?php esc_html_e( 'Database Schema', 'platform-core' ); ?></dt>
-					<dd><?php echo esc_html( $summary['database_version'] ?: __( 'Not installed', 'platform-core' ) ); ?></dd>
-				</dl>
-			<?php endif; ?>
+		if ( 'system' === $section ) {
+			$this->render_settings_section_header(
+				__( 'System Information', 'platform-core' ),
+				__( 'Read-only platform and environment details.', 'platform-core' )
+			);
+			?>
+			<dl class="mpp-profile-list">
+				<dt><?php esc_html_e( 'Platform Core Version', 'platform-core' ); ?></dt>
+				<dd><?php echo esc_html( $summary['platform_version'] ); ?></dd>
+				<dt><?php esc_html_e( 'WordPress Version', 'platform-core' ); ?></dt>
+				<dd><?php echo esc_html( $summary['wordpress_version'] ); ?></dd>
+				<dt><?php esc_html_e( 'Database Schema', 'platform-core' ); ?></dt>
+				<dd><?php echo esc_html( $summary['database_version'] ?: __( 'Not installed', 'platform-core' ) ); ?></dd>
+				<dt><?php esc_html_e( 'Routing Mode', 'platform-core' ); ?></dt>
+				<dd><?php echo esc_html( $summary['permalink_mode'] ); ?></dd>
+			</dl>
+			<?php
+		} else {
+			?>
+			<form method="post" class="mpp-form mpp-settings-form">
+				<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<input type="hidden" name="mpp_admin_action" value="save_settings">
+				<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'section', $section, $base_url ) ); ?>">
 
-			<?php if ( 'system' !== $section ) : ?>
-				<button type="submit" class="mpp-btn mpp-btn--primary"><?php esc_html_e( 'Save Changes', 'platform-core' ); ?></button>
-			<?php endif; ?>
-		</form>
-		<?php
+				<?php if ( 'general' === $section ) : ?>
+					<?php
+					$this->render_settings_section_header(
+						__( 'General Settings', 'platform-core' ),
+						__( 'Default landing experience after login.', 'platform-core' )
+					);
+					echo $this->settings_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'type'        => 'select',
+							'name'        => 'default_dashboard',
+							'label'       => __( 'Default Dashboard Route', 'platform-core' ),
+							'value'       => $settings['general']['default_dashboard'],
+							'description' => __( 'Where users are sent after signing in when no specific panel is requested.', 'platform-core' ),
+							'options'     => array(
+								'app/user'    => __( 'User Panel', 'platform-core' ),
+								'app/manager' => __( 'Manager Panel', 'platform-core' ),
+								'app/admin'   => __( 'Admin Panel', 'platform-core' ),
+							),
+						)
+					);
+					?>
+				<?php elseif ( 'appearance' === $section ) : ?>
+					<?php
+					$this->render_settings_section_header(
+						__( 'Appearance', 'platform-core' ),
+						__( 'Branding shown in the platform header and navigation.', 'platform-core' )
+					);
+					echo $this->settings_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'name'        => 'platform_name',
+							'label'       => __( 'Platform Name', 'platform-core' ),
+							'value'       => $settings['appearance']['platform_name'],
+							'description' => __( 'Displayed in the header logo and page titles.', 'platform-core' ),
+						)
+					);
+					echo $this->settings_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'name'        => 'logo_mark',
+							'label'       => __( 'Logo Mark', 'platform-core' ),
+							'value'       => $settings['appearance']['logo_mark'],
+							'description' => __( 'Single character shown inside the logo badge.', 'platform-core' ),
+							'attributes'  => array(
+								'maxlength' => '1',
+							),
+						)
+					);
+					echo $this->settings_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'name'        => 'accent_color',
+							'label'       => __( 'Accent Color', 'platform-core' ),
+							'value'       => $settings['appearance']['accent_color'],
+							'description' => __( 'Optional hex color (e.g. #0f172a). Leave empty to use the theme default.', 'platform-core' ),
+							'attributes'  => array(
+								'placeholder' => '#0f172a',
+							),
+						)
+					);
+					?>
+				<?php elseif ( 'registration' === $section ) : ?>
+					<?php
+					$this->render_settings_section_header(
+						__( 'Registration', 'platform-core' ),
+						__( 'Control public sign-up and default role assignment.', 'platform-core' )
+					);
+					echo $this->settings_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'type'        => 'checkbox',
+							'name'        => 'registration_enabled',
+							'label'       => __( 'Enable public registration', 'platform-core' ),
+							'value'       => $settings['registration']['enabled'],
+							'description' => __( 'Allow new users to create accounts from the registration page.', 'platform-core' ),
+						)
+					);
+
+					$role_options = array();
+					foreach ( $roles as $role ) {
+						$role_options[ $role['slug'] ] = $role['name'];
+					}
+
+					echo $this->settings_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'type'        => 'select',
+							'name'        => 'default_platform_role',
+							'label'       => __( 'Default Platform Role', 'platform-core' ),
+							'value'       => $settings['registration']['default_platform_role'],
+							'description' => __( 'Assigned automatically to newly registered users.', 'platform-core' ),
+							'options'     => $role_options,
+						)
+					);
+					?>
+				<?php elseif ( 'security' === $section ) : ?>
+					<?php
+					$this->render_settings_section_header(
+						__( 'Security', 'platform-core' ),
+						__( 'Session and access-related platform defaults.', 'platform-core' )
+					);
+					echo $this->settings_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'type'        => 'number',
+							'name'        => 'session_remember_days',
+							'label'       => __( 'Remember Me Duration (days)', 'platform-core' ),
+							'value'       => (string) $settings['security']['session_remember_days'],
+							'description' => __( 'WordPress administrators with manage_options receive effective platform_admin access for core permissions.', 'platform-core' ),
+							'attributes'  => array(
+								'min' => '1',
+								'max' => '365',
+							),
+						)
+					);
+					?>
+				<?php else : ?>
+					<?php
+					$this->render_settings_section_header(
+						__( 'Localization', 'platform-core' ),
+						__( 'Date, time, and locale preferences for the platform UI.', 'platform-core' )
+					);
+					echo $this->settings_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'name'        => 'date_format',
+							'label'       => __( 'Date Format', 'platform-core' ),
+							'value'       => $settings['localization']['date_format'],
+							'description' => __( 'PHP date format string used in platform views.', 'platform-core' ),
+						)
+					);
+					echo $this->settings_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'type'        => 'select',
+							'name'        => 'timezone',
+							'label'       => __( 'Timezone', 'platform-core' ),
+							'value'       => $settings['localization']['timezone'],
+							'description' => __( 'Used for platform timestamps. Overrides the WordPress site timezone when set.', 'platform-core' ),
+							'options'     => $this->get_timezone_options( $settings['localization']['timezone'] ),
+						)
+					);
+					?>
+					<dl class="mpp-profile-list mpp-profile-list--compact">
+						<dt><?php esc_html_e( 'Text Direction', 'platform-core' ); ?></dt>
+						<dd><?php echo is_rtl() ? esc_html__( 'Right-to-left (RTL)', 'platform-core' ) : esc_html__( 'Left-to-right (LTR)', 'platform-core' ); ?></dd>
+						<dt><?php esc_html_e( 'Locale', 'platform-core' ); ?></dt>
+						<dd><?php echo esc_html( get_locale() ); ?></dd>
+					</dl>
+				<?php endif; ?>
+
+				<div class="mpp-form-actions">
+					<button type="submit" class="mpp-btn mpp-btn--primary"><?php esc_html_e( 'Save Changes', 'platform-core' ); ?></button>
+				</div>
+			</form>
+			<?php
+		}
+
 		$content = ob_get_clean();
 
 		if ( function_exists( 'platform_ui_settings_layout' ) ) {
@@ -1478,6 +1592,68 @@ class AdminRenderer {
 		}
 
 		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+
+	/**
+	 * Render a settings section heading.
+	 *
+	 * @param string $title       Section title.
+	 * @param string $description Section description.
+	 */
+	private function render_settings_section_header( $title, $description = '' ) {
+		?>
+		<header class="mpp-settings-section__header">
+			<h2 class="mpp-settings-section__title"><?php echo esc_html( $title ); ?></h2>
+			<?php if ( $description ) : ?>
+				<p class="mpp-settings-section__description mpp-muted"><?php echo esc_html( $description ); ?></p>
+			<?php endif; ?>
+		</header>
+		<?php
+	}
+
+	/**
+	 * Render a settings form field via the theme design system.
+	 *
+	 * @param array<string, mixed> $args Field arguments.
+	 * @return string
+	 */
+	private function settings_field( array $args ) {
+		if ( function_exists( 'platform_ui_form_field' ) ) {
+			return platform_ui_form_field( $args );
+		}
+
+		$name  = $args['name'] ?? '';
+		$label = $args['label'] ?? '';
+		$value = $args['value'] ?? '';
+
+		return sprintf(
+			'<label for="%1$s">%2$s</label><input type="text" id="%1$s" name="%1$s" value="%3$s">',
+			esc_attr( $name ),
+			esc_html( $label ),
+			esc_attr( (string) $value )
+		);
+	}
+
+	/**
+	 * Build timezone select options.
+	 *
+	 * @param string $selected Selected timezone.
+	 * @return array<string, string>
+	 */
+	private function get_timezone_options( $selected ) {
+		$options = array(
+			'' => __( 'Use WordPress default', 'platform-core' ),
+		);
+
+		foreach ( timezone_identifiers_list() as $timezone ) {
+			$options[ $timezone ] = str_replace( '_', ' ', $timezone );
+		}
+
+		if ( $selected && ! isset( $options[ $selected ] ) ) {
+			$options[ $selected ] = $selected;
+		}
+
+		return $options;
 	}
 
 	/**

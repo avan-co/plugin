@@ -124,6 +124,23 @@ function platform_theme_enqueue_assets() {
 				array( 'platform-theme-panels' ),
 				wp_get_theme()->get( 'Version' )
 			);
+			wp_enqueue_script(
+				'platform-theme-settings-nav',
+				get_template_directory_uri() . '/assets/js/settings-nav.js',
+				array(),
+				wp_get_theme()->get( 'Version' ),
+				true
+			);
+		}
+	}
+
+	if ( function_exists( 'mpp_get_accent_color' ) ) {
+		$accent = mpp_get_accent_color();
+		if ( $accent && preg_match( '/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/', $accent ) ) {
+			wp_add_inline_style(
+				'platform-theme-tokens',
+				sprintf( ':root { --mpp-primary: %s; }', esc_attr( $accent ) )
+			);
 		}
 	}
 }

@@ -228,7 +228,7 @@ Each row/card: human name, description, key, module, roles count, link to detail
 
 **Mobile:** Section picker dropdown above form (sidebar becomes select).
 
-**Gap:** Current admin settings is a single runtime-status page.
+**Gap:** ~~Current admin settings is a single runtime-status page.~~ Addressed in Phase 8 (sectioned layout + appearance branding).
 
 ---
 
@@ -379,4 +379,5 @@ Account section (footer): Profile, Logout
 - **Phase 5 (Permissions / Roles / ACL):** Complete
 - **Phase 6 (Modules):** Complete
 - **Phase 7 (Users):** Complete — list filters (role, status), role chips, effective access source labels
-- **Phase 8+:** Pending — settings polish, panels, auth, responsive/RTL, testing
+- **Phase 8 (Settings):** Complete — appearance section, timezone, form fields, mobile section picker, header branding
+- **Phase 9+:** Pending — panels, auth, responsive/RTL, testing
