@@ -117,19 +117,110 @@ class ModuleService {
 	 * @return int
 	 */
 	private function count_module_routes( $slug ) {
-		if ( ! function_exists( 'mpp' ) ) {
-			return 0;
-		}
+		return count( $this->get_module_routes( $slug ) );
+	}
 
-		$router = mpp()->get( \MPP\Core\Router::class );
-		$count  = 0;
+	/**
+	 * Find a module by slug.
+	 *
+	 * @param string $slug Module slug.
+	 * @return array<string, mixed>|null
+	 */
+	public function find_module( $slug ) {
+		$slug = sanitize_key( $slug );
 
-		foreach ( array_keys( $router->get_routes() ) as $route_slug ) {
-			if ( 0 === strpos( $route_slug, 'app/' . $slug ) || $route_slug === 'app/' . $slug ) {
-				$count++;
+		foreach ( $this->list_modules() as $module ) {
+			if ( $module['slug'] === $slug ) {
+				return $module;
 			}
 		}
 
-		return $count;
+		return null;
+	}
+
+	/**
+	 * Get permissions registered for a module.
+	 *
+	 * @param string $slug Module slug.
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function get_module_permissions( $slug ) {
+		$slug    = sanitize_key( $slug );
+		$grouped = $this->registry->get_grouped();
+		$items   = array();
+
+		if ( empty( $grouped[ $slug ] ) ) {
+			return $items;
+		}
+
+		foreach ( $grouped[ $slug ] as $resource => $actions ) {
+			foreach ( $actions as $action ) {
+				$items[] = array_merge(
+					$action,
+					array(
+						'resource' => $resource,
+						'module'   => $slug,
+					)
+				);
+			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Get platform routes owned by a module.
+	 *
+	 * @param string $slug Module slug.
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function get_module_routes( $slug ) {
+		$slug = sanitize_key( $slug );
+
+		if ( ! function_exists( 'mpp' ) ) {
+			return array();
+		}
+
+		$router = mpp()->get( \MPP\Core\Router::class );
+		$routes = array();
+
+		foreach ( $router->get_routes() as $route_slug => $definition ) {
+			if ( ! $this->route_belongs_to_module( $route_slug, $slug ) ) {
+				continue;
+			}
+
+			$routes[] = array(
+				'slug'        => $route_slug,
+				'title'       => $definition['title'] ?? '',
+				'description' => $definition['description'] ?? '',
+				'permission'  => $definition['permission'] ?? '',
+				'url'         => mpp_route_url( $route_slug ),
+			);
+		}
+
+		usort(
+			$routes,
+			function ( $a, $b ) {
+				return strcmp( $a['slug'], $b['slug'] );
+			}
+		);
+
+		return $routes;
+	}
+
+	/**
+	 * Determine whether a route belongs to a module slug.
+	 *
+	 * @param string $route_slug Route slug.
+	 * @param string $module     Module slug.
+	 * @return bool
+	 */
+	private function route_belongs_to_module( $route_slug, $module ) {
+		if ( 'core' === $module ) {
+			return 0 === strpos( $route_slug, 'app/admin' )
+				|| in_array( $route_slug, array( 'app', 'app/user', 'app/manager', 'profile', 'settings', 'login', 'register' ), true );
+		}
+
+		return $route_slug === 'app/' . $module || 0 === strpos( $route_slug, 'app/' . $module . '/' );
 	}
 }

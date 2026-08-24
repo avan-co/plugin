@@ -149,3 +149,4 @@ Used by: login, register, forgot-password (Phase 10).
 - [x] Page implementations (Phase 4 admin shell)
 - [x] Permissions role editor on Role Details (Phase 5)
 - [ ] Modules, users, panels, auth, responsive/RTL, testing (Phase 6+)
+- [x] Modules list/detail pages (Phase 6)

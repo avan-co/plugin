@@ -793,11 +793,46 @@ class AdminRenderer {
 	 * Modules listing.
 	 */
 	private function render_modules() {
+		$module_slug = isset( $_GET['module'] ) ? sanitize_key( wp_unslash( $_GET['module'] ) ) : '';
+
+		if ( $module_slug ) {
+			$this->render_module_detail( $module_slug );
+			return;
+		}
+
+		$query   = isset( $_GET['mod_q'] ) ? sanitize_text_field( wp_unslash( $_GET['mod_q'] ) ) : '';
 		$modules = $this->modules->list_modules();
 
+		if ( $query ) {
+			$modules = array_values(
+				array_filter(
+					$modules,
+					function ( $module ) use ( $query ) {
+						$haystack = strtolower( $module['slug'] . ' ' . $module['name'] . ' ' . ( $module['description'] ?? '' ) );
+						return false !== strpos( $haystack, strtolower( $query ) );
+					}
+				)
+			);
+		}
+
 		if ( empty( $modules ) ) {
-			echo '<div class="mpp-empty-state"><h3 class="mpp-empty-state__title">' . esc_html__( 'No modules registered', 'platform-core' ) . '</h3><p>' . esc_html__( 'Install and activate platform module plugins in WordPress to extend the platform.', 'platform-core' ) . '</p></div>';
+			echo '<div class="mpp-empty-state"><h3 class="mpp-empty-state__title">' . esc_html__( 'No modules found', 'platform-core' ) . '</h3><p>' . esc_html__( 'Try adjusting your search or install a platform module plugin.', 'platform-core' ) . '</p></div>';
 			return;
+		}
+
+		if ( function_exists( 'platform_ui_filter_bar' ) ) {
+			echo platform_ui_filter_bar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				mpp_route_url( 'app/admin/modules' ),
+				array(
+					array(
+						'type'        => 'search',
+						'name'        => 'mod_q',
+						'label'       => __( 'Search modules', 'platform-core' ),
+						'value'       => $query,
+						'placeholder' => __( 'Search modules...', 'platform-core' ),
+					),
+				)
+			);
 		}
 		?>
 		<p class="mpp-muted"><?php esc_html_e( 'Module availability is controlled by WordPress plugin activation. Deactivating a plugin removes its runtime routes and widgets.', 'platform-core' ); ?></p>
@@ -805,13 +840,13 @@ class AdminRenderer {
 			<?php foreach ( $modules as $module ) : ?>
 				<?php
 				$card = array(
-					'name'              => $module['name'],
-					'description'       => $module['description'] ?? __( 'No description provided.', 'platform-core' ),
-					'version'           => $module['version'] ?? '—',
-					'status'            => $module['status'] ?? 'active',
-					'permission_count'  => $module['permission_count'] ?? 0,
-					'route_count'       => $module['route_count'] ?? 0,
-					'url'               => add_query_arg( 'module', $module['slug'], mpp_route_url( 'app/admin/permissions' ) ),
+					'name'             => $module['name'],
+					'description'      => $module['description'] ?? __( 'No description provided.', 'platform-core' ),
+					'version'          => $module['version'] ?? '—',
+					'status'           => $module['status'] ?? 'active',
+					'permission_count' => $module['permission_count'] ?? 0,
+					'route_count'      => $module['route_count'] ?? 0,
+					'url'              => add_query_arg( 'module', $module['slug'], mpp_route_url( 'app/admin/modules' ) ),
 				);
 				if ( function_exists( 'platform_ui_module_card' ) ) {
 					echo platform_ui_module_card( $card ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -825,6 +860,152 @@ class AdminRenderer {
 				}
 				?>
 			<?php endforeach; ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Module detail page with tabs.
+	 *
+	 * @param string $module_slug Module slug.
+	 */
+	private function render_module_detail( $module_slug ) {
+		$module = $this->modules->find_module( $module_slug );
+
+		if ( ! $module ) {
+			echo '<p>' . esc_html__( 'Module not found.', 'platform-core' ) . '</p>';
+			return;
+		}
+
+		$tab      = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'overview';
+		$base_url = add_query_arg( 'module', $module_slug, mpp_route_url( 'app/admin/modules' ) );
+		$tabs     = array(
+			'overview'    => __( 'Overview', 'platform-core' ),
+			'permissions' => __( 'Permissions', 'platform-core' ),
+			'routes'      => __( 'Routes', 'platform-core' ),
+			'settings'    => __( 'Settings', 'platform-core' ),
+		);
+
+		if ( ! isset( $tabs[ $tab ] ) ) {
+			$tab = 'overview';
+		}
+
+		$permissions = $this->modules->get_module_permissions( $module_slug );
+		$routes      = $this->modules->get_module_routes( $module_slug );
+
+		$this->set_page_meta(
+			array(
+				'title'       => $module['name'],
+				'description' => $module['description'] ?? '',
+			)
+		);
+
+		if ( function_exists( 'platform_ui_detail_header' ) ) {
+			echo platform_ui_detail_header( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$module['name'],
+				$module['description'] ?? '',
+				array(
+					array(
+						'label' => __( 'Version', 'platform-core' ),
+						'value' => $module['version'] ?? '—',
+					),
+					array(
+						'label' => __( 'Permissions', 'platform-core' ),
+						'value' => (string) count( $permissions ),
+					),
+					array(
+						'label' => __( 'Routes', 'platform-core' ),
+						'value' => (string) count( $routes ),
+					),
+				)
+			);
+		}
+
+		$this->echo_back_link( mpp_route_url( 'app/admin/modules' ), __( 'Back to modules', 'platform-core' ) );
+		$this->render_admin_tabs( $tabs, $tab, $base_url );
+
+		if ( 'permissions' === $tab ) {
+			if ( empty( $permissions ) ) {
+				echo '<p>' . esc_html__( 'This module has not registered any permissions.', 'platform-core' ) . '</p>';
+				return;
+			}
+			?>
+			<ul class="mpp-module-permissions__list">
+				<?php foreach ( $permissions as $permission ) : ?>
+					<li class="mpp-module-permissions__item">
+						<div>
+							<strong><?php echo esc_html( $permission['description'] ?: ucfirst( $permission['action'] ) ); ?></strong>
+							<p class="mpp-muted"><code><?php echo esc_html( $permission['key'] ); ?></code></p>
+						</div>
+						<a href="<?php echo esc_url( add_query_arg( 'permission_id', $permission['id'], mpp_route_url( 'app/admin/permissions' ) ) ); ?>"><?php esc_html_e( 'Details', 'platform-core' ); ?> &rarr;</a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<?php
+			return;
+		}
+
+		if ( 'routes' === $tab ) {
+			if ( empty( $routes ) ) {
+				echo '<p>' . esc_html__( 'This module has not registered any routes.', 'platform-core' ) . '</p>';
+				return;
+			}
+			?>
+			<div class="mpp-table-wrap">
+			<table class="mpp-admin-table mpp-admin-table--stack">
+				<thead>
+					<tr>
+						<th><?php esc_html_e( 'Route', 'platform-core' ); ?></th>
+						<th><?php esc_html_e( 'Title', 'platform-core' ); ?></th>
+						<th><?php esc_html_e( 'Permission', 'platform-core' ); ?></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ( $routes as $route ) : ?>
+						<tr>
+							<td data-label="<?php esc_attr_e( 'Route', 'platform-core' ); ?>"><code><?php echo esc_html( $route['slug'] ); ?></code></td>
+							<td data-label="<?php esc_attr_e( 'Title', 'platform-core' ); ?>"><?php echo esc_html( $route['title'] ?: '—' ); ?></td>
+							<td data-label="<?php esc_attr_e( 'Permission', 'platform-core' ); ?>"><?php echo $route['permission'] ? '<code>' . esc_html( $route['permission'] ) . '</code>' : '&mdash;'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
+							<td data-label="<?php esc_attr_e( 'Actions', 'platform-core' ); ?>"><a href="<?php echo esc_url( $route['url'] ); ?>"><?php esc_html_e( 'Open', 'platform-core' ); ?></a></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+			</div>
+			<?php
+			return;
+		}
+
+		if ( 'settings' === $tab ) {
+			$settings_html = apply_filters( 'mpp_module_admin_settings_html', '', $module_slug, $module );
+
+			if ( $settings_html ) {
+				echo $settings_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				return;
+			}
+			?>
+			<div class="mpp-empty-state">
+				<h3 class="mpp-empty-state__title"><?php esc_html_e( 'No module settings', 'platform-core' ); ?></h3>
+				<p><?php esc_html_e( 'This module does not expose admin settings yet.', 'platform-core' ); ?></p>
+			</div>
+			<?php
+			return;
+		}
+
+		?>
+		<dl class="mpp-profile-list">
+			<dt><?php esc_html_e( 'Slug', 'platform-core' ); ?></dt><dd><code><?php echo esc_html( $module['slug'] ); ?></code></dd>
+			<dt><?php esc_html_e( 'Version', 'platform-core' ); ?></dt><dd><?php echo esc_html( $module['version'] ?? '—' ); ?></dd>
+			<dt><?php esc_html_e( 'Status', 'platform-core' ); ?></dt><dd><?php echo esc_html( $module['status'] ?? 'active' ); ?></dd>
+			<dt><?php esc_html_e( 'Requires Core', 'platform-core' ); ?></dt><dd><?php echo esc_html( $module['requires_core_version'] ?? '—' ); ?></dd>
+			<dt><?php esc_html_e( 'Permissions', 'platform-core' ); ?></dt><dd><?php echo esc_html( (string) count( $permissions ) ); ?></dd>
+			<dt><?php esc_html_e( 'Routes', 'platform-core' ); ?></dt><dd><?php echo esc_html( (string) count( $routes ) ); ?></dd>
+		</dl>
+		<div class="mpp-quick-actions">
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( add_query_arg( array( 'module' => $module_slug, 'tab' => 'permissions' ), mpp_route_url( 'app/admin/modules' ) ) ); ?>"><?php esc_html_e( 'View Permissions', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( add_query_arg( array( 'module' => $module_slug, 'tab' => 'routes' ), mpp_route_url( 'app/admin/modules' ) ) ); ?>"><?php esc_html_e( 'View Routes', 'platform-core' ); ?></a>
+			<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( add_query_arg( 'module', $module_slug, mpp_route_url( 'app/admin/permissions' ) ) ); ?>"><?php esc_html_e( 'Browse in Permissions', 'platform-core' ); ?></a>
 		</div>
 		<?php
 	}
@@ -1009,7 +1190,7 @@ class AdminRenderer {
 			<h2><?php echo esc_html( $permission['description'] ?: $permission['permission_key'] ); ?></h2>
 			<dl class="mpp-profile-list">
 				<dt><?php esc_html_e( 'Permission', 'platform-core' ); ?></dt><dd><code><?php echo esc_html( $permission['permission_key'] ); ?></code></dd>
-				<dt><?php esc_html_e( 'Module', 'platform-core' ); ?></dt><dd><?php echo esc_html( $this->get_module_group_label( $permission['module'] ) ); ?></dd>
+				<dt><?php esc_html_e( 'Module', 'platform-core' ); ?></dt><dd><a href="<?php echo esc_url( add_query_arg( 'module', $permission['module'], mpp_route_url( 'app/admin/modules' ) ) ); ?>"><?php echo esc_html( $this->get_module_group_label( $permission['module'] ) ); ?></a></dd>
 				<dt><?php esc_html_e( 'Category', 'platform-core' ); ?></dt><dd><?php echo esc_html( ucfirst( $permission['resource'] ) ); ?></dd>
 				<dt><?php esc_html_e( 'Action', 'platform-core' ); ?></dt><dd><?php echo esc_html( $permission['action'] ); ?></dd>
 				<dt><?php esc_html_e( 'Users with access', 'platform-core' ); ?></dt><dd><?php echo esc_html( (string) $user_count ); ?></dd>

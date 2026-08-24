@@ -377,4 +377,5 @@ Account section (footer): Profile, Logout
 - **Phase 3 (Design system):** Complete — see `docs/design-system.md`
 - **Phase 4 (Admin shell):** Complete
 - **Phase 5 (Permissions / Roles / ACL):** Complete
-- **Phase 6+:** Pending — modules, users, panels, auth, responsive/RTL, testing
+- **Phase 6 (Modules):** Complete
+- **Phase 7+:** Pending — users, panels, auth, responsive/RTL, testing

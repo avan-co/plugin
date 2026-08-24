@@ -370,6 +370,22 @@
 	margin: 0;
 }
 
+.mpp-module-permissions__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.mpp-module-permissions__item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: var(--mpp-space-sm);
+	padding: 0.75rem 0;
+	border-bottom: 1px solid var(--mpp-border);
+}
+
 /* Role permission editor */
 .mpp-role-permissions__module {
 	margin-bottom: var(--mpp-space-xl);
