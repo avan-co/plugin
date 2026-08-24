@@ -127,9 +127,10 @@ final class UIComponents {
 	 * @param string $title       Title.
 	 * @param string $description Description.
 	 */
-	public static function empty_state( $title, $description = '' ) {
+	public static function empty_state( $title, $description = '', $icon = '…' ) {
 		?>
 		<div class="mpp-empty-state">
+			<div class="mpp-empty-state__icon" aria-hidden="true"><?php echo esc_html( $icon ); ?></div>
 			<h3 class="mpp-empty-state__title"><?php echo esc_html( $title ); ?></h3>
 			<?php if ( $description ) : ?>
 				<p><?php echo esc_html( $description ); ?></p>

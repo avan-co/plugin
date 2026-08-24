@@ -202,6 +202,8 @@ body.mpp-auth-page .mpp-header__brand {
 	border: 1px solid var(--mpp-border);
 	border-radius: var(--mpp-radius-lg);
 	padding: 1.25rem;
+	box-shadow: var(--mpp-shadow-subtle);
+	border-inline-start: 3px solid var(--mpp-info);
 }
 
 .mpp-stat-card__label {

@@ -32,14 +32,44 @@ function platform_theme_setup() {
 add_action( 'after_setup_theme', 'platform_theme_setup' );
 
 /**
+ * Output platform meta description on front-end routes.
+ */
+function platform_theme_document_meta() {
+	if ( is_admin() ) {
+		return;
+	}
+
+	$description = __( 'A secure multi-panel workspace for your team — manage access, collaborate in role-based panels, and extend with modules.', 'platform-theme' );
+
+	if ( is_front_page() ) {
+		$description = __( 'Sign in to your workspace or create an account. Role-based panels for users, managers, and administrators.', 'platform-theme' );
+	}
+
+	if ( function_exists( 'mpp_get_current_route' ) ) {
+		$route = mpp_get_current_route();
+
+		if ( $route && ! empty( $route['definition']['title'] ) ) {
+			$description = sprintf(
+				/* translators: %s: page title */
+				__( '%s — Platform workspace', 'platform-theme' ),
+				$route['definition']['title']
+			);
+		}
+	}
+
+	echo '<meta name="description" content="' . esc_attr( $description ) . '">' . "\n";
+}
+add_action( 'wp_head', 'platform_theme_document_meta', 1 );
+
+/**
  * Enqueue theme assets.
  */
 function platform_theme_enqueue_assets() {
 	wp_enqueue_style(
 		'platform-theme-fonts',
-		'https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap',
+		get_template_directory_uri() . '/assets/css/fonts.css',
 		array(),
-		null
+		wp_get_theme()->get( 'Version' )
 	);
 
 	wp_enqueue_style(

@@ -54,7 +54,8 @@ echo UIComponents::quick_actions(
 if ( ! $has_content ) {
 	UIComponents::empty_state(
 		__( 'Manager tools will appear here', 'platform-theme' ),
-		__( 'Install modules that provide team oversight, tasks, or reports. Until then, use Profile and Settings to manage your account.', 'platform-theme' )
+		__( 'Install modules that provide team oversight, tasks, or reports. Until then, use Profile and Settings to manage your account.', 'platform-theme' ),
+		'M'
 	);
 } else {
 	if ( $has_real_stats || ! empty( $widgets ) ) {

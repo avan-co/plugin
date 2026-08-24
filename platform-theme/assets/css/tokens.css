@@ -25,10 +25,20 @@
 	--mpp-surface-sidebar: #ffffff;
 	--mpp-surface-popover: #ffffff;
 
-	--mpp-font-body: "Noto Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	--mpp-font-body: "Vazirmatn", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 	--mpp-font-heading: var(--mpp-font-body);
 	--mpp-font-small: 0.8125rem;
 	--mpp-font-label: 0.875rem;
+	--mpp-font-display: clamp(1.75rem, 3vw, 2.5rem);
+	--mpp-font-title: 1.25rem;
+	--mpp-font-subtitle: 1.0625rem;
+
+	--mpp-ring: rgba(37, 99, 235, 0.35);
+	--mpp-ring-offset: 2px;
+
+	--mpp-panel-user-accent: #2563eb;
+	--mpp-panel-manager-accent: #0d9488;
+	--mpp-panel-admin-accent: #7c3aed;
 
 	--mpp-space-xs: 0.25rem;
 	--mpp-space-sm: 0.5rem;
