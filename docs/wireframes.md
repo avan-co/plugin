@@ -354,7 +354,8 @@ Account section (footer): Profile, Logout
 | Tables | `.mpp-admin-table`, `.mpp-table-wrap` |
 | Forms | `.mpp-form`, `FormHandler` |
 | Tabs | `render_admin_tabs()` (roles only) |
-| Badges/alerts | `.mpp-badge`, `.mpp-alert` |
+| Badges/alerts | `.mpp-badge`, `.mpp-alert`, `platform_ui_alert()` |
+| Profile page | `platform_render_profile_content()`, `.mpp-card--profile` |
 | Permission tree | `PermissionService::get_permission_tree()` |
 | Effective access | `EffectiveAccessService` |
 

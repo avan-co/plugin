@@ -74,6 +74,7 @@ Rendered by `PanelNavigation` with `.mpp-nav__sublist`.
 | Pending list | `platform_ui_pending_list()` | `.mpp-pending-list` |
 | Dashboard welcome | `platform_ui_dashboard_welcome()` | `.mpp-dashboard-welcome` |
 | Avatar | `platform_ui_avatar()` | `.mpp-avatar` |
+| Profile page | `platform_render_profile_content()` | `.mpp-profile-page`, `.mpp-card--profile` |
 
 ## Data display
 
@@ -143,7 +144,7 @@ File: `platform-theme/assets/css/responsive.css` (loaded after `panels.css`)
 
 | Breakpoint | Patterns |
 |------------|----------|
-| ≤768px | Filter bar stacks; stats 2-up; profile lists single-column; form actions full-width |
+| ≤768px | Filter bar stacks; stats 2-up; profile lists single-column; profile save sticky; form actions full-width |
 | ≤480px | Stats and module grids single-column |
 | ≤900px | Sidebar collapse + nav toggle (see `panels.css`) |
 
@@ -158,7 +159,7 @@ composer install
 composer test
 ```
 
-Phase 12 adds coverage for auth handlers, settings, dashboard shortcuts, route definitions, and theme asset wiring.
+Phase 12 adds coverage for auth handlers, settings, dashboard shortcuts, route definitions, theme asset wiring, and profile page helpers.
 
 ## File load order
 

@@ -296,6 +296,40 @@
 	font-size: 1.125rem;
 }
 
+.mpp-profile-header__meta {
+	flex: 1;
+	min-width: 0;
+}
+
+.mpp-profile-header__since {
+	margin: var(--mpp-space-xs) 0 0;
+	font-size: var(--mpp-font-small);
+}
+
+.mpp-card--profile {
+	padding: var(--mpp-space-xl);
+}
+
+.mpp-profile-page__header {
+	margin-bottom: 0;
+}
+
+.mpp-profile-section {
+	padding-top: var(--mpp-space-lg);
+	margin-top: var(--mpp-space-lg);
+	border-top: 1px solid var(--mpp-border);
+}
+
+.mpp-profile-section__title {
+	margin: 0 0 var(--mpp-space-md);
+	font-size: 1rem;
+	font-weight: 600;
+}
+
+.mpp-profile-form__actions {
+	margin-top: var(--mpp-space-md);
+}
+
 [dir="rtl"] .mpp-panel-card__arrow {
 	transform: scaleX(-1);
 }

@@ -97,11 +97,23 @@ class AccountFormHandler {
 		$data = array( 'ID' => $user_id );
 
 		if ( isset( $_POST['display_name'] ) ) {
-			$data['display_name'] = sanitize_text_field( wp_unslash( $_POST['display_name'] ) );
+			$display_name = sanitize_text_field( wp_unslash( $_POST['display_name'] ) );
+
+			if ( '' === $display_name ) {
+				return array( 'success' => false, 'message' => __( 'Display name is required.', 'platform-core' ) );
+			}
+
+			$data['display_name'] = $display_name;
 		}
 
 		if ( isset( $_POST['email'] ) ) {
-			$data['user_email'] = sanitize_email( wp_unslash( $_POST['email'] ) );
+			$email = sanitize_email( wp_unslash( $_POST['email'] ) );
+
+			if ( '' === $email || ! is_email( $email ) ) {
+				return array( 'success' => false, 'message' => __( 'A valid email address is required.', 'platform-core' ) );
+			}
+
+			$data['user_email'] = $email;
 		}
 
 		$result = wp_update_user( $data );

@@ -480,9 +480,16 @@ function mpp_render_account_notice() {
 		return;
 	}
 
+	$alert_type = 'success' === $type ? 'success' : 'error';
+
+	if ( function_exists( 'platform_ui_alert' ) ) {
+		platform_ui_alert( $message, $alert_type );
+		return;
+	}
+
 	printf(
 		'<div class="mpp-alert mpp-alert--%s" role="alert">%s</div>',
-		esc_attr( 'success' === $type ? 'success' : 'error' ),
+		esc_attr( $alert_type ),
 		esc_html( $message )
 	);
 }

@@ -55,6 +55,22 @@
 		width: 100%;
 	}
 
+	.mpp-card--profile {
+		padding: var(--mpp-space-lg);
+	}
+
+	.mpp-profile-form__actions {
+		position: sticky;
+		bottom: 0;
+		z-index: 2;
+		margin-inline: calc(-1 * var(--mpp-space-lg));
+		margin-bottom: calc(-1 * var(--mpp-space-lg));
+		padding: var(--mpp-space-md) var(--mpp-space-lg);
+		background: var(--mpp-surface-card);
+		border-top: 1px solid var(--mpp-border);
+		box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.06);
+	}
+
 	.mpp-pagination__list {
 		flex-wrap: wrap;
 		justify-content: center;
