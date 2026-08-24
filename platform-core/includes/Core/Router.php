@@ -310,6 +310,15 @@ class Router {
 		);
 
 		$this->add_route(
+			'forgot-password',
+			array(
+				'template' => 'templates/page-forgot-password.php',
+				'auth'     => false,
+				'title'    => __( 'Forgot Password', 'platform-core' ),
+			)
+		);
+
+		$this->add_route(
 			'app',
 			array(
 				'template'   => 'templates/page-app.php',

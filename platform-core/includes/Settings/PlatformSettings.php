@@ -17,6 +17,29 @@ class PlatformSettings {
 	const OPTION_PREFIX = 'mpp_setting_';
 
 	/**
+	 * Register WordPress hooks for stored settings.
+	 */
+	public function register_hooks() {
+		add_filter( 'pre_option_timezone_string', array( $this, 'filter_timezone_string' ) );
+	}
+
+	/**
+	 * Override WordPress timezone when a platform timezone is saved.
+	 *
+	 * @param mixed $value Current pre-option value.
+	 * @return mixed
+	 */
+	public function filter_timezone_string( $value ) {
+		$timezone = get_option( self::OPTION_PREFIX . 'timezone', '' );
+
+		if ( is_string( $timezone ) && '' !== $timezone ) {
+			return $timezone;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Get a setting value.
 	 *
 	 * @param string $key     Setting key.
@@ -52,11 +75,15 @@ class PlatformSettings {
 	public function all() {
 		return array(
 			'general' => array(
-				'platform_name'     => $this->get( 'platform_name', get_bloginfo( 'name' ) ),
 				'default_dashboard' => $this->get( 'default_dashboard', 'app/user' ),
 			),
+			'appearance' => array(
+				'platform_name' => $this->get( 'platform_name', get_bloginfo( 'name' ) ),
+				'logo_mark'     => $this->get( 'logo_mark', 'P' ),
+				'accent_color'  => $this->get( 'accent_color', '' ),
+			),
 			'registration' => array(
-				'enabled'             => $this->is_registration_enabled(),
+				'enabled'               => $this->is_registration_enabled(),
 				'default_platform_role' => $this->get( 'default_platform_role', 'platform_user' ),
 			),
 			'security' => array(
@@ -64,6 +91,7 @@ class PlatformSettings {
 			),
 			'localization' => array(
 				'date_format' => $this->get( 'date_format', get_option( 'date_format' ) ),
+				'timezone'    => $this->get_timezone_override(),
 			),
 		);
 	}
@@ -84,6 +112,17 @@ class PlatformSettings {
 	}
 
 	/**
+	 * Get the saved timezone override, if any.
+	 *
+	 * @return string
+	 */
+	public function get_timezone_override() {
+		$stored = get_option( self::OPTION_PREFIX . 'timezone', null );
+
+		return null === $stored ? '' : (string) $stored;
+	}
+
+	/**
 	 * Save settings from admin form payload.
 	 *
 	 * @param array<string, mixed> $input Raw input.
@@ -101,8 +140,23 @@ class PlatformSettings {
 			}
 		}
 
+		if ( isset( $input['logo_mark'] ) ) {
+			$mark = sanitize_text_field( $input['logo_mark'] );
+			$mark = '' !== $mark ? mb_substr( $mark, 0, 1 ) : 'P';
+			$this->set( 'logo_mark', $mark );
+		}
+
+		if ( isset( $input['accent_color'] ) ) {
+			$color = sanitize_text_field( $input['accent_color'] );
+			if ( '' !== $color && ! preg_match( '/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/', $color ) ) {
+				$errors['accent_color'] = __( 'Accent color must be a valid hex value.', 'platform-core' );
+			} else {
+				$this->set( 'accent_color', $color );
+			}
+		}
+
 		if ( isset( $input['default_dashboard'] ) ) {
-			$route = sanitize_text_field( $input['default_dashboard'] );
+			$route   = sanitize_text_field( $input['default_dashboard'] );
 			$allowed = array( 'app/user', 'app/manager', 'app/admin', 'app' );
 			if ( ! in_array( $route, $allowed, true ) ) {
 				$errors['default_dashboard'] = __( 'Invalid default dashboard route.', 'platform-core' );
@@ -131,6 +185,17 @@ class PlatformSettings {
 			$this->set( 'date_format', sanitize_text_field( $input['date_format'] ) );
 		}
 
+		if ( isset( $input['timezone'] ) ) {
+			$timezone = sanitize_text_field( $input['timezone'] );
+			if ( '' === $timezone ) {
+				delete_option( self::OPTION_PREFIX . 'timezone' );
+			} elseif ( ! in_array( $timezone, timezone_identifiers_list(), true ) ) {
+				$errors['timezone'] = __( 'Invalid timezone selected.', 'platform-core' );
+			} else {
+				$this->set( 'timezone', $timezone );
+			}
+		}
+
 		return $errors;
 	}
 
@@ -144,10 +209,13 @@ class PlatformSettings {
 	private function get_default( $key, $default ) {
 		$defaults = array(
 			'platform_name'         => get_bloginfo( 'name' ),
+			'logo_mark'             => 'P',
+			'accent_color'          => '',
 			'default_dashboard'     => 'app/user',
 			'default_platform_role' => 'platform_user',
 			'session_remember_days' => 14,
 			'date_format'           => get_option( 'date_format' ),
+			'timezone'              => wp_timezone_string(),
 		);
 
 		return $defaults[ $key ] ?? $default;

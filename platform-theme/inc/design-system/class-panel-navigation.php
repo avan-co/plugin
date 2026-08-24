@@ -101,15 +101,7 @@ final class PanelNavigation {
 		echo '<ul class="mpp-nav__list">';
 
 		foreach ( $nav_items as $item ) {
-			$route  = isset( $item['route'] ) ? $item['route'] : '';
-			$active = $route && $current_slug === $route;
-			printf(
-				'<li class="mpp-nav__item%s"><a href="%s"><span class="mpp-nav__label">%s</span>%s</a></li>',
-				$active ? ' mpp-nav__item--active' : '',
-				esc_url( $item['url'] ),
-				esc_html( $item['label'] ),
-				! empty( $item['description'] ) ? '<span class="mpp-nav__desc">' . esc_html( $item['description'] ) . '</span>' : ''
-			);
+			self::render_admin_item( $item, $current_slug );
 		}
 
 		echo '</ul>';
@@ -129,6 +121,102 @@ final class PanelNavigation {
 		echo '</div>';
 
 		echo '</nav>';
+	}
+
+	/**
+	 * Render one admin navigation item, including nested children.
+	 *
+	 * @param array<string, mixed> $item         Navigation item.
+	 * @param string               $current_slug Current route slug.
+	 */
+	private static function render_admin_item( array $item, $current_slug ) {
+		if ( ! empty( $item['children'] ) ) {
+			$group_active = false;
+
+			foreach ( $item['children'] as $child ) {
+				if ( self::is_admin_item_active( $child, $current_slug ) ) {
+					$group_active = true;
+					break;
+				}
+			}
+
+			echo '<li class="mpp-nav__item mpp-nav__item--group' . ( $group_active ? ' mpp-nav__item--group-active' : '' ) . '">';
+			echo '<span class="mpp-nav__group-label">' . esc_html( $item['label'] ) . '</span>';
+			echo '<ul class="mpp-nav__sublist">';
+
+			foreach ( $item['children'] as $child ) {
+				self::render_admin_link( $child, $current_slug, true );
+			}
+
+			echo '</ul>';
+			echo '</li>';
+			return;
+		}
+
+		self::render_admin_link( $item, $current_slug, false );
+	}
+
+	/**
+	 * Render a single admin navigation link.
+	 *
+	 * @param array<string, mixed> $item         Navigation item.
+	 * @param string               $current_slug Current route slug.
+	 * @param bool                 $nested       Whether item is nested.
+	 */
+	private static function render_admin_link( array $item, $current_slug, $nested ) {
+		$active = self::is_admin_item_active( $item, $current_slug );
+		$classes = array( 'mpp-nav__item' );
+
+		if ( $nested ) {
+			$classes[] = 'mpp-nav__item--child';
+		}
+
+		if ( $active ) {
+			$classes[] = 'mpp-nav__item--active';
+		}
+
+		printf(
+			'<li class="%s"><a href="%s"><span class="mpp-nav__label">%s</span>%s</a></li>',
+			esc_attr( implode( ' ', $classes ) ),
+			esc_url( $item['url'] ),
+			esc_html( $item['label'] ),
+			! empty( $item['description'] ) ? '<span class="mpp-nav__desc">' . esc_html( $item['description'] ) . '</span>' : ''
+		);
+	}
+
+	/**
+	 * Determine whether an admin nav item is active.
+	 *
+	 * @param array<string, mixed> $item         Navigation item.
+	 * @param string               $current_slug Current route slug.
+	 * @return bool
+	 */
+	private static function is_admin_item_active( array $item, $current_slug ) {
+		$route = isset( $item['route'] ) ? $item['route'] : '';
+
+		if ( ! $route || $current_slug !== $route ) {
+			return false;
+		}
+
+		$view = isset( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : '';
+
+		if ( ! empty( $item['query_args'] ) && is_array( $item['query_args'] ) ) {
+			foreach ( $item['query_args'] as $key => $value ) {
+				$current = isset( $_GET[ $key ] ) ? sanitize_text_field( wp_unslash( $_GET[ $key ] ) ) : '';
+
+				if ( (string) $current !== (string) $value ) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		if ( 'audit' === $view && 'app/admin/acl' === $route ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

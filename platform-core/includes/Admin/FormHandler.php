@@ -143,6 +143,8 @@ class FormHandler {
 				return $this->revoke_permission();
 			case 'update_permission_scope':
 				return $this->update_permission_scope();
+			case 'save_role_permissions':
+				return $this->save_role_permissions();
 			case 'save_settings':
 				return $this->save_settings();
 			default:
@@ -407,6 +409,58 @@ class FormHandler {
 		return array(
 			'success' => (bool) $result,
 			'message' => $result ? __( 'Scope updated.', 'platform-core' ) : __( 'Could not update scope.', 'platform-core' ),
+		);
+	}
+
+	/**
+	 * Bulk save role permissions from checkbox editor.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function save_role_permissions() {
+		$role_id = isset( $_POST['role_id'] ) ? (int) $_POST['role_id'] : 0;
+		$role    = $this->roles->find( $role_id );
+
+		if ( ! $role ) {
+			return array( 'success' => false, 'message' => __( 'Role not found.', 'platform-core' ) );
+		}
+
+		$before = $this->roles->get_permissions( $role_id );
+		$ids    = isset( $_POST['permission_ids'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['permission_ids'] ) ) : array();
+		$result = $this->roles->sync_permissions( $role_id, $ids );
+		$after  = $this->roles->get_permissions( $role_id );
+
+		if ( isset( $_POST['permission_scopes'] ) && is_array( $_POST['permission_scopes'] ) ) {
+			foreach ( wp_unslash( $_POST['permission_scopes'] ) as $permission_id => $scope_type ) {
+				$permission_id = (int) $permission_id;
+				if ( ! in_array( $permission_id, $ids, true ) ) {
+					continue;
+				}
+				$this->roles->assign_permission( $role_id, $permission_id, sanitize_key( $scope_type ) );
+			}
+			$after = $this->roles->get_permissions( $role_id );
+		}
+
+		$this->audit->log(
+			'role.permissions.updated',
+			'role',
+			$role_id,
+			array( 'permissions' => wp_list_pluck( $before, 'permission_id' ) ),
+			array(
+				'permissions' => wp_list_pluck( $after, 'permission_id' ),
+				'granted'     => $result['granted'],
+				'revoked'     => $result['revoked'],
+			)
+		);
+
+		return array(
+			'success' => true,
+			'message' => sprintf(
+				/* translators: 1: granted count, 2: revoked count */
+				__( 'Permissions saved. %1$d granted, %2$d revoked.', 'platform-core' ),
+				$result['granted'],
+				$result['revoked']
+			),
 		);
 	}
 

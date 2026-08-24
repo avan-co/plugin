@@ -104,6 +104,34 @@ function mpp_logout_url() {
 }
 
 /**
+ * Whether the current request is an authentication route.
+ *
+ * @return bool
+ */
+function mpp_is_auth_route() {
+	if ( ! function_exists( 'mpp_get_current_route' ) ) {
+		return false;
+	}
+
+	$route = mpp_get_current_route();
+
+	if ( ! $route || empty( $route['slug'] ) ) {
+		return false;
+	}
+
+	return in_array( $route['slug'], array( 'login', 'register', 'forgot-password' ), true );
+}
+
+/**
+ * Get the themed forgot-password URL.
+ *
+ * @return string
+ */
+function mpp_forgot_password_url() {
+	return mpp_route_url( 'forgot-password' );
+}
+
+/**
  * Render navigation for a panel type.
  *
  * @param string $panel Panel slug.
@@ -269,22 +297,32 @@ function mpp_get_admin_navigation() {
 			'description' => __( 'Platform overview', 'platform-core' ),
 		),
 		array(
-			'label'       => __( 'Users', 'platform-core' ),
-			'route'       => 'app/admin/users',
-			'permission'  => 'core.acl.manage',
-			'description' => __( 'Accounts and role assignments', 'platform-core' ),
-		),
-		array(
-			'label'       => __( 'Roles', 'platform-core' ),
-			'route'       => 'app/admin/roles',
-			'permission'  => 'core.acl.manage',
-			'description' => __( 'Role definitions and members', 'platform-core' ),
+			'label'      => __( 'Users', 'platform-core' ),
+			'permission' => 'core.acl.manage',
+			'children'   => array(
+				array(
+					'label'       => __( 'Users', 'platform-core' ),
+					'route'       => 'app/admin/users',
+					'description' => __( 'Accounts and role assignments', 'platform-core' ),
+				),
+				array(
+					'label'       => __( 'Roles', 'platform-core' ),
+					'route'       => 'app/admin/roles',
+					'description' => __( 'Role definitions and members', 'platform-core' ),
+				),
+			),
 		),
 		array(
 			'label'       => __( 'Permissions', 'platform-core' ),
 			'route'       => 'app/admin/permissions',
 			'permission'  => 'core.acl.manage',
-			'description' => __( 'Grant and revoke access', 'platform-core' ),
+			'description' => __( 'Browse and inspect permissions', 'platform-core' ),
+		),
+		array(
+			'label'       => __( 'ACL', 'platform-core' ),
+			'route'       => 'app/admin/acl',
+			'permission'  => 'core.acl.manage',
+			'description' => __( 'Access control overview', 'platform-core' ),
 		),
 		array(
 			'label'       => __( 'Modules', 'platform-core' ),
@@ -293,19 +331,30 @@ function mpp_get_admin_navigation() {
 			'description' => __( 'Installed platform modules', 'platform-core' ),
 		),
 		array(
-			'label'       => __( 'ACL', 'platform-core' ),
-			'route'       => 'app/admin/acl',
-			'permission'  => 'core.acl.manage',
-			'description' => __( 'Audit and access history', 'platform-core' ),
-		),
-		array(
 			'label'       => __( 'Settings', 'platform-core' ),
 			'route'       => 'app/admin/settings',
 			'permission'  => 'core.acl.manage',
 			'description' => __( 'Platform configuration', 'platform-core' ),
 		),
+		array(
+			'label'       => __( 'Audit Log', 'platform-core' ),
+			'route'       => 'app/admin/acl',
+			'permission'  => 'core.acl.manage',
+			'description' => __( 'ACL change history', 'platform-core' ),
+			'query_args'  => array( 'view' => 'audit' ),
+		),
 	);
 
+	return mpp_filter_admin_navigation( $items );
+}
+
+/**
+ * Filter and normalize admin navigation items.
+ *
+ * @param array<int, array<string, mixed>> $items Raw navigation items.
+ * @return array<int, array<string, mixed>>
+ */
+function mpp_filter_admin_navigation( array $items ) {
 	$filtered = array();
 
 	foreach ( $items as $item ) {
@@ -313,11 +362,88 @@ function mpp_get_admin_navigation() {
 			continue;
 		}
 
-		$item['url'] = mpp_route_url( $item['route'] );
+		if ( ! empty( $item['children'] ) ) {
+			$children = array();
+
+			foreach ( $item['children'] as $child ) {
+				if ( ! empty( $child['permission'] ) && ! mpp_can( $child['permission'] ) ) {
+					continue;
+				}
+
+				if ( empty( $child['permission'] ) && ! empty( $item['permission'] ) && ! mpp_can( $item['permission'] ) ) {
+					continue;
+				}
+
+				$child['url'] = ! empty( $child['query_args'] )
+					? add_query_arg( $child['query_args'], mpp_route_url( $child['route'] ) )
+					: mpp_route_url( $child['route'] );
+				$children[]   = $child;
+			}
+
+			if ( empty( $children ) ) {
+				continue;
+			}
+
+			$item['children'] = $children;
+			unset( $item['route'], $item['url'] );
+			$filtered[] = $item;
+			continue;
+		}
+
+		if ( empty( $item['route'] ) ) {
+			continue;
+		}
+
+		$item['url'] = ! empty( $item['query_args'] )
+			? add_query_arg( $item['query_args'], mpp_route_url( $item['route'] ) )
+			: mpp_route_url( $item['route'] );
 		$filtered[]  = $item;
 	}
 
 	return apply_filters( 'mpp_admin_navigation', $filtered );
+}
+
+/**
+ * Reset admin page shell context before rendering content.
+ */
+function mpp_reset_admin_page_context() {
+	unset( $GLOBALS['mpp_admin_page_actions'], $GLOBALS['mpp_admin_page_meta'] );
+}
+
+/**
+ * Set header action buttons HTML for the current admin page.
+ *
+ * @param string $html Actions HTML.
+ */
+function mpp_set_admin_page_actions( $html ) {
+	$GLOBALS['mpp_admin_page_actions'] = $html;
+}
+
+/**
+ * Get header action buttons HTML for the current admin page.
+ *
+ * @return string
+ */
+function mpp_get_admin_page_actions() {
+	return isset( $GLOBALS['mpp_admin_page_actions'] ) ? (string) $GLOBALS['mpp_admin_page_actions'] : '';
+}
+
+/**
+ * Override admin shell title/description for the current page.
+ *
+ * @param array<string, string> $meta Meta overrides (title, description).
+ */
+function mpp_set_admin_page_meta( array $meta ) {
+	$GLOBALS['mpp_admin_page_meta'] = $meta;
+}
+
+/**
+ * Get admin shell meta overrides for the current page.
+ *
+ * @return array<string, string>
+ */
+function mpp_get_admin_page_meta() {
+	return isset( $GLOBALS['mpp_admin_page_meta'] ) ? (array) $GLOBALS['mpp_admin_page_meta'] : array();
 }
 
 /**
@@ -354,9 +480,16 @@ function mpp_render_account_notice() {
 		return;
 	}
 
+	$alert_type = 'success' === $type ? 'success' : 'error';
+
+	if ( function_exists( 'platform_ui_alert' ) ) {
+		platform_ui_alert( $message, $alert_type );
+		return;
+	}
+
 	printf(
 		'<div class="mpp-alert mpp-alert--%s" role="alert">%s</div>',
-		esc_attr( 'success' === $type ? 'success' : 'error' ),
+		esc_attr( $alert_type ),
 		esc_html( $message )
 	);
 }
@@ -456,4 +589,91 @@ function mpp_get_panel_widgets( $panel ) {
 	 * @param string                            $panel    Panel slug.
 	 */
 	return apply_filters( 'mpp_panel_widgets', $filtered, $panel );
+}
+
+/**
+ * Get the platform settings service.
+ *
+ * @return \MPP\Settings\PlatformSettings|null
+ */
+function mpp_platform_settings() {
+	if ( ! function_exists( 'mpp' ) ) {
+		return null;
+	}
+
+	return mpp()->get( \MPP\Settings\PlatformSettings::class );
+}
+
+/**
+ * Get the configured platform display name.
+ *
+ * @return string
+ */
+function mpp_get_platform_name() {
+	$settings = mpp_platform_settings();
+
+	if ( ! $settings ) {
+		return get_bloginfo( 'name' );
+	}
+
+	return (string) $settings->get( 'platform_name', get_bloginfo( 'name' ) );
+}
+
+/**
+ * Get the single-character logo mark for the platform brand.
+ *
+ * @return string
+ */
+function mpp_get_logo_mark() {
+	$settings = mpp_platform_settings();
+
+	if ( ! $settings ) {
+		return 'P';
+	}
+
+	$mark = (string) $settings->get( 'logo_mark', 'P' );
+
+	return '' !== $mark ? mb_substr( $mark, 0, 1 ) : 'P';
+}
+
+/**
+ * Get the configured accent color override, if any.
+ *
+ * @return string
+ */
+function mpp_get_accent_color() {
+	$settings = mpp_platform_settings();
+
+	if ( ! $settings ) {
+		return '';
+	}
+
+	return (string) $settings->get( 'accent_color', '' );
+}
+
+/**
+ * Get module shortcut links for a panel dashboard.
+ *
+ * @param string $panel Panel slug.
+ * @return array<int, array<string, string>>
+ */
+function mpp_get_panel_module_shortcuts( $panel ) {
+	if ( ! function_exists( 'mpp' ) ) {
+		return array();
+	}
+
+	return mpp()->get( \MPP\Panels\DashboardService::class )->get_module_shortcuts( $panel );
+}
+
+/**
+ * Get pending items for the manager dashboard.
+ *
+ * @return array<int, array<string, string>>
+ */
+function mpp_get_manager_pending_items() {
+	if ( ! function_exists( 'mpp' ) ) {
+		return array();
+	}
+
+	return mpp()->get( \MPP\Panels\DashboardService::class )->get_pending_items();
 }

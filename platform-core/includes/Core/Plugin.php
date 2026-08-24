@@ -25,6 +25,7 @@ use MPP\API\ScopesController;
 use MPP\API\UsersController;
 use MPP\Auth\AccessGuard;
 use MPP\Auth\AuthIntegration;
+use MPP\Auth\PasswordResetHandler;
 use MPP\Auth\RegistrationHandler;
 use MPP\Database\Installer;
 use MPP\Modules\ModuleManager;
@@ -115,6 +116,7 @@ class Plugin {
 		$this->container->get( AccountFormHandler::class )->register();
 		$this->container->get( AuthIntegration::class )->register();
 		$this->container->get( RegistrationHandler::class )->register();
+		$this->container->get( PasswordResetHandler::class )->register();
 		$this->container->get( AccessGuard::class )->register();
 		$this->container->get( RolesController::class )->register();
 		$this->container->get( PermissionsController::class )->register();
@@ -123,6 +125,8 @@ class Plugin {
 		$this->container->get( ModulesController::class )->register();
 		$this->container->get( ScopesController::class )->register();
 		$this->container->get( AuditLogController::class )->register();
+
+		$this->container->get( PlatformSettings::class )->register_hooks();
 
 		add_action( 'rest_api_init', array( $module_manager, 'register_module_rest_routes' ) );
 
@@ -254,6 +258,10 @@ class Plugin {
 				$c->get( AuditLogService::class ),
 				$c->get( PlatformSettings::class )
 			);
+		} );
+
+		$this->container->set( PasswordResetHandler::class, function () {
+			return new PasswordResetHandler();
 		} );
 
 		$this->container->set( AccessGuard::class, function ( Container $c ) {

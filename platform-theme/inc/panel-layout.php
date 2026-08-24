@@ -17,7 +17,8 @@ use PlatformTheme\DesignSystem\PanelShell;
  * @param string               $content      HTML content.
  * @param string               $description  Optional page description.
  * @param array<int, string>   $breadcrumb   Optional breadcrumb.
+ * @param string               $actions_html Optional header actions.
  */
-function platform_render_panel( $panel, $title, $content, $description = '', array $breadcrumb = array() ) {
-	PanelShell::render( $panel, $title, $content, $description, $breadcrumb );
+function platform_render_panel( $panel, $title, $content, $description = '', array $breadcrumb = array(), $actions_html = '' ) {
+	PanelShell::render( $panel, $title, $content, $description, $breadcrumb, $actions_html );
 }

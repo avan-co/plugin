@@ -12,6 +12,7 @@ use PlatformTheme\DesignSystem\UIComponents;
 
 $current_user = wp_get_current_user();
 $is_panel     = function_exists( 'mpp_get_current_route' ) && mpp_get_current_route();
+$is_auth_page = function_exists( 'mpp_is_auth_route' ) && mpp_is_auth_route();
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -27,8 +28,8 @@ $is_panel     = function_exists( 'mpp_get_current_route' ) && mpp_get_current_ro
 	<div class="mpp-header__inner">
 		<div class="mpp-header__brand">
 			<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app' ) : home_url( '/app' ) ); ?>" class="mpp-logo">
-				<span class="mpp-logo__mark" aria-hidden="true">P</span>
-				<span class="mpp-logo__text"><?php bloginfo( 'name' ); ?></span>
+				<span class="mpp-logo__mark" aria-hidden="true"><?php echo esc_html( function_exists( 'mpp_get_logo_mark' ) ? mpp_get_logo_mark() : 'P' ); ?></span>
+				<span class="mpp-logo__text"><?php echo esc_html( function_exists( 'mpp_get_platform_name' ) ? mpp_get_platform_name() : get_bloginfo( 'name' ) ); ?></span>
 			</a>
 		</div>
 
@@ -50,14 +51,18 @@ $is_panel     = function_exists( 'mpp_get_current_route' ) && mpp_get_current_ro
 				</div>
 			</div>
 		<?php else : ?>
+			<?php if ( ! $is_auth_page ) : ?>
 			<nav class="mpp-public-nav" aria-label="<?php esc_attr_e( 'Public navigation', 'platform-theme' ); ?>">
 				<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'login' ) : home_url( '/login' ) ); ?>" class="mpp-header__link"><?php esc_html_e( 'Login', 'platform-theme' ); ?></a>
 				<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'register' ) : home_url( '/register' ) ); ?>" class="mpp-header__link mpp-header__link--cta"><?php esc_html_e( 'Register', 'platform-theme' ); ?></a>
 			</nav>
+			<?php endif; ?>
 		<?php endif; ?>
 
+		<?php if ( ! $is_auth_page ) : ?>
 		<button class="mpp-nav-toggle" aria-label="<?php esc_attr_e( 'Toggle navigation', 'platform-theme' ); ?>" aria-expanded="false" aria-controls="mpp-main-content">
 			<span></span>
 		</button>
+		<?php endif; ?>
 	</div>
 </header>
