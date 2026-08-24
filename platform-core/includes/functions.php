@@ -269,22 +269,32 @@ function mpp_get_admin_navigation() {
 			'description' => __( 'Platform overview', 'platform-core' ),
 		),
 		array(
-			'label'       => __( 'Users', 'platform-core' ),
-			'route'       => 'app/admin/users',
-			'permission'  => 'core.acl.manage',
-			'description' => __( 'Accounts and role assignments', 'platform-core' ),
-		),
-		array(
-			'label'       => __( 'Roles', 'platform-core' ),
-			'route'       => 'app/admin/roles',
-			'permission'  => 'core.acl.manage',
-			'description' => __( 'Role definitions and members', 'platform-core' ),
+			'label'      => __( 'Users', 'platform-core' ),
+			'permission' => 'core.acl.manage',
+			'children'   => array(
+				array(
+					'label'       => __( 'Users', 'platform-core' ),
+					'route'       => 'app/admin/users',
+					'description' => __( 'Accounts and role assignments', 'platform-core' ),
+				),
+				array(
+					'label'       => __( 'Roles', 'platform-core' ),
+					'route'       => 'app/admin/roles',
+					'description' => __( 'Role definitions and members', 'platform-core' ),
+				),
+			),
 		),
 		array(
 			'label'       => __( 'Permissions', 'platform-core' ),
 			'route'       => 'app/admin/permissions',
 			'permission'  => 'core.acl.manage',
-			'description' => __( 'Grant and revoke access', 'platform-core' ),
+			'description' => __( 'Browse and inspect permissions', 'platform-core' ),
+		),
+		array(
+			'label'       => __( 'ACL', 'platform-core' ),
+			'route'       => 'app/admin/acl',
+			'permission'  => 'core.acl.manage',
+			'description' => __( 'Access control overview', 'platform-core' ),
 		),
 		array(
 			'label'       => __( 'Modules', 'platform-core' ),
@@ -293,19 +303,30 @@ function mpp_get_admin_navigation() {
 			'description' => __( 'Installed platform modules', 'platform-core' ),
 		),
 		array(
-			'label'       => __( 'ACL', 'platform-core' ),
-			'route'       => 'app/admin/acl',
-			'permission'  => 'core.acl.manage',
-			'description' => __( 'Audit and access history', 'platform-core' ),
-		),
-		array(
 			'label'       => __( 'Settings', 'platform-core' ),
 			'route'       => 'app/admin/settings',
 			'permission'  => 'core.acl.manage',
 			'description' => __( 'Platform configuration', 'platform-core' ),
 		),
+		array(
+			'label'       => __( 'Audit Log', 'platform-core' ),
+			'route'       => 'app/admin/acl',
+			'permission'  => 'core.acl.manage',
+			'description' => __( 'ACL change history', 'platform-core' ),
+			'query_args'  => array( 'view' => 'audit' ),
+		),
 	);
 
+	return mpp_filter_admin_navigation( $items );
+}
+
+/**
+ * Filter and normalize admin navigation items.
+ *
+ * @param array<int, array<string, mixed>> $items Raw navigation items.
+ * @return array<int, array<string, mixed>>
+ */
+function mpp_filter_admin_navigation( array $items ) {
 	$filtered = array();
 
 	foreach ( $items as $item ) {
@@ -313,7 +334,41 @@ function mpp_get_admin_navigation() {
 			continue;
 		}
 
-		$item['url'] = mpp_route_url( $item['route'] );
+		if ( ! empty( $item['children'] ) ) {
+			$children = array();
+
+			foreach ( $item['children'] as $child ) {
+				if ( ! empty( $child['permission'] ) && ! mpp_can( $child['permission'] ) ) {
+					continue;
+				}
+
+				if ( empty( $child['permission'] ) && ! empty( $item['permission'] ) && ! mpp_can( $item['permission'] ) ) {
+					continue;
+				}
+
+				$child['url'] = ! empty( $child['query_args'] )
+					? add_query_arg( $child['query_args'], mpp_route_url( $child['route'] ) )
+					: mpp_route_url( $child['route'] );
+				$children[]   = $child;
+			}
+
+			if ( empty( $children ) ) {
+				continue;
+			}
+
+			$item['children'] = $children;
+			unset( $item['route'], $item['url'] );
+			$filtered[] = $item;
+			continue;
+		}
+
+		if ( empty( $item['route'] ) ) {
+			continue;
+		}
+
+		$item['url'] = ! empty( $item['query_args'] )
+			? add_query_arg( $item['query_args'], mpp_route_url( $item['route'] ) )
+			: mpp_route_url( $item['route'] );
 		$filtered[]  = $item;
 	}
 

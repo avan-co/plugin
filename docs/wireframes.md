@@ -374,4 +374,5 @@ Account section (footer): Profile, Logout
 
 - **Phase 1 (Architecture + UI audit):** Complete — see gaps above
 - **Phase 2 (Wireframes):** Complete — this document
-- **Phase 3+:** Pending — design system refinement, then implementation
+- **Phase 3 (Design system):** Complete — see `docs/design-system.md`
+- **Phase 4+:** Pending — admin shell and page implementation

@@ -838,11 +838,16 @@ class AdminRenderer {
 	 * @param string                $base_url Base URL for tabs.
 	 */
 	private function render_admin_tabs( array $tabs, $current, $base_url ) {
-		echo '<nav class="mpp-admin-tabs" aria-label="' . esc_attr__( 'Section navigation', 'platform-core' ) . '"><ul class="mpp-admin-tabs__list">';
+		if ( function_exists( 'platform_ui_tabs' ) ) {
+			echo platform_ui_tabs( $tabs, $current, $base_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			return;
+		}
+
+		echo '<nav class="mpp-tabs" aria-label="' . esc_attr__( 'Section navigation', 'platform-core' ) . '"><ul class="mpp-tabs__list">';
 		foreach ( $tabs as $slug => $label ) {
-			$url      = add_query_arg( 'tab', $slug, $base_url );
+			$url       = add_query_arg( 'tab', $slug, $base_url );
 			$is_active = $current === $slug;
-			echo '<li class="mpp-admin-tabs__item' . ( $is_active ? ' is-active' : '' ) . '">';
+			echo '<li class="mpp-tabs__item' . ( $is_active ? ' is-active' : '' ) . '">';
 			echo '<a href="' . esc_url( $url ) . '"' . ( $is_active ? ' aria-current="page"' : '' ) . '>' . esc_html( $label ) . '</a>';
 			echo '</li>';
 		}

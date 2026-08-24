@@ -76,6 +76,7 @@ function platform_admin_breadcrumb( $page ) {
 		'permissions' => __( 'Permissions', 'platform-theme' ),
 		'modules'     => __( 'Modules', 'platform-theme' ),
 		'acl'         => __( 'ACL', 'platform-theme' ),
+		'audit-log'   => __( 'Audit Log', 'platform-theme' ),
 		'settings'    => __( 'Settings', 'platform-theme' ),
 	);
 
@@ -83,4 +84,88 @@ function platform_admin_breadcrumb( $page ) {
 		__( 'Admin', 'platform-theme' ),
 		$labels[ $page ] ?? ucfirst( $page ),
 	);
+}
+
+/**
+ * Render tab navigation.
+ *
+ * @param array<string, string> $tabs      Tab slug => label.
+ * @param string                $current   Active tab.
+ * @param string                $base_url  Base URL.
+ * @param string                $query_arg Query arg name.
+ * @return string
+ */
+function platform_ui_tabs( array $tabs, $current, $base_url, $query_arg = 'tab' ) {
+	return UIComponents::tabs( $tabs, $current, $base_url, $query_arg );
+}
+
+/**
+ * Render a detail page header.
+ *
+ * @param string                              $title    Title.
+ * @param string                              $subtitle Subtitle.
+ * @param array<int, array<string, string>>   $meta     Meta stats.
+ * @param string                              $leading  Leading HTML.
+ * @return string
+ */
+function platform_ui_detail_header( $title, $subtitle = '', array $meta = array(), $leading = '' ) {
+	return UIComponents::detail_header( $title, $subtitle, $meta, $leading );
+}
+
+/**
+ * Render a back link.
+ *
+ * @param string $url   URL.
+ * @param string $label Label.
+ * @return string
+ */
+function platform_ui_back_link( $url, $label ) {
+	return UIComponents::back_link( $url, $label );
+}
+
+/**
+ * Render a filter bar.
+ *
+ * @param string                           $action Form action.
+ * @param array<int, array<string, mixed>> $fields Fields.
+ * @return string
+ */
+function platform_ui_filter_bar( $action, array $fields ) {
+	return UIComponents::filter_bar( $action, $fields );
+}
+
+/**
+ * Render a settings layout.
+ *
+ * @param array<string, string> $sections  Sections.
+ * @param string                $current   Current section.
+ * @param string                $base_url  Base URL.
+ * @param string                $content   Content HTML.
+ * @param string                $query_arg Query arg.
+ * @return string
+ */
+function platform_ui_settings_layout( array $sections, $current, $base_url, $content, $query_arg = 'section' ) {
+	return UIComponents::settings_layout( $sections, $current, $base_url, $content, $query_arg );
+}
+
+/**
+ * Render a chip.
+ *
+ * @param string $label   Label.
+ * @param string $url     URL.
+ * @param string $variant Variant.
+ * @return string
+ */
+function platform_ui_chip( $label, $url = '', $variant = '' ) {
+	return UIComponents::chip( $label, $url, $variant );
+}
+
+/**
+ * Render a module card.
+ *
+ * @param array<string, mixed> $module Module data.
+ * @return string
+ */
+function platform_ui_module_card( array $module ) {
+	return UIComponents::module_card( $module );
 }
