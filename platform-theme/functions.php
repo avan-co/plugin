@@ -9,6 +9,9 @@ defined( 'ABSPATH' ) || exit;
 
 require_once get_template_directory() . '/inc/navigation-helpers.php';
 require_once get_template_directory() . '/inc/ui-components.php';
+require_once get_template_directory() . '/inc/design-system/class-bootstrap.php';
+
+PlatformTheme\DesignSystem\Bootstrap::init();
 
 /**
  * Theme setup.
@@ -67,6 +70,13 @@ function platform_theme_enqueue_assets() {
 		wp_get_theme()->get( 'Version' )
 	);
 
+	wp_enqueue_style(
+		'platform-theme-panels',
+		get_template_directory_uri() . '/assets/css/panels.css',
+		array( 'platform-theme-main' ),
+		wp_get_theme()->get( 'Version' )
+	);
+
 	wp_enqueue_script(
 		'platform-theme-navigation',
 		get_template_directory_uri() . '/assets/js/navigation.js',
@@ -111,7 +121,7 @@ function platform_theme_enqueue_assets() {
 			wp_enqueue_style(
 				'platform-theme-admin',
 				get_template_directory_uri() . '/assets/css/admin.css',
-				array( 'platform-theme-main' ),
+				array( 'platform-theme-panels' ),
 				wp_get_theme()->get( 'Version' )
 			);
 		}

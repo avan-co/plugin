@@ -9,71 +9,109 @@ defined( 'ABSPATH' ) || exit;
 
 require_once get_template_directory() . '/inc/panel-shell.php';
 
+use PlatformTheme\DesignSystem\UIComponents;
+
 $user    = wp_get_current_user();
 $stats   = function_exists( 'mpp_get_manager_stats' ) ? mpp_get_manager_stats() : array();
 $widgets = function_exists( 'mpp_get_panel_widgets' ) ? mpp_get_panel_widgets( 'manager' ) : array();
+$activity = function_exists( 'mpp_get_user_recent_activity' ) ? mpp_get_user_recent_activity() : array();
 
 ob_start();
 ?>
 <p class="mpp-lead"><?php echo esc_html( sprintf( __( 'Welcome back, %s.', 'platform-theme' ), $user->display_name ) ); ?></p>
 
-<div class="mpp-quick-actions">
-	<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'app/manager/profile' ) ); ?>"><?php esc_html_e( 'Profile', 'platform-theme' ); ?></a>
-	<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( mpp_route_url( 'settings' ) ); ?>"><?php esc_html_e( 'Settings', 'platform-theme' ); ?></a>
-</div>
-
-<div class="mpp-stats">
-	<div class="mpp-stat-card">
-		<span class="mpp-stat-card__label"><?php esc_html_e( 'Team Members', 'platform-theme' ); ?></span>
-		<span class="mpp-stat-card__value"><?php echo esc_html( $stats['team_members'] ?? '—' ); ?></span>
-	</div>
-	<div class="mpp-stat-card">
-		<span class="mpp-stat-card__label"><?php esc_html_e( 'Pending Tasks', 'platform-theme' ); ?></span>
-		<span class="mpp-stat-card__value"><?php echo esc_html( $stats['pending_tasks'] ?? '—' ); ?></span>
-	</div>
-</div>
-
-<?php if ( ! empty( $widgets ) ) : ?>
-	<h2 class="mpp-section-title"><?php esc_html_e( 'Module Widgets', 'platform-theme' ); ?></h2>
-	<div class="mpp-stats">
-		<?php foreach ( $widgets as $widget ) : ?>
-			<div class="mpp-stat-card">
-				<span class="mpp-stat-card__label"><?php echo esc_html( $widget['title'] ?? '' ); ?></span>
-				<span class="mpp-stat-card__value"><?php echo esc_html( $widget['value'] ?? '—' ); ?></span>
-			</div>
-		<?php endforeach; ?>
-	</div>
-<?php else : ?>
-	<?php platform_ui_empty_state( __( 'No module widgets yet', 'platform-theme' ), __( 'Installed modules can expose manager widgets here.', 'platform-theme' ) ); ?>
-<?php endif; ?>
-
 <?php
-platform_render_placeholder_section(
-	__( 'Team', 'platform-theme' ),
-	__( 'Team management will be available when a team module is installed.', 'platform-theme' )
+echo UIComponents::quick_actions(
+	array(
+		array(
+			'label'   => __( 'Profile', 'platform-theme' ),
+			'url'     => mpp_route_url( 'app/manager/profile' ),
+			'variant' => 'secondary',
+		),
+		array(
+			'label'   => __( 'Settings', 'platform-theme' ),
+			'url'     => mpp_route_url( 'settings' ),
+			'variant' => 'secondary',
+		),
+	)
 );
-platform_render_placeholder_section(
-	__( 'Projects', 'platform-theme' ),
-	__( 'Project oversight will appear here when a project module is installed.', 'platform-theme' )
+
+echo UIComponents::section(
+	__( 'Team Overview', 'platform-theme' ),
+	UIComponents::stat_grid(
+		array(
+			array(
+				'label' => __( 'Team Members', 'platform-theme' ),
+				'value' => $stats['team_members'] ?? '—',
+				'hint'  => __( 'Managed users in your scope', 'platform-theme' ),
+			),
+			array(
+				'label' => __( 'Pending Tasks', 'platform-theme' ),
+				'value' => $stats['pending_tasks'] ?? '—',
+				'hint'  => __( 'Open items requiring attention', 'platform-theme' ),
+			),
+		)
+	)
 );
-platform_render_placeholder_section(
-	__( 'Reports', 'platform-theme' ),
-	__( 'Manager reports will be provided by future modules without fake data.', 'platform-theme' )
+
+if ( ! empty( $widgets ) ) {
+	$widget_stats = array();
+	foreach ( $widgets as $widget ) {
+		$widget_stats[] = array(
+			'label' => $widget['title'] ?? '',
+			'value' => $widget['value'] ?? '—',
+		);
+	}
+	echo UIComponents::section( __( 'Module Widgets', 'platform-theme' ), UIComponents::stat_grid( $widget_stats ) );
+} else {
+	ob_start();
+	UIComponents::empty_state(
+		__( 'No module widgets yet', 'platform-theme' ),
+		__( 'Installed modules can expose manager widgets here.', 'platform-theme' )
+	);
+	echo UIComponents::section( __( 'Module Widgets', 'platform-theme' ), ob_get_clean() );
+}
+
+$roadmap = array(
+	array(
+		__( 'Team', 'platform-theme' ),
+		__( 'Team management will be available when a team module is installed.', 'platform-theme' ),
+	),
+	array(
+		__( 'Projects', 'platform-theme' ),
+		__( 'Project oversight will appear here when a project module is installed.', 'platform-theme' ),
+	),
+	array(
+		__( 'Reports', 'platform-theme' ),
+		__( 'Manager reports will be provided by future modules without fake data.', 'platform-theme' ),
+	),
 );
+
+$roadmap_html = '';
+foreach ( $roadmap as $item ) {
+	$roadmap_html .= UIComponents::section( $item[0], '<p class="mpp-muted">' . esc_html( $item[1] ) . '</p>' );
+}
+echo $roadmap_html;
+
+$activity_html = '';
+if ( ! empty( $activity ) ) {
+	$activity_html .= '<ul class="mpp-activity-list">';
+	foreach ( $activity as $entry ) {
+		$activity_html .= '<li><code>' . esc_html( $entry['action'] ) . '</code> — ' . esc_html( $entry['created_at'] ) . '</li>';
+	}
+	$activity_html .= '</ul>';
+} else {
+	ob_start();
+	UIComponents::empty_state(
+		__( 'No recent activity', 'platform-theme' ),
+		__( 'Your manager actions will be listed here.', 'platform-theme' )
+	);
+	$activity_html = ob_get_clean();
+}
+
+echo UIComponents::section( __( 'Activity', 'platform-theme' ), $activity_html );
 ?>
 
-<h2 class="mpp-section-title"><?php esc_html_e( 'Activity', 'platform-theme' ); ?></h2>
-<?php
-$activity = function_exists( 'mpp_get_user_recent_activity' ) ? mpp_get_user_recent_activity() : array();
-if ( ! empty( $activity ) ) : ?>
-	<ul class="mpp-activity-list">
-		<?php foreach ( $activity as $entry ) : ?>
-			<li><code><?php echo esc_html( $entry['action'] ); ?></code> — <?php echo esc_html( $entry['created_at'] ); ?></li>
-		<?php endforeach; ?>
-	</ul>
-<?php else : ?>
-	<?php platform_ui_empty_state( __( 'No recent activity', 'platform-theme' ), __( 'Your manager actions will be listed here.', 'platform-theme' ) ); ?>
-<?php endif; ?>
 <?php
 $content = ob_get_clean();
 

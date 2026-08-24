@@ -7,9 +7,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use PlatformTheme\DesignSystem\PanelNavigation;
+
 $panel = isset( $args['panel'] ) ? sanitize_key( $args['panel'] ) : 'user';
 ?>
 
 <aside class="mpp-sidebar" data-panel="<?php echo esc_attr( $panel ); ?>">
-	<?php get_template_part( 'template-parts/navigation', $panel ); ?>
+	<?php PanelNavigation::render( $panel ); ?>
 </aside>

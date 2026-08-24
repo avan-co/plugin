@@ -925,7 +925,7 @@ class AdminRenderer {
 		$role = $this->roles->find( $role_id );
 
 		if ( ! $role ) {
-			echo '<p>' . esc_html__( 'Role not found.', 'platform-core' ); ?></p>';
+			echo '<p>' . esc_html__( 'Role not found.', 'platform-core' ) . '</p>';
 			return;
 		}
 
