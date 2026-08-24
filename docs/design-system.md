@@ -147,4 +147,5 @@ Used by: login, register, forgot-password (Phase 10).
 - [x] Mobile stacked tables (`.mpp-admin-table--stack`)
 - [x] Permission tree CSS (`.mpp-perm-tree`)
 - [x] Page implementations (Phase 4 admin shell)
-- [ ] Permissions role editor on Role Details (Phase 5)
+- [x] Permissions role editor on Role Details (Phase 5)
+- [ ] Modules, users, panels, auth, responsive/RTL, testing (Phase 6+)

@@ -467,7 +467,7 @@ class AdminRenderer {
 						<td data-label="<?php esc_attr_e( 'Actions', 'platform-core' ); ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'view', $role['id'], mpp_route_url( 'app/admin/roles' ) ) ); ?>"><?php esc_html_e( 'View', 'platform-core' ); ?></a>
 							| <a href="<?php echo esc_url( add_query_arg( 'edit', $role['id'], mpp_route_url( 'app/admin/roles' ) ) ); ?>"><?php esc_html_e( 'Edit', 'platform-core' ); ?></a>
-							| <a href="<?php echo esc_url( add_query_arg( array( 'role_id' => $role['id'] ), mpp_route_url( 'app/admin/permissions' ) ) ); ?>"><?php esc_html_e( 'Permissions', 'platform-core' ); ?></a>
+							| <a href="<?php echo esc_url( add_query_arg( array( 'view' => $role['id'], 'tab' => 'permissions' ), mpp_route_url( 'app/admin/roles' ) ) ); ?>"><?php esc_html_e( 'Permissions', 'platform-core' ); ?></a>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -629,56 +629,163 @@ class AdminRenderer {
 	}
 
 	/**
-	 * Render grant/revoke actions for a permission row.
+	 * Render grouped permission editor for a role.
 	 *
-	 * @param int   $role_id      Role ID.
-	 * @param int   $pid          Permission ID.
-	 * @param bool  $is_set       Whether permission is granted.
-	 * @param string $scope       Current scope.
-	 * @param array $scope_types  Scope types.
-	 * @param array $assigned      Assigned permissions.
+	 * @param int $role_id Role ID.
 	 */
-	private function render_permission_actions( $role_id, $pid, $is_set, $scope, $scope_types, $assigned ) {
-		if ( ! $role_id ) {
-			return;
+	private function render_role_permissions_editor( $role_id ) {
+		$query         = isset( $_GET['perm_q'] ) ? sanitize_text_field( wp_unslash( $_GET['perm_q'] ) ) : '';
+		$tree          = $this->permissions->get_permission_tree();
+		$scope_types   = $this->scopes->assignable();
+		$assigned      = array();
+		$granted_count = 0;
+
+		foreach ( $this->roles->get_permissions( $role_id ) as $perm ) {
+			$assigned[ (int) $perm['permission_id'] ] = $perm;
+			$granted_count++;
 		}
 
-		if ( $is_set ) {
-			?>
-			<form method="post" class="mpp-inline-form">
-				<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<input type="hidden" name="mpp_admin_action" value="update_permission_scope">
-				<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
-				<input type="hidden" name="permission_id" value="<?php echo esc_attr( (string) $pid ); ?>">
-				<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'role_id', $role_id, mpp_route_url( 'app/admin/permissions' ) ) ); ?>">
-				<select name="scope_type">
-					<?php foreach ( $scope_types as $st ) : ?>
-						<option value="<?php echo esc_attr( $st['slug'] ); ?>" <?php selected( $scope, $st['slug'] ); ?>><?php echo esc_html( $st['name'] ); ?></option>
+		$redirect = add_query_arg(
+			array(
+				'view'   => $role_id,
+				'tab'    => 'permissions',
+				'perm_q' => $query,
+			),
+			mpp_route_url( 'app/admin/roles' )
+		);
+		?>
+		<form method="get" action="<?php echo esc_url( mpp_route_url( 'app/admin/roles' ) ); ?>" class="mpp-filter-bar">
+			<input type="hidden" name="view" value="<?php echo esc_attr( (string) $role_id ); ?>">
+			<input type="hidden" name="tab" value="permissions">
+			<label class="mpp-filter-bar__field mpp-filter-bar__field--grow">
+				<span class="screen-reader-text"><?php esc_html_e( 'Search permissions', 'platform-core' ); ?></span>
+				<input type="search" name="perm_q" value="<?php echo esc_attr( $query ); ?>" placeholder="<?php esc_attr_e( 'Search permissions...', 'platform-core' ); ?>" class="mpp-input">
+			</label>
+			<button type="submit" class="mpp-btn mpp-btn--secondary"><?php esc_html_e( 'Search', 'platform-core' ); ?></button>
+		</form>
+
+		<form method="post" class="mpp-role-permissions">
+			<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<input type="hidden" name="mpp_admin_action" value="save_role_permissions">
+			<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
+			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( $redirect ); ?>">
+
+			<?php foreach ( $tree as $module => $resources ) : ?>
+				<?php
+				$module_visible = false;
+				foreach ( $resources as $resource => $actions ) {
+					foreach ( $actions as $action ) {
+						if ( ! $query || false !== stripos( $action['key'] . ' ' . $action['action'] . ' ' . ( $action['description'] ?? '' ), $query ) ) {
+							$module_visible = true;
+							break 2;
+						}
+					}
+				}
+				if ( ! $module_visible ) {
+					continue;
+				}
+				?>
+				<section class="mpp-role-permissions__module">
+					<h3 class="mpp-role-permissions__module-title"><?php echo esc_html( $this->get_module_group_label( $module ) ); ?></h3>
+					<?php foreach ( $resources as $resource => $actions ) : ?>
+						<?php
+						$resource_visible = false;
+						foreach ( $actions as $action ) {
+							if ( ! $query || false !== stripos( $action['key'] . ' ' . $action['action'] . ' ' . ( $action['description'] ?? '' ), $query ) ) {
+								$resource_visible = true;
+								break;
+							}
+						}
+						if ( ! $resource_visible ) {
+							continue;
+						}
+						?>
+						<div class="mpp-role-permissions__resource">
+							<h4 class="mpp-role-permissions__resource-title"><?php echo esc_html( ucfirst( $resource ) ); ?></h4>
+							<ul class="mpp-role-permissions__list">
+								<?php foreach ( $actions as $action ) : ?>
+									<?php
+									if ( $query && false === stripos( $action['key'] . ' ' . $action['action'] . ' ' . ( $action['description'] ?? '' ), $query ) ) {
+										continue;
+									}
+									$pid     = (int) $action['id'];
+									$granted = isset( $assigned[ $pid ] );
+									$scope   = $granted ? $assigned[ $pid ]['scope_type'] : 'all';
+									$label   = $action['description'] ?: ucfirst( $action['action'] );
+									?>
+									<li class="mpp-role-permissions__item">
+										<label class="mpp-role-permissions__checkbox">
+											<input type="checkbox" name="permission_ids[]" value="<?php echo esc_attr( (string) $pid ); ?>" <?php checked( $granted ); ?>>
+											<span><?php echo esc_html( $label ); ?></span>
+										</label>
+										<select name="permission_scopes[<?php echo esc_attr( (string) $pid ); ?>]" class="mpp-select mpp-role-permissions__scope" aria-label="<?php echo esc_attr( sprintf( __( 'Scope for %s', 'platform-core' ), $label ) ); ?>">
+											<?php foreach ( $scope_types as $st ) : ?>
+												<option value="<?php echo esc_attr( $st['slug'] ); ?>" <?php selected( $scope, $st['slug'] ); ?>><?php echo esc_html( $st['name'] ); ?></option>
+											<?php endforeach; ?>
+										</select>
+									</li>
+								<?php endforeach; ?>
+							</ul>
+						</div>
 					<?php endforeach; ?>
-				</select>
-				<button type="submit" class="mpp-btn mpp-btn--sm mpp-btn--secondary"><?php esc_html_e( 'Set Scope', 'platform-core' ); ?></button>
-			</form>
-			<form method="post" class="mpp-inline-form">
-				<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<input type="hidden" name="mpp_admin_action" value="revoke_permission">
-				<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
-				<input type="hidden" name="permission_id" value="<?php echo esc_attr( (string) $pid ); ?>">
-				<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'role_id', $role_id, mpp_route_url( 'app/admin/permissions' ) ) ); ?>">
-				<button type="submit" class="mpp-btn mpp-btn--sm mpp-btn--danger"><?php esc_html_e( 'Revoke', 'platform-core' ); ?></button>
-			</form>
-			<?php
+				</section>
+			<?php endforeach; ?>
+
+			<div class="mpp-role-permissions__footer">
+				<p class="mpp-muted">
+					<?php
+					printf(
+						/* translators: %d: permission count */
+						esc_html( _n( '%d permission granted', '%d permissions granted', $granted_count, 'platform-core' ) ),
+						$granted_count
+					);
+					?>
+				</p>
+				<div class="mpp-role-permissions__actions">
+					<a class="mpp-btn mpp-btn--secondary" href="<?php echo esc_url( add_query_arg( array( 'view' => $role_id, 'tab' => 'permissions' ), mpp_route_url( 'app/admin/roles' ) ) ); ?>"><?php esc_html_e( 'Cancel', 'platform-core' ); ?></a>
+					<button type="submit" class="mpp-btn mpp-btn--primary"><?php esc_html_e( 'Save Changes', 'platform-core' ); ?></button>
+				</div>
+			</div>
+		</form>
+		<?php
+	}
+
+	/**
+	 * Render read-only effective access for a role.
+	 *
+	 * @param int $role_id Role ID.
+	 */
+	private function render_role_effective_access_tab( $role_id ) {
+		$permissions = $this->roles->get_permissions( $role_id );
+
+		if ( empty( $permissions ) ) {
+			echo '<p>' . esc_html__( 'This role does not grant any permissions yet.', 'platform-core' ) . '</p>';
 			return;
 		}
 		?>
-		<form method="post" class="mpp-inline-form">
-			<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			<input type="hidden" name="mpp_admin_action" value="grant_permission">
-			<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
-			<input type="hidden" name="permission_id" value="<?php echo esc_attr( (string) $pid ); ?>">
-			<input type="hidden" name="scope_type" value="all">
-			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( add_query_arg( 'role_id', $role_id, mpp_route_url( 'app/admin/permissions' ) ) ); ?>">
-			<button type="submit" class="mpp-btn mpp-btn--sm mpp-btn--primary"><?php esc_html_e( 'Grant', 'platform-core' ); ?></button>
-		</form>
+		<p class="mpp-muted"><?php esc_html_e( 'Permissions granted directly by this role.', 'platform-core' ); ?></p>
+		<div class="mpp-table-wrap">
+		<table class="mpp-admin-table mpp-admin-table--stack">
+			<thead>
+				<tr>
+					<th><?php esc_html_e( 'Permission', 'platform-core' ); ?></th>
+					<th><?php esc_html_e( 'Module', 'platform-core' ); ?></th>
+					<th><?php esc_html_e( 'Scope', 'platform-core' ); ?></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ( $permissions as $perm ) : ?>
+					<tr>
+						<td data-label="<?php esc_attr_e( 'Permission', 'platform-core' ); ?>"><code><?php echo esc_html( $perm['permission_key'] ); ?></code></td>
+						<td data-label="<?php esc_attr_e( 'Module', 'platform-core' ); ?>"><?php echo esc_html( $this->get_module_group_label( $perm['module'] ) ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Scope', 'platform-core' ); ?>"><?php echo esc_html( $this->access->get_scope_label( $perm['scope_type'] ) ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Actions', 'platform-core' ); ?>"><a href="<?php echo esc_url( add_query_arg( 'permission_id', $perm['permission_id'], mpp_route_url( 'app/admin/permissions' ) ) ); ?>"><?php esc_html_e( 'Details', 'platform-core' ); ?></a></td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+		</div>
 		<?php
 	}
 
@@ -921,7 +1028,7 @@ class AdminRenderer {
 						<tr>
 							<td><a href="<?php echo esc_url( add_query_arg( 'view', $role['id'], mpp_route_url( 'app/admin/roles' ) ) ); ?>"><?php echo esc_html( $role['name'] ); ?></a></td>
 							<td><?php echo esc_html( $this->access->get_scope_label( $role['scope_type'] ) ); ?><?php echo $this->scopes->requires_resource_context( $role['scope_type'] ) ? ' <span class="mpp-muted">(' . esc_html__( 'resource context required', 'platform-core' ) . ')</span>' : ''; ?></td>
-							<td><a href="<?php echo esc_url( add_query_arg( array( 'role_id' => $role['id'], 'permission_id' => $permission_id ), mpp_route_url( 'app/admin/permissions' ) ) ); ?>"><?php esc_html_e( 'Manage', 'platform-core' ); ?></a></td>
+							<td><a href="<?php echo esc_url( add_query_arg( array( 'view' => $role['id'], 'tab' => 'permissions' ), mpp_route_url( 'app/admin/roles' ) ) ); ?>"><?php esc_html_e( 'Manage', 'platform-core' ); ?></a></td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
@@ -957,10 +1064,10 @@ class AdminRenderer {
 		$tab      = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'overview';
 		$base_url = add_query_arg( 'view', $role_id, mpp_route_url( 'app/admin/roles' ) );
 		$tabs     = array(
-			'overview'    => __( 'Overview', 'platform-core' ),
-			'permissions' => __( 'Permissions', 'platform-core' ),
-			'users'       => __( 'Users', 'platform-core' ),
-			'audit'       => __( 'Audit', 'platform-core' ),
+			'overview'         => __( 'Overview', 'platform-core' ),
+			'permissions'      => __( 'Permissions', 'platform-core' ),
+			'users'            => __( 'Users', 'platform-core' ),
+			'effective-access' => __( 'Effective Access', 'platform-core' ),
 		);
 
 		if ( ! isset( $tabs[ $tab ] ) ) {
@@ -1002,28 +1109,7 @@ class AdminRenderer {
 		$this->render_admin_tabs( $tabs, $tab, $base_url );
 
 		if ( 'permissions' === $tab ) {
-			$tree     = $this->permissions->get_permission_tree();
-			$assigned = array();
-			foreach ( $this->roles->get_permissions( $role_id ) as $perm ) {
-				$assigned[ $perm['permission_key'] ] = $perm;
-			}
-			foreach ( $tree as $module => $resources ) {
-				echo '<div class="mpp-perm-module"><h3>' . esc_html( $this->get_module_group_label( $module ) ) . '</h3>';
-				foreach ( $resources as $resource => $actions ) {
-					echo '<h4>' . esc_html( ucfirst( $resource ) ) . '</h4><ul class="mpp-admin-list">';
-					foreach ( $actions as $action ) {
-						$granted = isset( $assigned[ $action['key'] ] );
-						echo '<li>' . ( $granted ? '&#10003;' : '&mdash;' ) . ' ';
-						echo '<a href="' . esc_url( add_query_arg( 'permission_id', $action['id'], mpp_route_url( 'app/admin/permissions' ) ) ) . '">' . esc_html( $action['description'] ?: $action['key'] ) . '</a>';
-						if ( $granted ) {
-							echo ' <span class="mpp-muted">(' . esc_html( $assigned[ $action['key'] ]['scope_type'] ) . ')</span>';
-						}
-						echo '</li>';
-					}
-					echo '</ul>';
-				}
-				echo '</div>';
-			}
+			$this->render_role_permissions_editor( $role_id );
 			return;
 		}
 
@@ -1042,20 +1128,8 @@ class AdminRenderer {
 			return;
 		}
 
-		if ( 'audit' === $tab ) {
-			$entries = $this->audit->query( array( 'object_type' => 'role', 'limit' => 25 ) );
-			if ( empty( $entries ) ) {
-				echo '<p>' . esc_html__( 'No audit entries for this role.', 'platform-core' ) . '</p>';
-				return;
-			}
-			echo '<ul class="mpp-activity-list">';
-			foreach ( $entries as $entry ) {
-				if ( (string) $entry['object_id'] !== (string) $role_id ) {
-					continue;
-				}
-				echo '<li><code>' . esc_html( $entry['action'] ) . '</code> — ' . esc_html( $entry['created_at'] ) . '</li>';
-			}
-			echo '</ul>';
+		if ( 'effective-access' === $tab ) {
+			$this->render_role_effective_access_tab( $role_id );
 			return;
 		}
 

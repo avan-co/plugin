@@ -233,6 +233,50 @@ class RoleManager {
 	}
 
 	/**
+	 * Sync role permissions to a target set of permission IDs.
+	 *
+	 * Grants missing permissions, revokes removed ones, and preserves scope
+	 * for permissions that remain assigned.
+	 *
+	 * @param int           $role_id        Role ID.
+	 * @param array<int>    $permission_ids Permission IDs to keep granted.
+	 * @param string        $default_scope  Scope for newly granted permissions.
+	 * @return array{granted: int, revoked: int}
+	 */
+	public function sync_permissions( $role_id, array $permission_ids, $default_scope = 'all' ) {
+		$permission_ids = array_values( array_unique( array_filter( array_map( 'intval', $permission_ids ) ) ) );
+		$current        = $this->get_permissions( $role_id );
+		$current_ids    = array_map(
+			static function ( $perm ) {
+				return (int) $perm['permission_id'];
+			},
+			$current
+		);
+
+		$to_grant = array_diff( $permission_ids, $current_ids );
+		$to_revoke = array_diff( $current_ids, $permission_ids );
+		$granted   = 0;
+		$revoked   = 0;
+
+		foreach ( $to_grant as $permission_id ) {
+			if ( $this->assign_permission( $role_id, $permission_id, $default_scope ) ) {
+				$granted++;
+			}
+		}
+
+		foreach ( $to_revoke as $permission_id ) {
+			if ( $this->revoke_permission( $role_id, $permission_id ) ) {
+				$revoked++;
+			}
+		}
+
+		return array(
+			'granted' => $granted,
+			'revoked' => $revoked,
+		);
+	}
+
+	/**
 	 * Get permissions assigned to a role.
 	 *
 	 * @param int $role_id Role ID.

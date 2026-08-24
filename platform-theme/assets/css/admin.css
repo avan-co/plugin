@@ -369,3 +369,90 @@
 .mpp-module-card__stats {
 	margin: 0;
 }
+
+/* Role permission editor */
+.mpp-role-permissions__module {
+	margin-bottom: var(--mpp-space-xl);
+}
+
+.mpp-role-permissions__module-title {
+	margin: 0 0 var(--mpp-space-md);
+	font-size: 1rem;
+	font-weight: 600;
+}
+
+.mpp-role-permissions__resource {
+	margin-bottom: var(--mpp-space-md);
+	padding-inline-start: var(--mpp-space-md);
+}
+
+.mpp-role-permissions__resource-title {
+	margin: 0 0 var(--mpp-space-sm);
+	font-size: var(--mpp-font-label);
+	color: var(--mpp-muted-foreground);
+}
+
+.mpp-role-permissions__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.mpp-role-permissions__item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--mpp-space-sm);
+	padding: 0.625rem 0;
+	border-bottom: 1px solid var(--mpp-border);
+}
+
+.mpp-role-permissions__checkbox {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--mpp-space-sm);
+	font-weight: 500;
+}
+
+.mpp-role-permissions__scope {
+	width: auto;
+	min-width: 140px;
+}
+
+.mpp-role-permissions__footer {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--mpp-space-md);
+	margin-top: var(--mpp-space-lg);
+	padding-top: var(--mpp-space-lg);
+	border-top: 1px solid var(--mpp-border);
+}
+
+.mpp-role-permissions__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--mpp-space-sm);
+}
+
+@media (max-width: 768px) {
+	.mpp-role-permissions__item {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.mpp-role-permissions__scope {
+		width: 100%;
+	}
+
+	.mpp-role-permissions__footer {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.mpp-role-permissions__actions .mpp-btn {
+		flex: 1;
+	}
+}
