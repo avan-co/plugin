@@ -94,6 +94,11 @@ class RegistrationHandler {
 			return;
 		}
 
+		if ( apply_filters( 'mpp_registration_require_terms', false ) && empty( $_POST['accept_terms'] ) ) {
+			$GLOBALS['mpp_register_error'] = __( 'You must accept the terms of service to register.', 'platform-core' );
+			return;
+		}
+
 		if ( ! is_email( $email ) ) {
 			$GLOBALS['mpp_register_error'] = __( 'Please enter a valid email address.', 'platform-core' );
 			return;

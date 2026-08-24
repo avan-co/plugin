@@ -96,7 +96,7 @@ function platform_theme_enqueue_assets() {
 
 	if ( function_exists( 'mpp_get_current_route' ) ) {
 		$route = mpp_get_current_route();
-		if ( $route && in_array( $route['slug'], array( 'login', 'register' ), true ) ) {
+		if ( $route && in_array( $route['slug'], array( 'login', 'register', 'forgot-password' ), true ) ) {
 			wp_enqueue_script(
 				'platform-theme-forms',
 				get_template_directory_uri() . '/assets/js/forms.js',
@@ -160,6 +160,10 @@ function platform_theme_body_classes( $classes ) {
 	$locale = get_locale();
 	if ( $locale ) {
 		$classes[] = 'mpp-locale-' . sanitize_html_class( strtolower( substr( $locale, 0, 2 ) ) );
+	}
+
+	if ( function_exists( 'mpp_is_auth_route' ) && mpp_is_auth_route() ) {
+		$classes[] = 'mpp-auth-page';
 	}
 
 	return $classes;

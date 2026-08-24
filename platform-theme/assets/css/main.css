@@ -18,6 +18,33 @@ body.mpp-body {
 	align-items: center;
 	justify-content: center;
 	min-height: calc(100vh - var(--mpp-header-height) - 60px);
+	padding: var(--mpp-space-lg) var(--mpp-space-md);
+}
+
+.mpp-main--auth {
+	min-height: calc(100vh - var(--mpp-header-height) - 48px);
+}
+
+body.mpp-auth-page .mpp-header__inner {
+	justify-content: center;
+}
+
+body.mpp-auth-page .mpp-header__brand {
+	margin-inline: auto;
+}
+
+.mpp-auth-links {
+	margin-top: var(--mpp-space-md);
+}
+
+.mpp-field {
+	margin-bottom: var(--mpp-space-md);
+}
+
+.mpp-field__hint {
+	margin: var(--mpp-space-xs) 0 0;
+	font-size: var(--mpp-font-small);
+	color: var(--mpp-muted-foreground);
 }
 
 .mpp-content--narrow {

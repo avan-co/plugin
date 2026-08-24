@@ -321,7 +321,7 @@ Each row/card: human name, description, key, module, roles count, link to detail
 **Main action:** Submit email/username for reset link.
 
 **Hierarchy:** Instructions → email field → submit → success message.
-**Mobile:** Centered card. Currently delegates to WP `wp_lostpassword_url`; add themed template at `/forgot-password`.
+**Mobile:** Centered card. ~~Currently delegates to WP `wp_lostpassword_url`; add themed template at `/forgot-password`.~~ Themed route added in Phase 10.
 
 ---
 
@@ -381,4 +381,5 @@ Account section (footer): Profile, Logout
 - **Phase 7 (Users):** Complete — list filters (role, status), role chips, effective access source labels
 - **Phase 8 (Settings):** Complete — appearance section, timezone, form fields, mobile section picker, header branding
 - **Phase 9 (Panels):** Complete — user/manager dashboards with welcome, stats, module shortcuts, activity
-- **Phase 10+:** Pending — auth, responsive/RTL, testing
+- **Phase 10 (Authentication):** Complete — themed forgot-password route, auth page shell, minimal header
+- **Phase 11+:** Pending — responsive/RTL, testing

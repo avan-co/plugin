@@ -104,6 +104,34 @@ function mpp_logout_url() {
 }
 
 /**
+ * Whether the current request is an authentication route.
+ *
+ * @return bool
+ */
+function mpp_is_auth_route() {
+	if ( ! function_exists( 'mpp_get_current_route' ) ) {
+		return false;
+	}
+
+	$route = mpp_get_current_route();
+
+	if ( ! $route || empty( $route['slug'] ) ) {
+		return false;
+	}
+
+	return in_array( $route['slug'], array( 'login', 'register', 'forgot-password' ), true );
+}
+
+/**
+ * Get the themed forgot-password URL.
+ *
+ * @return string
+ */
+function mpp_forgot_password_url() {
+	return mpp_route_url( 'forgot-password' );
+}
+
+/**
  * Render navigation for a panel type.
  *
  * @param string $panel Panel slug.

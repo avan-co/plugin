@@ -52,6 +52,10 @@ $title = ! empty( $route['definition']['title'] ) ? $route['definition']['title'
 
 				<button type="submit" class="mpp-btn mpp-btn--primary"><?php esc_html_e( 'Log In', 'platform-core' ); ?></button>
 			</form>
+
+			<p class="mpp-form-footer">
+				<a href="<?php echo esc_url( function_exists( 'mpp_forgot_password_url' ) ? mpp_forgot_password_url() : wp_lostpassword_url( mpp_route_url( 'login' ) ) ); ?>"><?php esc_html_e( 'Forgot password?', 'platform-core' ); ?></a>
+			</p>
 		</div>
 	</main>
 	<?php wp_footer(); ?>
