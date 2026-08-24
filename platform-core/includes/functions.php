@@ -376,6 +376,49 @@ function mpp_filter_admin_navigation( array $items ) {
 }
 
 /**
+ * Reset admin page shell context before rendering content.
+ */
+function mpp_reset_admin_page_context() {
+	unset( $GLOBALS['mpp_admin_page_actions'], $GLOBALS['mpp_admin_page_meta'] );
+}
+
+/**
+ * Set header action buttons HTML for the current admin page.
+ *
+ * @param string $html Actions HTML.
+ */
+function mpp_set_admin_page_actions( $html ) {
+	$GLOBALS['mpp_admin_page_actions'] = $html;
+}
+
+/**
+ * Get header action buttons HTML for the current admin page.
+ *
+ * @return string
+ */
+function mpp_get_admin_page_actions() {
+	return isset( $GLOBALS['mpp_admin_page_actions'] ) ? (string) $GLOBALS['mpp_admin_page_actions'] : '';
+}
+
+/**
+ * Override admin shell title/description for the current page.
+ *
+ * @param array<string, string> $meta Meta overrides (title, description).
+ */
+function mpp_set_admin_page_meta( array $meta ) {
+	$GLOBALS['mpp_admin_page_meta'] = $meta;
+}
+
+/**
+ * Get admin shell meta overrides for the current page.
+ *
+ * @return array<string, string>
+ */
+function mpp_get_admin_page_meta() {
+	return isset( $GLOBALS['mpp_admin_page_meta'] ) ? (array) $GLOBALS['mpp_admin_page_meta'] : array();
+}
+
+/**
  * Get recent activity for the current user.
  *
  * @param int $user_id User ID.

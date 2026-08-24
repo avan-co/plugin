@@ -328,6 +328,14 @@ body.mpp-body {
 	gap: var(--mpp-space-sm);
 }
 
+.mpp-page-body--admin {
+	background: var(--mpp-surface-card);
+	border: 1px solid var(--mpp-border);
+	border-radius: var(--mpp-radius-lg);
+	box-shadow: var(--mpp-shadow-subtle);
+	padding: var(--mpp-space-lg);
+}
+
 /* Dashboard sections */
 .mpp-panel-section {
 	background: var(--mpp-surface-card);
@@ -480,6 +488,18 @@ body.mpp-body {
 
 	.mpp-page-header__row {
 		flex-direction: column;
+	}
+
+	.mpp-page-header__actions {
+		width: 100%;
+	}
+
+	.mpp-page-header__actions .mpp-btn {
+		flex: 1;
+	}
+
+	.mpp-page-body--admin {
+		padding: var(--mpp-space-md);
 	}
 
 	.mpp-footer__inner {

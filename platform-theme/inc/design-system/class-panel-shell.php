@@ -33,13 +33,14 @@ final class PanelShell {
 	 * @param string               $content      HTML content.
 	 * @param string               $description  Optional page description.
 	 * @param array<int, string>   $breadcrumb   Optional breadcrumb labels.
+	 * @param string               $actions_html Optional header action buttons.
 	 */
-	public static function render( $panel, $title, $content, $description = '', array $breadcrumb = array() ) {
+	public static function render( $panel, $title, $content, $description = '', array $breadcrumb = array(), $actions_html = '' ) {
 		$panel = sanitize_key( $panel );
 
 		get_header();
 		?>
-		<div class="mpp-layout" data-panel="<?php echo esc_attr( $panel ); ?>">
+		<div class="mpp-layout mpp-layout--<?php echo esc_attr( $panel ); ?>" data-panel="<?php echo esc_attr( $panel ); ?>">
 			<?php self::render_sidebar( $panel ); ?>
 			<div class="mpp-layout__main">
 				<main class="mpp-main mpp-main--panel" id="mpp-main-content">
@@ -48,10 +49,11 @@ final class PanelShell {
 						UIComponents::page_header(
 							$title,
 							$description,
-							self::normalize_breadcrumb( $panel, $title, $breadcrumb )
+							self::normalize_breadcrumb( $panel, $title, $breadcrumb ),
+							$actions_html
 						);
 						?>
-						<div class="mpp-page-body">
+						<div class="mpp-page-body mpp-page-body--<?php echo esc_attr( $panel ); ?>">
 							<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</div>
 					</div>
@@ -79,7 +81,7 @@ final class PanelShell {
 			);
 		}
 
-		self::render( $panel, $title, $content, $description, $breadcrumb );
+		self::render( $panel, $title, $content, $description, $breadcrumb, '' );
 	}
 
 	/**

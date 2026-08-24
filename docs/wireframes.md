@@ -375,4 +375,5 @@ Account section (footer): Profile, Logout
 - **Phase 1 (Architecture + UI audit):** Complete — see gaps above
 - **Phase 2 (Wireframes):** Complete — this document
 - **Phase 3 (Design system):** Complete — see `docs/design-system.md`
-- **Phase 4+:** Pending — admin shell and page implementation
+- **Phase 4 (Admin shell):** Complete
+- **Phase 5+:** Pending — permissions/roles ACL, modules, users, settings, panels, auth, responsive/RTL, testing
