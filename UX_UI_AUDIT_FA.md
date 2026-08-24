@@ -72,7 +72,7 @@
 | ورود User به پنل | ناموفق در نصب تازه | خطای ACL و نمایش 403 |
 | ورود Manager به پنل | ناموفق در نصب تازه | خطای ACL و نمایش 403 |
 | ورود Admin | موفق | مدیر WordPress از مسیر bypass مجوزهای Core عبور می‌کند |
-| ویرایش پروفایل | موفق ولی مبهم | عملیات انجام می‌شود، پیام موفقیت در صفحه رندر نمی‌شود |
+| ویرایش پروفایل | موفق ولی قابل‌بهبود | پیام نمایش داده می‌شود، اما URL پاک و Focus مدیریت نمی‌شود |
 | تنظیم اعلان کاربر عادی | ناممکن | نقش پیش‌فرض User مجوز `core.settings.edit` ندارد |
 | مدیریت نقش و مجوز | قابل‌استفاده ولی پرریسک | فرم‌های ریز، عملیات فوری، برچسب و کنتراست ناکافی |
 | استفاده در موبایل | ناقص | منوی پنل و ابزارهای هدر قابل دسترسی نیستند |
@@ -95,13 +95,14 @@
 
 ## یافته‌های بحرانی — P0
 
-### P0-01 — دسترسی User و Manager در نصب تازه کاملاً مسدود است
+### P0-01 — ذخیره تمام Permission Grantهای جدید خراب است
 
 - **مشاهده واقعی:** پس از اختصاص صحیح `platform_user` و `platform_manager`، مسیرهای `/app`، `/app/user`، `/app/manager`، `/profile` و `/settings` همگی 403 برگرداندند.
 - **علت:** ترتیب آرایه داده در `RoleManager::assign_permission()` با ترتیب formatهای `$wpdb->insert()` هم‌خوان نیست. `scope_type='all'` با `%d` ذخیره و به `0` تبدیل می‌شود.
+- این نقص محدود به Seed نصب تازه نیست؛ هر Grant جدید از Admin UI یا REST API نیز از همین متد عبور می‌کند و `scope_type` و در صورت وجود `scope_value` را نادرست ذخیره می‌کند.
 - **شاهد کد:** `platform-core/includes/ACL/RoleManager.php` خطوط 190 تا 212.
 - **اثر کاربری:** کاربر با موفقیت ثبت‌نام یا وارد می‌شود، اما هیچ پنلی در دسترس ندارد.
-- **اقدام لازم:** اصلاح ترتیب formatها، Migration برای داده‌های `scope_type=0`، تست Integration روی نصب تازه و تست واقعی هر سه نقش.
+- **اقدام لازم:** اصلاح ترتیب formatها، بازگردانی Default Grantهای شناخته‌شده به `all` و بازسازی سایر Grantهای خراب از Audit Log یا Revoke برای بازبینی ادمین. تبدیل کور همه مقدارهای `0` به `all` خطر افزایش ناخواسته دسترسی را دارد.
 - **معیار پذیرش:** پس از نصب صفر تا صد، User و Manager بدون اصلاح دستی دیتابیس به تمام مسیرهای مجاز وارد شوند و مسیر غیرمجاز 403 صحیح بدهد.
 
 ### P0-02 — ناوبری پنل در موبایل غیرقابل‌دسترسی است
@@ -118,6 +119,8 @@
 
 - **مشاهده واقعی:** پس از انتخاب فارسی، مقدار `lang` به `fa-IR` تغییر کرد، اما `dir` خالی ماند و عنوان، منوها و محتوای صفحه همچنان انگلیسی بود.
 - فقط فایل‌های `.po` در مخزن وجود دارند و خروجی قابل بارگذاری `.mo` یا PHP translation catalog وجود ندارد.
+- بخش بزرگی از `msgstr`های فایل‌های فارسی نیز همان متن انگلیسی است و هنوز ترجمه نشده است.
+- کاربر خارج‌شده در Landing، Login و Register اصلاً به Language Switcher دسترسی ندارد.
 - کلاس RTL روی Body نیز به `is_rtl()` وابسته است و در اجرای تست فعال نشد.
 - **شاهد کد:** `platform-theme/inc/design-system/class-language-switcher.php` و پوشه‌های `languages/`.
 - **اثر:** رابط ترکیبی و ادعای نادرست پشتیبانی دو‌زبانه؛ برای کاربر فارسی‌زبان محصول عملاً ترجمه نشده است.
@@ -138,13 +141,13 @@
 
 **اثر:** ادمین پیام «Settings saved» می‌بیند اما رفتار محصول تغییر نمی‌کند؛ این مسئله اعتماد را مستقیماً کاهش می‌دهد.
 
-### P1-02 — عملیات Profile و Settings بازخورد قابل‌مشاهده ندارد
+### P1-02 — بازخورد Profile و Settings ناقص است
 
-Handler پس از ذخیره، `mpp_notice` و `mpp_message` را به URL اضافه می‌کند، اما قالب‌های Profile و Settings این پیام‌ها را رندر نمی‌کنند. فقط `AdminRenderer` پیام را نمایش می‌دهد.
+Handler پس از ذخیره، `mpp_notice` و `mpp_message` را به URL اضافه و Account Layout پیام را با `role="alert"` رندر می‌کند؛ اما پارامترها در URL باقی می‌مانند، Focus به پیام منتقل نمی‌شود و Success نیز با semantics فوری Alert اعلام می‌شود.
 
-**اثر:** کاربر نمی‌داند ذخیره موفق بوده، شکست خورده یا اصلاً انجام نشده است.
+**اثر:** بازخورد دیداری وجود دارد، ولی ممکن است کاربر Keyboard/Screen Reader آن را از دست بدهد یا با Refresh دوباره پیام قدیمی را ببیند.
 
-**اقدام:** Flash Message مشترک، تمرکز روی پیام، `role=status/alert`، حذف پارامتر پیام از URL پس از نمایش.
+**اقدام:** Success با `role="status"`، Error با `role="alert"`، Focus Management و پاک‌کردن Query String با History API یا Redirect دوم.
 
 ### P1-03 — کاربر عادی نمی‌تواند تنظیم اعلان خودش را تغییر دهد
 
@@ -152,7 +155,9 @@ Dashboard کاربر او را به Settings می‌فرستد و متن صفح�
 
 **شاهد:** `Installer.php`، `panel-user.php` و `page-settings.php`.
 
-**پیشنهاد:** تفکیک «تنظیمات شخصی» از «تنظیمات سیستمی» و اعطای ویرایش preferences شخصی به همه کاربران معتبر.
+حتی برای Manager که امکان ذخیره دارد، مقدار `mpp_notifications` فقط ذخیره و نمایش داده می‌شود و هیچ مصرف‌کننده اعلان/ایمیل در مخزن ندارد.
+
+**پیشنهاد:** تفکیک «تنظیمات شخصی» از «تنظیمات سیستمی»، اعطای ویرایش preferences شخصی به همه کاربران معتبر و اتصال Preference اعلان به یک سرویس واقعی؛ در غیر این صورت کنترل فعلاً حذف شود.
 
 ### P1-04 — Card پایه padding ندارد و بخش بزرگی از رابط به حاشیه چسبیده است
 
@@ -197,6 +202,8 @@ axe موارد Critical زیر را ثبت کرد:
 - Username غیرفعال در Profile و Manager Profile، label متصل ندارد.
 - Select فیلتر Module در Permissions نام دسترس‌پذیر ندارد.
 - Selectهای Scope در ردیف‌ها و کارت‌های Permission label ندارند.
+- فیلدهای Create/Edit Role، Select مربوط به Add Role و Search کاربران نیز label متصل کافی ندارند.
+- صفحه Skip Link برای رفتن مستقیم به محتوای اصلی ندارد.
 
 **اقدام:** اتصال `for/id` یا `aria-label/aria-labelledby` معنادار، به‌خصوص با نام Permission مربوطه.
 
@@ -269,7 +276,7 @@ axe در دسکتاپ برای لینک‌های Panel Switcher، توضیح آ�
 | P2-09 | Search/Filter با Submit کامل صفحه کار می‌کند | وقفه و از دست رفتن Context | حفظ فیلترها و progressive enhancement |
 | P2-10 | فیلترهای Permissions و ACL متراکم‌اند | بار شناختی بالا | Filter Bar، chip فعال و Clear All |
 | P2-11 | عملیات Permission پس از Redirect فقط role را حفظ می‌کند | Search و Module Filter از دست می‌رود | حفظ کامل state در redirect |
-| P2-12 | Scopeهای Team/Department/Project/Organization در Backend placeholder هستند | Admin گزینه‌ای می‌بیند که الزاماً کار نمی‌کند | غیرفعال‌سازی تا پیاده‌سازی یا برچسب Experimental |
+| P2-12 | Scopeهای Team/Department/Project/Organization به Context هدف نیاز دارند، اما Route Checkهای Core این Context را نمی‌دهند و Admin UI نیز Scope Value نمی‌گیرد | Scope انتخاب‌شده ممکن است همیشه Deny شود | تکمیل قرارداد Context/Value و غیرفعال‌سازی گزینه تا آن زمان |
 | P2-13 | Empty Stateها عمدتاً فقط متن دارند | اقدام بعدی روشن نیست | CTA، توضیح علت و لینک راهنما |
 | P2-14 | Loader، disabled-on-submit و جلوگیری از دوبار Submit وجود ندارد | احتمال عملیات تکراری | pending state و idempotency UX |
 | P2-15 | Favicon و Meta Description وجود ندارد | هویت ضعیف در Tab/Search/Share | Brand assets و metadata |
@@ -390,10 +397,11 @@ Roles و Permissions بهتر است یک حوزه واحد با Detail View و 
 2. تست End-to-End نقش‌های User، Manager و Admin روی نصب تازه
 3. اصلاح Mobile Drawer، دکمه منو و ARIA
 4. تکمیل build/load ترجمه فارسی و RTL واقعی
-5. رندر Flash Message در Profile و Settings
+5. اصلاح semantics، Focus و پاک‌سازی URL در Flash Messageهای Profile و Settings
 6. اتصال تنظیمات ذخیره‌شده به رفتار واقعی یا حذف موقت آن‌ها
 7. تصمیم روشن برای مجوز ویرایش تنظیمات شخصی User
 8. اصلاح status صفحات 403/404
+9. رفع labelهای Critical، کنتراست‌های Serious و افزودن Skip Link
 
 **خروجی قابل پذیرش:**
 
@@ -454,7 +462,7 @@ Roles و Permissions بهتر است یک حوزه واحد با Detail View و 
 2. Search، Sort، Filter، Bulk Action و حفظ State
 3. Confirm Dialog و Undo برای تغییرات حساس
 4. نمایش اثر تغییر مجوز: چه کاربران و مسیرهایی متأثر می‌شوند
-5. غیرفعال‌کردن Scopeهای پیاده‌سازی‌نشده
+5. تکمیل Context/Value Scopeهای محدود و غیرفعال‌کردن آن‌ها تا زمان قابل‌استفاده‌شدن
 6. تبدیل کلیدهای Audit به متن انسانی و Detail قابل‌بررسی
 7. Responsive Data Grid یا Card View واقعی
 8. Activity و Audit با timezone/locale صحیح
@@ -465,14 +473,14 @@ Roles و Permissions بهتر است یک حوزه واحد با Detail View و 
 - هیچ عملیات مخربی با یک کلیک ناخواسته نهایی نشود.
 - Filter و Scroll Position پس از عملیات حفظ شوند.
 
-## فاز ۴ — کیفیت، دسترس‌پذیری و سنجش مستمر
+## فاز ۴ — تثبیت کیفیت و سنجش مستمر
 
 **هدف:** جلوگیری از بازگشت ایرادها.
 
 کارها:
 
 1. تست Playwright برای Journey هر نقش
-2. axe در CI برای صفحات عمومی و authenticated
+2. axe در CI برای جلوگیری از بازگشت ایرادهای عمومی و authenticated
 3. Visual Regression برای LTR/RTL و چهار breakpoint
 4. تست نصب تازه و Migration دیتابیس
 5. بودجه Performance و self-host assets
@@ -491,13 +499,14 @@ Roles و Permissions بهتر است یک حوزه واحد با Detail View و 
 ## ترتیب پیشنهادی اجرا
 
 1. P0-01، P0-02 و P0-03
-2. بازخورد فرم‌ها و حذف تنظیمات نمایشی بدون اثر
-3. Information Architecture و Journeyها
-4. Design System و Shell
-5. Landing/Auth/User
-6. Manager
-7. Admin/ACL
-8. Accessibility، RTL و Regression Gate
+2. دسترس‌پذیری Critical/Serious، بازخورد فرم‌ها و حذف تنظیمات نمایشی بدون اثر
+3. محافظت عملیات مخرب ACL و Scopeهای غیرقابل‌استفاده
+4. Information Architecture و Journeyها
+5. Design System و Shell
+6. Landing/Auth/User
+7. Manager
+8. Admin/ACL
+9. RTL و Regression Gate
 
 ## مواردی که نباید قبل از فاز صفر انجام شوند
 
