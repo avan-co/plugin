@@ -1,0 +1,50 @@
+#
+msgid ""
+msgstr ""
+"Language: fa_IR\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Default"
+msgstr "پیش‌فرض"
+
+msgid "Email"
+msgstr "ایمیل"
+
+msgid "Manage team members"
+msgstr "مدیریت اعضای تیم"
+
+msgid "Manage team membership and member visibility for managers."
+msgstr "مدیریت عضویت تیم و دید مدیران به اعضا."
+
+msgid "Member"
+msgstr "عضو"
+
+msgid "Members and groups under your oversight."
+msgstr "اعضا و گروه‌ها تحت نظارت شما."
+
+msgid "No team members are assigned to your scope yet."
+msgstr "هنوز عضوی به محدوده شما تخصیص نشده."
+
+msgid "Operations"
+msgstr "عملیات"
+
+msgid "People and groups assigned to your manager scope."
+msgstr "افراد و گروه‌های تخصیص‌یافته به محدوده مدیر."
+
+msgid "Platform Team requires Platform Core %s or newer."
+msgstr "Platform Team به هسته پلتفرم %s یا جدیدتر نیاز دارد."
+
+msgid "Platform Team requires Platform Core to be installed and activated."
+msgstr "Platform Team نیاز به نصب و فعال‌سازی هسته پلتفرم دارد."
+
+msgid "Team"
+msgstr "تیم"
+
+msgid "Team Members"
+msgstr "اعضای تیم"
+
+msgid "View members assigned to your manager scope."
+msgstr "اعضای تخصیص‌یافته به محدوده مدیریت خود را ببینید."
+
+msgid "View team members"
+msgstr "مشاهده اعضای تیم"

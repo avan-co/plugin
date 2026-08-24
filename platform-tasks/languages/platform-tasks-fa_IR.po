@@ -1,0 +1,85 @@
+#
+msgid ""
+msgstr ""
+"Language: fa_IR\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "%d task awaiting review"
+msgstr "%d وظیفه در انتظار بازبینی"
+
+msgid "%d tasks awaiting review"
+msgstr "%d وظیفه در انتظار بازبینی"
+
+msgid "Approve quarterly report draft"
+msgstr "تأیید پیش‌نویس گزارش فصلی"
+
+msgid "Confirm metrics before publishing to stakeholders."
+msgstr "شاخص‌ها را قبل از انتشار برای ذینفعان تأیید کنید."
+
+msgid "Coordinate weekly manager review session."
+msgstr "جلسه بازبینی هفتگی مدیر را هماهنگ کنید."
+
+msgid "Manage tasks"
+msgstr "مدیریت وظایف"
+
+msgid "No tasks yet. Tasks created for your scope will appear here."
+msgstr ""
+"هنوز وظیفه‌ای نیست. وظایف ایجاد‌شده برای محدوده شما اینجا نمایش داده "
+"می‌شوند."
+
+msgid "Open Tasks"
+msgstr "وظایف باز"
+
+msgid "Open the task board to approve or assign work."
+msgstr "تابلو وظایف را برای تأیید یا تخصیص کار باز کنید."
+
+msgid "Pending Tasks"
+msgstr "وظایف در انتظار"
+
+msgid "Pending work and task approvals for your team."
+msgstr "کار در انتظار و تأیید وظایف برای تیم شما."
+
+msgid "Platform Tasks requires Platform Core %s or newer."
+msgstr "Platform Tasks به هسته پلتفرم %s یا جدیدتر نیاز دارد."
+
+msgid "Platform Tasks requires Platform Core to be installed and activated."
+msgstr "Platform Tasks نیاز به نصب و فعال‌سازی هسته پلتفرم دارد."
+
+msgid "Review and manage team tasks and approvals."
+msgstr "بازبینی و مدیریت وظایف و تأییدهای تیم."
+
+msgid "Review onboarding checklist"
+msgstr "بازبینی چک‌لیست ورود"
+
+msgid "Review tasks"
+msgstr "بازبینی وظایف"
+
+msgid "Schedule team sync"
+msgstr "زمان‌بندی جلسه هماهنگی تیم"
+
+msgid "Status"
+msgstr "وضعیت"
+
+msgid "Task"
+msgstr "وظیفه"
+
+msgid "Tasks"
+msgstr "وظایف"
+
+msgid "Total Tasks"
+msgstr "مجموع وظایف"
+
+msgid "Track pending approvals and team workload."
+msgstr "پیگیری تأییدهای در انتظار و بار کار تیم."
+
+msgid "Track team tasks, pending approvals, and manager workload."
+msgstr "پیگیری وظایف تیم، تأییدهای در انتظار و بار کار مدیر."
+
+msgid "Updated"
+msgstr "به‌روزرسانی"
+
+msgid "Verify new member access and profile completion."
+msgstr "دسترسی عضو جدید و تکمیل پروفایل را بررسی کنید."
+
+msgid "View tasks"
+msgstr "مشاهده وظایف"

@@ -53,11 +53,10 @@ class Phase4FeaturesTest extends TestCase {
 	/**
 	 * Example module contributes manager dashboard data.
 	 */
-	public function test_example_manager_module(): void {
+	public function test_example_module_user_panel_only(): void {
 		$source = file_get_contents( dirname( __DIR__, 3 ) . '/platform-example/includes/ExampleModule.php' );
 
-		$this->assertStringContainsString( "'panel'      => 'manager'", $source );
-		$this->assertStringContainsString( 'mpp_manager_dashboard_stats', $source );
-		$this->assertStringContainsString( 'mpp_manager_pending_items', $source );
+		$this->assertStringContainsString( "'panel'      => 'user'", $source );
+		$this->assertStringNotContainsString( 'mpp_manager_dashboard_stats', $source );
 	}
 }

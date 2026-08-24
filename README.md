@@ -143,7 +143,10 @@ Business modules are independent WordPress plugins that depend on **platform-cor
 wp-content/plugins/
 ├── platform-core/
 ├── platform-theme/
-└── platform-example/    # reference implementation
+├── platform-example/    # user-panel reference
+├── platform-tasks/      # manager task board
+├── platform-team/       # manager team roster
+└── platform-reports/    # manager operational reports
 ```
 
 ### Minimum structure
@@ -195,7 +198,7 @@ register_deactivation_hook( __FILE__, function () {
 });
 ```
 
-See `platform-example/` for a working minimal module.
+See `platform-example/` for a minimal user-panel module. Manager modules (`platform-tasks`, `platform-team`, `platform-reports`) provide real dashboard data for the manager panel.
 
 ### REST API
 

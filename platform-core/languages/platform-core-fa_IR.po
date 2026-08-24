@@ -11,17 +11,17 @@ msgid ""
 "A permission alone does not create access. Effective access is calculated "
 "from roles, permissions, and scope."
 msgstr ""
-"A permission alone does not create access. Effective access is calculated "
-"from roles, permissions, and scope."
+"مجوز به‌تنهایی دسترسی ایجاد نمی‌کند. دسترسی مؤثر از نقش‌ها، مجوزها و محدوده "
+"محاسبه می‌شود."
 
 msgid "A valid permission key is required."
-msgstr "A valid permission key is required."
+msgstr "کلید مجوز معتبر الزامی است."
 
 msgid "A valid permission_id is required."
-msgstr "A valid permission_id is required."
+msgstr "شناسه مجوز معتبر الزامی است."
 
 msgid "A valid role_id is required."
-msgstr "A valid role_id is required."
+msgstr "شناسه نقش معتبر الزامی است."
 
 msgid "ACL"
 msgstr "کنترل دسترسی"
@@ -30,52 +30,52 @@ msgid "ACL Overview"
 msgstr "نمای ACL"
 
 msgid "Access Denied"
-msgstr "Access Denied"
+msgstr "دسترسی رد شد"
 
 msgid "Access admin panel"
-msgstr "Access admin panel"
+msgstr "دسترسی به پنل ادمین"
 
 msgid "Access denied."
 msgstr "دسترسی رد شد."
 
 msgid "Access manager panel"
-msgstr "Access manager panel"
+msgstr "دسترسی به پنل مدیر"
 
 msgid "Access platform dashboard"
-msgstr "Access platform dashboard"
+msgstr "دسترسی به داشبورد پلتفرم"
 
 msgid "Access to all resources."
-msgstr "Access to all resources."
+msgstr "دسترسی به همه منابع."
 
 msgid "Access to own resources only."
-msgstr "Access to own resources only."
+msgstr "دسترسی فقط به منابع خود."
 
 msgid "Access user panel"
-msgstr "Access user panel"
+msgstr "دسترسی به پنل کاربر"
 
 msgid "Access within assigned projects."
-msgstr "Access within assigned projects."
+msgstr "دسترسی در محدوده پروژه‌های تخصیص‌یافته."
 
 msgid "Access within organization."
-msgstr "Access within organization."
+msgstr "دسترسی در محدوده سازمان."
 
 msgid "Access within user department."
-msgstr "Access within user department."
+msgstr "دسترسی در محدوده بخش کاربر."
 
 msgid "Access within user team."
-msgstr "Access within user team."
+msgstr "دسترسی در محدوده تیم کاربر."
 
 msgid "Action"
 msgstr "عملیات"
 
 msgid "Active"
-msgstr "Active"
+msgstr "فعال"
 
 msgid "Active Modules"
-msgstr "Active Modules"
+msgstr "ماژول‌های فعال"
 
 msgid "Add Role"
-msgstr "Add Role"
+msgstr "افزودن نقش"
 
 msgid "Admin Panel"
 msgstr "پنل ادمین"
@@ -84,28 +84,28 @@ msgid "Admin Settings"
 msgstr "تنظیمات ادمین"
 
 msgid "Administrator with full panel access."
-msgstr "Administrator with full panel access."
+msgstr "مدیر با دسترسی کامل به پنل."
 
 msgid "All"
-msgstr "All"
+msgstr "همه"
 
 msgid "All fields are required."
-msgstr "All fields are required."
+msgstr "همه فیلدها الزامی هستند."
 
 msgid "All modules"
-msgstr "All modules"
+msgstr "همه ماژول‌ها"
 
 msgid "Assign Role"
-msgstr "Assign Role"
+msgstr "تخصیص نقش"
 
 msgid "Assigned Platform Roles"
-msgstr "Assigned Platform Roles"
+msgstr "نقش‌های تخصیص‌یافته پلتفرم"
 
 msgid "Audit"
 msgstr "گزارش فعالیت"
 
 msgid "Audit Entries"
-msgstr "Audit Entries"
+msgstr "ردیف‌های ممیزی"
 
 msgid "Audit Log"
 msgstr "گزارش ممیزی"
@@ -117,88 +117,88 @@ msgid "Back to roles"
 msgstr "بازگشت به نقش‌ها"
 
 msgid "Back to users"
-msgstr "Back to users"
+msgstr "بازگشت به کاربران"
 
 msgid "Category"
-msgstr "Category"
+msgstr "دسته"
 
 msgid "Clear"
 msgstr "پاک کردن"
 
 msgid "Core"
-msgstr "Core"
+msgstr "هسته"
 
 msgid "Core Permissions"
-msgstr "Core Permissions"
+msgstr "مجوزهای هسته"
 
 msgid "Could not assign permission. Check scope_type."
-msgstr "Could not assign permission. Check scope_type."
+msgstr "تخصیص مجوز انجام نشد. scope_type را بررسی کنید."
 
 msgid "Could not assign role."
-msgstr "Could not assign role."
+msgstr "تخصیص نقش انجام نشد."
 
 msgid "Could not create role."
-msgstr "Could not create role."
+msgstr "ایجاد نقش انجام نشد."
 
 msgid "Could not delete role."
-msgstr "Could not delete role."
+msgstr "حذف نقش انجام نشد."
 
 msgid "Could not delete role. System roles cannot be deleted."
-msgstr "Could not delete role. System roles cannot be deleted."
+msgstr "حذف نقش انجام نشد. نقش‌های سیستمی قابل حذف نیستند."
 
 msgid "Could not grant permission."
-msgstr "Could not grant permission."
+msgstr "اعطای مجوز انجام نشد."
 
 msgid "Could not remove role."
-msgstr "Could not remove role."
+msgstr "حذف نقش انجام نشد."
 
 msgid "Could not revoke permission."
-msgstr "Could not revoke permission."
+msgstr "لغو مجوز انجام نشد."
 
 msgid "Could not update scope."
-msgstr "Could not update scope."
+msgstr "به‌روزرسانی محدوده انجام نشد."
 
 msgid "Create Role"
-msgstr "Create Role"
+msgstr "ایجاد نقش"
 
 msgid "Custom"
-msgstr "Custom"
+msgstr "سفارشی"
 
 msgid "Custom scope with handler."
-msgstr "Custom scope with handler."
+msgstr "محدوده سفارشی با handler."
 
 msgid "Dashboard"
 msgstr "داشبورد"
 
 msgid "Database Schema"
-msgstr "Database Schema"
+msgstr "طرح پایگاه داده"
 
 msgid "Date Format"
-msgstr "Date Format"
+msgstr "قالب تاریخ"
 
 msgid "Default Dashboard Route"
-msgstr "Default Dashboard Route"
+msgstr "مسیر پیش‌فرض داشبورد"
 
 msgid "Default Platform Role"
-msgstr "Default Platform Role"
+msgstr "نقش پیش‌فرض پلتفرم"
 
 msgid "Default platform roles are created during installation."
-msgstr "Default platform roles are created during installation."
+msgstr "نقش‌های پیش‌فرض پلتفرم هنگام نصب ایجاد می‌شوند."
 
 msgid "Delete Role"
 msgstr "حذف نقش"
 
 msgid "Delete this role?"
-msgstr "Delete this role?"
+msgstr "این نقش حذف شود؟"
 
 msgid "Denied"
 msgstr "غیرمجاز"
 
 msgid "Department"
-msgstr "Department"
+msgstr "بخش"
 
 msgid "Description"
-msgstr "Description"
+msgstr "توضیحات"
 
 msgid "Details"
 msgstr "جزئیات"
@@ -207,13 +207,13 @@ msgid "Edit"
 msgstr "ویرایش"
 
 msgid "Edit own profile"
-msgstr "Edit own profile"
+msgstr "ویرایش پروفایل خود"
 
 msgid "Edit role"
-msgstr "Edit role"
+msgstr "ویرایش نقش"
 
 msgid "Edit settings"
-msgstr "Edit settings"
+msgstr "ویرایش تنظیمات"
 
 msgid "Effective Access"
 msgstr "دسترسی نهایی"
@@ -222,62 +222,61 @@ msgid "Email"
 msgstr "ایمیل"
 
 msgid "Enable public registration"
-msgstr "Enable public registration"
+msgstr "فعال‌سازی ثبت‌نام عمومی"
 
 msgid "Filter"
 msgstr "فیلتر"
 
 msgid "From"
-msgstr "From"
+msgstr "از"
 
 msgid "General"
-msgstr "General"
+msgstr "عمومی"
 
 msgid "Grant"
-msgstr "Grant"
+msgstr "اعطا"
 
 msgid "Granted"
 msgstr "مجاز"
 
 msgid "ID"
-msgstr "ID"
+msgstr "شناسه"
 
 msgid "IP"
-msgstr "IP"
+msgstr "آی‌پی"
 
 msgid "Inactive"
-msgstr "Inactive"
+msgstr "غیرفعال"
 
 msgid ""
 "Install and activate platform module plugins in WordPress to extend the "
 "platform."
 msgstr ""
-"Install and activate platform module plugins in WordPress to extend the "
-"platform."
+"پلاگین‌های ماژول را در وردپرس نصب و فعال کنید تا پلتفرم را گسترش دهید."
 
 msgid "Invalid default dashboard route."
-msgstr "Invalid default dashboard route."
+msgstr "مسیر پیش‌فرض داشبورد نامعتبر است."
 
 msgid "Invalid role or permission."
-msgstr "Invalid role or permission."
+msgstr "نقش یا مجوز نامعتبر است."
 
 msgid "Invalid security token."
 msgstr "توکن امنیتی نامعتبر است."
 
 msgid "Invalid user or role."
-msgstr "Invalid user or role."
+msgstr "کاربر یا نقش نامعتبر است."
 
 msgid "Key"
-msgstr "Key"
+msgstr "کلید"
 
 msgid "Left-to-right (LTR)"
-msgstr "Left-to-right (LTR)"
+msgstr "چپ به راست (LTR)"
 
 msgid "Locale"
-msgstr "Locale"
+msgstr "زبان"
 
 msgid "Localization"
-msgstr "Localization"
+msgstr "بومی‌سازی"
 
 msgid "Login"
 msgstr "ورود"
@@ -286,233 +285,230 @@ msgid "Logout"
 msgstr "خروج"
 
 msgid "Manage"
-msgstr "Manage"
+msgstr "مدیریت"
 
 msgid "Manage permissions"
-msgstr "Manage permissions"
+msgstr "مدیریت مجوزها"
 
 msgid "Manage roles and permissions"
-msgstr "Manage roles and permissions"
+msgstr "مدیریت نقش‌ها و مجوزها"
 
 msgid "Manager Panel"
 msgstr "پنل مدیر"
 
 msgid "Manager Profile"
-msgstr "Manager Profile"
+msgstr "پروفایل مدیر"
 
 msgid "Manager with access to the manager panel."
-msgstr "Manager with access to the manager panel."
+msgstr "مدیر با دسترسی به پنل مدیر."
 
 msgid "Missing permission: %s"
-msgstr "Missing permission: %s"
+msgstr "مجوز مفقود: %s"
 
 msgid "Module"
-msgstr "Module"
+msgstr "ماژول"
 
 msgid "Module Permissions"
-msgstr "Module Permissions"
+msgstr "مجوزهای ماژول"
 
 msgid ""
 "Module availability is controlled by WordPress plugin activation. "
 "Deactivating a plugin removes its runtime routes and widgets."
 msgstr ""
-"Module availability is controlled by WordPress plugin activation. "
-"Deactivating a plugin removes its runtime routes and widgets."
+"دسترسی ماژول با فعال‌سازی پلاگین وردپرس کنترل می‌شود. غیرفعال‌کردن پلاگین "
+"مسیرها و ویجت‌های زمان اجرا را حذف می‌کند."
 
 msgid "Modules"
 msgstr "ماژول‌ها"
 
 msgid "Name"
-msgstr "Name"
+msgstr "نام"
 
 msgid "Next"
-msgstr "Next"
+msgstr "بعدی"
 
 msgid "No"
-msgstr "No"
+msgstr "خیر"
 
 msgid "No audit entries for this role."
-msgstr "No audit entries for this role."
+msgstr "ردیف ممیزی برای این نقش وجود ندارد."
 
 msgid "No audit entries matched your filters."
 msgstr "هیچ ردیف ممیزی با فیلترهای شما مطابقت نداشت."
 
 msgid "No description provided."
-msgstr "No description provided."
+msgstr "توضیحی ارائه نشده است."
 
 msgid "No modules registered"
-msgstr "No modules registered"
+msgstr "ماژولی ثبت نشده"
 
 msgid "No platform roles assigned yet."
-msgstr "No platform roles assigned yet."
+msgstr "هنوز نقش پلتفرمی تخصیص نشده."
 
 msgid "No related audit entries yet."
-msgstr "No related audit entries yet."
+msgstr "هنوز ردیف ممیزی مرتبطی نیست."
 
 msgid "No roles currently grant this permission."
-msgstr "No roles currently grant this permission."
+msgstr "هیچ نقشی این مجوز را نمی‌دهد."
 
 msgid "No roles found"
-msgstr "No roles found"
+msgstr "نقشی پیدا نشد"
 
 msgid "No users are assigned to this role."
-msgstr "No users are assigned to this role."
+msgstr "کاربری به این نقش تخصیص نشده."
 
 msgid "No users found"
-msgstr "No users found"
+msgstr "کاربری پیدا نشد"
 
 msgid "Not Found"
-msgstr "Not Found"
+msgstr "پیدا نشد"
 
 msgid "Not granted"
-msgstr "Not granted"
+msgstr "اعطا نشده"
 
 msgid "Not installed"
-msgstr "Not installed"
+msgstr "نصب نشده"
 
 msgid "Object"
 msgstr "مورد"
 
 msgid "Object Type"
-msgstr "Object Type"
+msgstr "نوع مورد"
 
 msgid "Organization"
-msgstr "Organization"
+msgstr "سازمان"
 
 msgid "Overview"
 msgstr "نمای کلی"
 
 msgid "Own"
-msgstr "Own"
+msgstr "خود"
 
 msgid "Page %1$d of %2$d"
-msgstr "Page %1$d of %2$d"
+msgstr "صفحه %1$d از %2$d"
 
 msgid "Page not found."
-msgstr "Page not found."
+msgstr "صفحه پیدا نشد."
 
 msgid "Pagination"
-msgstr "Pagination"
+msgstr "صفحه‌بندی"
 
 msgid "Password must be at least 8 characters."
-msgstr "Password must be at least 8 characters."
+msgstr "رمز باید حداقل ۸ کاراکتر باشد."
 
 msgid "Passwords do not match."
 msgstr "رمزها یکسان نیستند."
 
 msgid "Permission"
-msgstr "Permission"
+msgstr "مجوز"
 
 msgid "Permission denied."
-msgstr "Permission denied."
+msgstr "مجوز رد شد."
 
 msgid "Permission does not exist."
-msgstr "Permission does not exist."
+msgstr "مجوز وجود ندارد."
 
 msgid "Permission granted."
-msgstr "Permission granted."
+msgstr "مجوز اعطا شد."
 
 msgid ""
 "Permission is assigned but scope requirements are not met for route-level "
 "access."
-msgstr ""
-"Permission is assigned but scope requirements are not met for route-level "
-"access."
+msgstr "مجوز تخصیص یافته اما محدوده برای دسترسی مسیر برقرار نیست."
 
 msgid "Permission not found."
-msgstr "Permission not found."
+msgstr "مجوز پیدا نشد."
 
 msgid "Permission revoked."
-msgstr "Permission revoked."
+msgstr "مجوز لغو شد."
 
 msgid "Permissions"
 msgstr "مجوزهای دسترسی"
 
 msgid "Plain permalinks (index.php routes)"
-msgstr "Plain permalinks (index.php routes)"
+msgstr "permalink ساده (مسیرهای index.php)"
 
 msgid "Platform Admin"
-msgstr "Platform Admin"
+msgstr "ادمین پلتفرم"
 
 msgid "Platform Core Version"
-msgstr "Platform Core Version"
+msgstr "نسخه هسته پلتفرم"
 
 msgid "Platform Manager"
-msgstr "Platform Manager"
+msgstr "مدیر پلتفرم"
 
 msgid "Platform Name"
-msgstr "Platform Name"
+msgstr "نام پلتفرم"
 
 msgid "Platform Roles"
-msgstr "Platform Roles"
+msgstr "نقش‌های پلتفرم"
 
 msgid "Platform User"
-msgstr "Platform User"
+msgstr "کاربر پلتفرم"
 
 msgid "Platform Version"
-msgstr "Platform Version"
+msgstr "نسخه پلتفرم"
 
 msgid "Platform name cannot be empty."
-msgstr "Platform name cannot be empty."
+msgstr "نام پلتفرم نمی‌تواند خالی باشد."
 
 msgid "Please enter a valid email address."
-msgstr "Please enter a valid email address."
+msgstr "ایمیل معتبر وارد کنید."
 
 msgid "Pretty permalinks"
-msgstr "Pretty permalinks"
+msgstr "permalink زیبا"
 
 msgid "Previous"
-msgstr "Previous"
+msgstr "قبلی"
 
 msgid "Profile"
 msgstr "پروفایل"
 
 msgid "Profile updated."
-msgstr "Profile updated."
+msgstr "پروفایل به‌روزرسانی شد."
 
 msgid "Project"
-msgstr "Project"
+msgstr "پروژه"
 
 msgid "Recent ACL Activity"
 msgstr "فعالیت اخیر ACL"
 
 msgid "Recent audit activity"
-msgstr "Recent audit activity"
+msgstr "فعالیت ممیزی اخیر"
 
 msgid "Register"
 msgstr "ثبت‌نام"
 
 msgid "Registered"
-msgstr "Registered"
+msgstr "ثبت‌نام"
 
 msgid "Registration"
-msgstr "Registration"
+msgstr "ثبت‌نام"
 
 msgid ""
 "Registration could not be completed. Please contact the site administrator."
-msgstr ""
-"Registration could not be completed. Please contact the site administrator."
+msgstr "ثبت‌نام تکمیل نشد. با مدیر سایت تماس بگیرید."
 
 msgid "Registration is currently disabled."
-msgstr "Registration is currently disabled."
+msgstr "ثبت‌نام در حال حاضر غیرفعال است."
 
 msgid "Remember Me Duration (days)"
-msgstr "Remember Me Duration (days)"
+msgstr "مدت «مرا به خاطر بسپار» (روز)"
 
 msgid "Remove"
 msgstr "حذف"
 
 msgid "Revoke"
-msgstr "Revoke"
+msgstr "لغو"
 
 msgid "Right-to-left (RTL)"
-msgstr "Right-to-left (RTL)"
+msgstr "راست به چپ (RTL)"
 
 msgid "Role"
-msgstr "Role"
+msgstr "نقش"
 
 msgid "Role assigned."
-msgstr "Role assigned."
+msgstr "نقش تخصیص داده شد."
 
 msgid "Role created."
 msgstr "نقش ایجاد شد."
@@ -521,61 +517,61 @@ msgid "Role deleted."
 msgstr "نقش حذف شد."
 
 msgid "Role not found."
-msgstr "Role not found."
+msgstr "نقش پیدا نشد."
 
 msgid "Role removed."
-msgstr "Role removed."
+msgstr "نقش حذف شد."
 
 msgid "Role slug already exists."
-msgstr "Role slug already exists."
+msgstr "شناسه نقش از قبل وجود دارد."
 
 msgid "Role updated."
-msgstr "Role updated."
+msgstr "نقش به‌روزرسانی شد."
 
 msgid "Roles"
 msgstr "نقش‌ها"
 
 msgid "Routes"
-msgstr "Routes"
+msgstr "مسیرها"
 
 msgid "Routing Mode"
-msgstr "Routing Mode"
+msgstr "حالت مسیریابی"
 
 msgid "Save Settings"
 msgstr "ذخیره تنظیمات"
 
 msgid "Scope"
-msgstr "Scope"
+msgstr "محدوده"
 
 msgid "Scope Types"
-msgstr "Scope Types"
+msgstr "نوع محدوده‌ها"
 
 msgid "Scope updated."
-msgstr "Scope updated."
+msgstr "محدوده به‌روزرسانی شد."
 
 msgid "Search"
-msgstr "Search"
+msgstr "جستجو"
 
 msgid "Search permissions"
 msgstr "جستجوی مجوزها"
 
 msgid "Search permissions..."
-msgstr "Search permissions..."
+msgstr "جستجوی مجوزها..."
 
 msgid "Search users..."
-msgstr "Search users..."
+msgstr "جستجوی کاربران..."
 
 msgid "Section navigation"
-msgstr "Section navigation"
+msgstr "ناوبری بخش"
 
 msgid "Security"
 msgstr "امنیت"
 
 msgid "Select role..."
-msgstr "Select role..."
+msgstr "انتخاب نقش..."
 
 msgid "Set Scope"
-msgstr "Set Scope"
+msgstr "تنظیم محدوده"
 
 msgid "Settings"
 msgstr "تنظیمات"
@@ -584,82 +580,82 @@ msgid "Settings saved."
 msgstr "تنظیمات ذخیره شد."
 
 msgid "Slug"
-msgstr "Slug"
+msgstr "شناسه"
 
 msgid "Slug and name are required."
-msgstr "Slug and name are required."
+msgstr "شناسه و نام الزامی هستند."
 
 msgid "Source"
-msgstr "Source"
+msgstr "منبع"
 
 msgid "Standard platform user with access to the user panel."
-msgstr "Standard platform user with access to the user panel."
+msgstr "کاربر استاندارد پلتفرم با دسترسی به پنل کاربر."
 
 msgid "Status"
-msgstr "Status"
+msgstr "وضعیت"
 
 msgid "System"
 msgstr "سیستم"
 
 msgid "System Information"
-msgstr "System Information"
+msgstr "اطلاعات سیستم"
 
 msgid "System role"
-msgstr "System role"
+msgstr "نقش سیستمی"
 
 msgid "System roles cannot be deleted."
-msgstr "System roles cannot be deleted."
+msgstr "نقش‌های سیستمی قابل حذف نیستند."
 
 msgid "Team"
-msgstr "Team"
+msgstr "تیم"
 
 msgid "Text Direction"
-msgstr "Text Direction"
+msgstr "جهت متن"
 
 msgid "This email is already registered."
-msgstr "This email is already registered."
+msgstr "این ایمیل قبلاً ثبت شده است."
 
 msgid "This username is already taken."
-msgstr "This username is already taken."
+msgstr "این نام کاربری قبلاً گرفته شده است."
 
 msgid "Time"
 msgstr "زمان"
 
 msgid "To"
-msgstr "To"
+msgstr "تا"
 
 msgid "Total Permissions"
-msgstr "Total Permissions"
+msgstr "مجوزهای کل"
 
 msgid "Try adjusting your search filters."
-msgstr "Try adjusting your search filters."
+msgstr "فیلترهای جستجو را تنظیم کنید."
 
 msgid "Unknown action."
-msgstr "Unknown action."
+msgstr "عملیات ناشناخته."
 
 msgid "Update Role"
-msgstr "Update Role"
+msgstr "به‌روزرسانی نقش"
 
 msgid "Used by roles"
-msgstr "Used by roles"
+msgstr "استفاده توسط نقش‌ها"
 
 msgid "Used by roles:"
-msgstr "Used by roles:"
+msgstr "استفاده توسط نقش‌ها:"
 
 msgid "User"
 msgstr "کاربر"
 
 msgid "User ID"
-msgstr "User ID"
+msgstr "شناسه کاربر"
 
 msgid "User Panel"
 msgstr "پنل کاربر"
 
 msgid "User has no active platform roles."
-msgstr "User has no active platform roles."
+msgstr "کاربر نقش فعال پلتفرم ندارد."
 
 msgid "User not found."
-msgstr "User not found."
+msgstr "کاربر پیدا نشد."
 
 msgid "Username"
 msgstr "نام کاربری"
@@ -668,65 +664,65 @@ msgid "Users"
 msgstr "کاربران"
 
 msgid "Users with access"
-msgstr "Users with access"
+msgstr "کاربران با دسترسی"
 
 msgid "View"
 msgstr "مشاهده"
 
 msgid "View own profile"
-msgstr "View own profile"
+msgstr "مشاهده پروفایل خود"
 
 msgid "View settings"
-msgstr "View settings"
+msgstr "مشاهده تنظیمات"
 
 msgid "WP Role"
-msgstr "WP Role"
+msgstr "نقش WP"
 
 msgid "WordPress Administrator"
-msgstr "WordPress Administrator"
+msgstr "مدیر وردپرس"
 
 msgid "WordPress Role"
-msgstr "WordPress Role"
+msgstr "نقش وردپرس"
 
 msgid "WordPress Version"
-msgstr "WordPress Version"
+msgstr "نسخه وردپرس"
 
 msgid ""
 "WordPress administrators with manage_options receive effective "
 "platform_admin access for core permissions."
 msgstr ""
-"WordPress administrators with manage_options receive effective "
-"platform_admin access for core permissions."
+"مدیران وردپرس با manage_options دسترسی مؤثر platform_admin برای مجوزهای هسته"
+" می‌گیرند."
 
 msgid "Yes"
-msgstr "Yes"
+msgstr "بله"
 
 msgid "You cannot check permissions for other users."
-msgstr "You cannot check permissions for other users."
+msgstr "نمی‌توانید مجوزهای دیگر کاربران را بررسی کنید."
 
 msgid "You do not have permission to access this resource."
-msgstr "You do not have permission to access this resource."
+msgstr "مجوز دسترسی به این منبع را ندارید."
 
 msgid "You do not have permission."
-msgstr "You do not have permission."
+msgstr "مجوز ندارید."
 
 msgid "You must be logged in."
-msgstr "You must be logged in."
+msgstr "باید وارد شوید."
 
 msgid "Your Effective Permissions"
-msgstr "Your Effective Permissions"
+msgstr "مجوزهای مؤثر شما"
 
 msgid "e.g. role"
-msgstr "e.g. role"
+msgstr "مثال: role"
 
 msgid "e.g. role.created"
-msgstr "e.g. role.created"
+msgstr "مثال: role.created"
 
 msgid "permission_id is required."
-msgstr "permission_id is required."
+msgstr "permission_id الزامی است."
 
 msgid "resource context required"
-msgstr "resource context required"
+msgstr "نیاز به زمینه منبع"
 
 msgid "role_id is required."
-msgstr "role_id is required."
+msgstr "role_id الزامی است."
