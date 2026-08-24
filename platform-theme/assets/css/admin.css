@@ -81,6 +81,17 @@
 	border-bottom: 1px solid var(--mpp-color-border);
 }
 
+.mpp-admin-list__item--chip {
+	gap: 0.75rem;
+}
+
+.mpp-chip-list {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 0.375rem;
+	align-items: center;
+}
+
 .mpp-perm-module {
 	margin-bottom: 2rem;
 }

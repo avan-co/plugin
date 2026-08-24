@@ -148,5 +148,6 @@ Used by: login, register, forgot-password (Phase 10).
 - [x] Permission tree CSS (`.mpp-perm-tree`)
 - [x] Page implementations (Phase 4 admin shell)
 - [x] Permissions role editor on Role Details (Phase 5)
-- [ ] Modules, users, panels, auth, responsive/RTL, testing (Phase 6+)
+- [ ] Panels, auth, responsive/RTL, testing (Phase 8+)
 - [x] Modules list/detail pages (Phase 6)
+- [x] Users list filters and detail polish (Phase 7)

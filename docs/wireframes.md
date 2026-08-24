@@ -378,4 +378,5 @@ Account section (footer): Profile, Logout
 - **Phase 4 (Admin shell):** Complete
 - **Phase 5 (Permissions / Roles / ACL):** Complete
 - **Phase 6 (Modules):** Complete
-- **Phase 7+:** Pending — users, panels, auth, responsive/RTL, testing
+- **Phase 7 (Users):** Complete — list filters (role, status), role chips, effective access source labels
+- **Phase 8+:** Pending — settings polish, panels, auth, responsive/RTL, testing

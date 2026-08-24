@@ -217,9 +217,11 @@ class AdminRenderer {
 	 * Users list and detail.
 	 */
 	private function render_users() {
-		$user_id = isset( $_GET['user_id'] ) ? (int) $_GET['user_id'] : 0;
-		$search  = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
-		$paged   = isset( $_GET['paged'] ) ? max( 1, (int) $_GET['paged'] ) : 1;
+		$user_id  = isset( $_GET['user_id'] ) ? (int) $_GET['user_id'] : 0;
+		$search   = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
+		$role_id  = isset( $_GET['role_id'] ) ? (int) $_GET['role_id'] : 0;
+		$status   = isset( $_GET['status'] ) ? sanitize_key( wp_unslash( $_GET['status'] ) ) : '';
+		$paged    = isset( $_GET['paged'] ) ? max( 1, (int) $_GET['paged'] ) : 1;
 		$per_page = 20;
 
 		if ( $user_id ) {
@@ -227,19 +229,33 @@ class AdminRenderer {
 			return;
 		}
 
-		$users = $this->users->list_users(
-			array(
-				'number' => $per_page,
-				'offset' => ( $paged - 1 ) * $per_page,
-				'search' => $search,
-			)
+		$query_args = array(
+			'number' => $per_page,
+			'offset' => ( $paged - 1 ) * $per_page,
+			'search' => $search,
 		);
-		$total = $this->users->count_users( array( 'search' => $search ) );
 
-		if ( empty( $users ) ) {
-			echo '<div class="mpp-empty-state"><h3 class="mpp-empty-state__title">' . esc_html__( 'No users found', 'platform-core' ) . '</h3><p>' . esc_html__( 'Try adjusting your search filters.', 'platform-core' ) . '</p></div>';
-			return;
+		if ( $role_id > 0 ) {
+			$query_args['platform_role_id'] = $role_id;
 		}
+
+		if ( in_array( $status, array( 'active', 'inactive' ), true ) ) {
+			$query_args['status'] = $status;
+		}
+
+		$users = $this->users->list_users( $query_args );
+		$total = $this->users->count_users( $query_args );
+
+		$role_options = array( '' => __( 'All roles', 'platform-core' ) );
+		foreach ( $this->roles->all() as $role ) {
+			$role_options[ (string) $role['id'] ] = $role['name'];
+		}
+
+		$status_options = array(
+			''         => __( 'All statuses', 'platform-core' ),
+			'active'   => __( 'Active', 'platform-core' ),
+			'inactive' => __( 'Inactive', 'platform-core' ),
+		);
 
 		if ( function_exists( 'platform_ui_filter_bar' ) ) {
 			echo platform_ui_filter_bar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -252,15 +268,44 @@ class AdminRenderer {
 						'value'       => $search,
 						'placeholder' => __( 'Search users...', 'platform-core' ),
 					),
+					array(
+						'type'    => 'select',
+						'name'    => 'role_id',
+						'label'   => __( 'Platform role', 'platform-core' ),
+						'value'   => $role_id > 0 ? (string) $role_id : '',
+						'options' => $role_options,
+					),
+					array(
+						'type'    => 'select',
+						'name'    => 'status',
+						'label'   => __( 'Status', 'platform-core' ),
+						'value'   => $status,
+						'options' => $status_options,
+					),
 				)
 			);
 		} else {
 			?>
 			<form method="get" action="<?php echo esc_url( mpp_route_url( 'app/admin/users' ) ); ?>" class="mpp-admin-search">
 				<input type="search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search users...', 'platform-core' ); ?>">
-				<button type="submit" class="mpp-btn mpp-btn--secondary"><?php esc_html_e( 'Search', 'platform-core' ); ?></button>
+				<select name="role_id" class="mpp-select">
+					<?php foreach ( $role_options as $value => $label ) : ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( (string) $role_id, (string) $value ); ?>><?php echo esc_html( $label ); ?></option>
+					<?php endforeach; ?>
+				</select>
+				<select name="status" class="mpp-select">
+					<?php foreach ( $status_options as $value => $label ) : ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $status, $value ); ?>><?php echo esc_html( $label ); ?></option>
+					<?php endforeach; ?>
+				</select>
+				<button type="submit" class="mpp-btn mpp-btn--secondary"><?php esc_html_e( 'Filter', 'platform-core' ); ?></button>
 			</form>
 			<?php
+		}
+
+		if ( empty( $users ) ) {
+			echo '<div class="mpp-empty-state"><h3 class="mpp-empty-state__title">' . esc_html__( 'No users found', 'platform-core' ) . '</h3><p>' . esc_html__( 'Try adjusting your search filters.', 'platform-core' ) . '</p></div>';
+			return;
 		}
 		?>
 		<div class="mpp-table-wrap">
@@ -289,7 +334,7 @@ class AdminRenderer {
 						<td data-label="<?php esc_attr_e( 'Username', 'platform-core' ); ?>"><?php echo esc_html( $user['username'] ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Email', 'platform-core' ); ?>"><?php echo esc_html( $user['email'] ); ?></td>
 						<td data-label="<?php esc_attr_e( 'WP Role', 'platform-core' ); ?>"><?php echo esc_html( $wp_user ? implode( ', ', (array) $wp_user->roles ) : '—' ); ?></td>
-						<td data-label="<?php esc_attr_e( 'Platform Roles', 'platform-core' ); ?>"><?php echo esc_html( ! empty( $user['platform_roles'] ) ? implode( ', ', wp_list_pluck( $user['platform_roles'], 'name' ) ) : '—' ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Platform Roles', 'platform-core' ); ?>"><?php $this->render_platform_role_chips( $user['platform_roles'] ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Registered', 'platform-core' ); ?>"><?php echo esc_html( $wp_user && $wp_user->user_registered ? mysql2date( get_option( 'date_format' ), $wp_user->user_registered ) : '—' ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Actions', 'platform-core' ); ?>"><a href="<?php echo esc_url( add_query_arg( 'user_id', $user['id'], mpp_route_url( 'app/admin/users' ) ) ); ?>"><?php esc_html_e( 'View', 'platform-core' ); ?></a></td>
 					</tr>
@@ -298,12 +343,24 @@ class AdminRenderer {
 		</table>
 		</div>
 		<?php
+		$pagination_args = array(
+			's' => $search,
+		);
+
+		if ( $role_id > 0 ) {
+			$pagination_args['role_id'] = $role_id;
+		}
+
+		if ( in_array( $status, array( 'active', 'inactive' ), true ) ) {
+			$pagination_args['status'] = $status;
+		}
+
 		Pagination::render(
 			$paged,
 			$total,
 			$per_page,
 			mpp_route_url( 'app/admin/users' ),
-			array( 's' => $search )
+			$pagination_args
 		);
 	}
 
@@ -398,6 +455,7 @@ class AdminRenderer {
 			<dt><?php esc_html_e( 'Email', 'platform-core' ); ?></dt><dd><?php echo esc_html( $user['email'] ); ?></dd>
 			<dt><?php esc_html_e( 'Status', 'platform-core' ); ?></dt><dd><?php echo esc_html( $user['status'] ); ?></dd>
 			<dt><?php esc_html_e( 'WordPress Role', 'platform-core' ); ?></dt><dd><?php echo esc_html( ! empty( $wp_roles ) ? implode( ', ', $wp_roles ) : '—' ); ?></dd>
+			<dt><?php esc_html_e( 'Platform Roles', 'platform-core' ); ?></dt><dd><?php $this->render_platform_role_chips( $user['platform_roles'] ); ?></dd>
 			<dt><?php esc_html_e( 'Registered', 'platform-core' ); ?></dt>
 			<dd><?php echo esc_html( $wp_user && $wp_user->user_registered ? mysql2date( get_option( 'date_format' ), $wp_user->user_registered ) : '—' ); ?></dd>
 		</dl>
@@ -1444,8 +1502,8 @@ class AdminRenderer {
 		<?php endif; ?>
 		<ul class="mpp-admin-list">
 			<?php foreach ( $user['platform_roles'] as $role ) : ?>
-				<li>
-					<?php echo esc_html( $role['name'] ); ?>
+				<li class="mpp-admin-list__item--chip">
+					<?php $this->render_platform_role_chips( array( $role ) ); ?>
 					<form method="post" class="mpp-inline-form">
 						<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<input type="hidden" name="mpp_admin_action" value="revoke_user_role">
@@ -1498,7 +1556,7 @@ class AdminRenderer {
 					<?php if ( empty( $row['granted'] ) ) { continue; } ?>
 					<tr>
 						<td data-label="<?php esc_attr_e( 'Permission', 'platform-core' ); ?>"><code><?php echo esc_html( $row['permission_key'] ); ?></code></td>
-						<td data-label="<?php esc_attr_e( 'Source', 'platform-core' ); ?>"><?php echo esc_html( $row['sources'][0]['role_name'] ?? '—' ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Source', 'platform-core' ); ?>"><?php echo esc_html( $this->format_access_source( $row['sources'][0] ?? array() ) ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Scope', 'platform-core' ); ?>"><?php echo esc_html( $row['sources'][0]['scope_label'] ?? '—' ); ?></td>
 					</tr>
 				<?php endforeach; ?>
@@ -1544,7 +1602,7 @@ class AdminRenderer {
 						<td data-label="<?php esc_attr_e( 'Permission', 'platform-core' ); ?>"><code><?php echo esc_html( $row['permission_key'] ); ?></code></td>
 						<td data-label="<?php esc_attr_e( 'Module', 'platform-core' ); ?>"><?php echo esc_html( $this->get_module_group_label( $row['module'] ?? '' ) ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Status', 'platform-core' ); ?>"><span class="mpp-badge <?php echo ! empty( $row['granted'] ) ? 'mpp-badge--success' : ''; ?>"><?php echo ! empty( $row['granted'] ) ? esc_html__( 'Granted', 'platform-core' ) : esc_html__( 'Denied', 'platform-core' ); ?></span></td>
-						<td data-label="<?php esc_attr_e( 'Source', 'platform-core' ); ?>"><?php echo esc_html( $row['sources'][0]['role_name'] ?? '—' ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Source', 'platform-core' ); ?>"><?php echo esc_html( $this->format_access_source( $row['sources'][0] ?? array() ) ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Scope', 'platform-core' ); ?>"><?php echo esc_html( $row['sources'][0]['scope_label'] ?? '—' ); ?></td>
 					</tr>
 				<?php endforeach; ?>
@@ -1638,5 +1696,58 @@ class AdminRenderer {
 		}
 
 		echo '<p><a href="' . esc_url( $url ) . '">&larr; ' . esc_html( $label ) . '</a></p>';
+	}
+
+	/**
+	 * Render linked platform role chips.
+	 *
+	 * @param array<int, array<string, mixed>> $roles Platform roles.
+	 */
+	private function render_platform_role_chips( array $roles ) {
+		if ( empty( $roles ) ) {
+			echo '<span class="mpp-muted">—</span>';
+			return;
+		}
+
+		echo '<span class="mpp-chip-list">';
+		foreach ( $roles as $role ) {
+			$url = add_query_arg( 'view', $role['id'], mpp_route_url( 'app/admin/roles' ) );
+			if ( function_exists( 'platform_ui_chip' ) ) {
+				echo platform_ui_chip( $role['name'], $url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			} else {
+				echo '<a class="mpp-chip" href="' . esc_url( $url ) . '">' . esc_html( $role['name'] ) . '</a>';
+			}
+		}
+		echo '</span>';
+	}
+
+	/**
+	 * Format an access source row for display.
+	 *
+	 * @param array<string, mixed> $source Source metadata.
+	 * @return string
+	 */
+	private function format_access_source( array $source ) {
+		if ( empty( $source ) ) {
+			return '—';
+		}
+
+		$type = $source['type'] ?? 'role';
+		$name = $source['role_name'] ?? '—';
+
+		if ( 'effective_admin' === $type ) {
+			return sprintf(
+				/* translators: %s: role name */
+				__( '%s (effective)', 'platform-core' ),
+				$name
+			);
+		}
+
+		return sprintf(
+			/* translators: 1: source type label, 2: role name */
+			__( '%1$s: %2$s', 'platform-core' ),
+			__( 'Role', 'platform-core' ),
+			$name
+		);
 	}
 }
