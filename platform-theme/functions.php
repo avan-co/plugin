@@ -186,6 +186,23 @@ function platform_theme_enqueue_assets() {
 				wp_get_theme()->get( 'Version' ),
 				true
 			);
+			wp_enqueue_script(
+				'platform-theme-admin-actions',
+				get_template_directory_uri() . '/assets/js/admin-actions.js',
+				array(),
+				wp_get_theme()->get( 'Version' ),
+				true
+			);
+			wp_localize_script(
+				'platform-theme-admin-actions',
+				'mppAdminActions',
+				array(
+					'savePermissions' => __( 'Save permission changes for this role?', 'platform-theme' ),
+					'impactPrefix'    => __( 'This will grant', 'platform-theme' ),
+					'impactGranted'   => __( 'and revoke', 'platform-theme' ),
+					'impactSuffix'    => __( 'permissions.', 'platform-theme' ),
+				)
+			);
 		}
 	}
 

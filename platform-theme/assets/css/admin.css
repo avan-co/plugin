@@ -466,6 +466,18 @@
 	gap: var(--mpp-space-sm);
 }
 
+.mpp-scope-hint {
+	margin: 0 0 var(--mpp-space-md);
+	padding: var(--mpp-space-sm) var(--mpp-space-md);
+	border-radius: var(--mpp-radius-sm);
+	background: var(--mpp-surface-muted, rgba(0, 0, 0, 0.04));
+	border: 1px solid var(--mpp-border);
+}
+
+.mpp-activity-list li {
+	margin-bottom: var(--mpp-space-xs);
+}
+
 @media (max-width: 768px) {
 	.mpp-role-permissions__item {
 		flex-direction: column;

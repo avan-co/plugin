@@ -61,20 +61,7 @@ class ScopeService {
 	 * @return array<int, array<string, mixed>>
 	 */
 	public function assignable() {
-		$availability = array(
-			'all'          => true,
-			'own'          => true,
-			'department'   => true,
-			'team'         => true,
-			'organization' => true,
-		);
-
-		/**
-		 * Filter which scope types are available for assignment.
-		 *
-		 * @param array<string, bool> $availability Scope slug => implemented.
-		 */
-		$availability = apply_filters( 'mpp_assignable_scope_types', $availability );
+		$availability = $this->get_scope_availability();
 
 		$rows = array();
 
@@ -89,6 +76,50 @@ class ScopeService {
 		}
 
 		return $rows;
+	}
+
+	/**
+	 * Scope types and whether they are implemented for assignment.
+	 *
+	 * @return array<string, bool>
+	 */
+	public function get_scope_availability() {
+		$availability = array(
+			'all'          => true,
+			'own'          => true,
+			'department'   => false,
+			'team'         => false,
+			'organization' => false,
+			'project'      => false,
+			'custom'       => false,
+		);
+
+		/**
+		 * Filter which scope types are available for assignment.
+		 *
+		 * @param array<string, bool> $availability Scope slug => implemented.
+		 */
+		return apply_filters( 'mpp_assignable_scope_types', $availability );
+	}
+
+	/**
+	 * Labels for scope types that are not yet available in the admin UI.
+	 *
+	 * @return array<int, string>
+	 */
+	public function unavailable_scope_labels() {
+		$availability = $this->get_scope_availability();
+		$labels       = array();
+
+		foreach ( $this->all() as $row ) {
+			$slug = $row['slug'];
+
+			if ( isset( $availability[ $slug ] ) && ! $availability[ $slug ] ) {
+				$labels[] = $row['label'] ?? $row['name'];
+			}
+		}
+
+		return $labels;
 	}
 
 	/**

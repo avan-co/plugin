@@ -666,6 +666,22 @@ function mpp_format_date( $datetime, $gmt = false ) {
 }
 
 /**
+ * Human-readable label for an audit log action key.
+ *
+ * @param string $action Audit action slug.
+ * @return string
+ */
+function mpp_format_audit_action( $action ) {
+	if ( ! function_exists( 'mpp' ) ) {
+		return $action;
+	}
+
+	$service = mpp()->get( \MPP\Services\AuditLabelService::class );
+
+	return $service->get_action_label( $action );
+}
+
+/**
  * Get the single-character logo mark for the platform brand.
  *
  * @return string

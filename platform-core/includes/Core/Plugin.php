@@ -30,6 +30,7 @@ use MPP\Auth\RegistrationHandler;
 use MPP\Database\Installer;
 use MPP\Modules\ModuleManager;
 use MPP\Panels\DashboardService;
+use MPP\Services\AuditLabelService;
 use MPP\Services\AuditLogService;
 use MPP\Services\EffectiveAccessService;
 use MPP\Services\ModuleService;
@@ -159,6 +160,10 @@ class Plugin {
 			return new AuditLogService();
 		} );
 
+		$this->container->set( AuditLabelService::class, function () {
+			return new AuditLabelService();
+		} );
+
 		$this->container->set( AclEngine::class, function ( Container $c ) {
 			return new AclEngine(
 				$c->get( PermissionRegistry::class ),
@@ -224,6 +229,7 @@ class Plugin {
 				$c->get( ModuleService::class ),
 				$c->get( ScopeService::class ),
 				$c->get( AuditLogService::class ),
+				$c->get( AuditLabelService::class ),
 				$c->get( EffectiveAccessService::class ),
 				$c->get( PlatformSettings::class )
 			);
