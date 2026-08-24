@@ -162,47 +162,61 @@ function mpp_get_panel_navigation( $panel ) {
 	$core_items = array(
 		'user' => array(
 			array(
-				'label'      => __( 'Dashboard', 'platform-core' ),
-				'url'        => mpp_route_url( 'app/user' ),
-				'route'      => 'app/user',
-				'permission' => 'core.panel.user.access',
+				'label'       => __( 'Dashboard', 'platform-core' ),
+				'url'         => mpp_route_url( 'app/user' ),
+				'route'       => 'app/user',
+				'permission'  => 'core.panel.user.access',
+				'section'     => 'main',
+				'description' => __( 'Overview and module widgets', 'platform-core' ),
 			),
 			array(
-				'label'      => __( 'Profile', 'platform-core' ),
-				'url'        => mpp_route_url( 'profile' ),
-				'route'      => 'profile',
-				'permission' => 'core.profile.view',
+				'label'       => __( 'Profile', 'platform-core' ),
+				'url'         => mpp_route_url( 'profile' ),
+				'route'       => 'profile',
+				'permission'  => 'core.profile.view',
+				'section'     => 'account',
+				'description' => __( 'Personal account details', 'platform-core' ),
 			),
 			array(
-				'label'      => __( 'Settings', 'platform-core' ),
-				'url'        => mpp_route_url( 'settings' ),
-				'route'      => 'settings',
-				'permission' => 'core.settings.view',
+				'label'       => __( 'Settings', 'platform-core' ),
+				'url'         => mpp_route_url( 'settings' ),
+				'route'       => 'settings',
+				'permission'  => 'core.settings.view',
+				'section'     => 'account',
+				'description' => __( 'Preferences and notifications', 'platform-core' ),
 			),
 			array(
-				'label' => __( 'Logout', 'platform-core' ),
-				'url'   => mpp_logout_url(),
-				'route' => '',
+				'label'       => __( 'Logout', 'platform-core' ),
+				'url'         => mpp_logout_url(),
+				'route'       => '',
+				'section'     => 'system',
+				'description' => __( 'Sign out of the platform', 'platform-core' ),
 			),
 		),
 		'manager' => array(
 			array(
-				'label'      => __( 'Dashboard', 'platform-core' ),
-				'url'        => mpp_route_url( 'app/manager' ),
-				'route'      => 'app/manager',
-				'permission' => 'core.panel.manager.access',
+				'label'       => __( 'Dashboard', 'platform-core' ),
+				'url'         => mpp_route_url( 'app/manager' ),
+				'route'       => 'app/manager',
+				'permission'  => 'core.panel.manager.access',
+				'section'     => 'main',
+				'description' => __( 'Team overview and widgets', 'platform-core' ),
 			),
 			array(
-				'label'      => __( 'Profile', 'platform-core' ),
-				'url'        => mpp_route_url( 'app/manager/profile' ),
-				'route'      => 'app/manager/profile',
-				'permission' => 'core.profile.view',
+				'label'       => __( 'Profile', 'platform-core' ),
+				'url'         => mpp_route_url( 'app/manager/profile' ),
+				'route'       => 'app/manager/profile',
+				'permission'  => 'core.profile.view',
+				'section'     => 'account',
+				'description' => __( 'Manager account details', 'platform-core' ),
 			),
 			array(
-				'label'      => __( 'Settings', 'platform-core' ),
-				'url'        => mpp_route_url( 'settings' ),
-				'route'      => 'settings',
-				'permission' => 'core.settings.view',
+				'label'       => __( 'Settings', 'platform-core' ),
+				'url'         => mpp_route_url( 'settings' ),
+				'route'       => 'settings',
+				'permission'  => 'core.settings.view',
+				'section'     => 'account',
+				'description' => __( 'Workspace preferences', 'platform-core' ),
 			),
 		),
 	);
@@ -214,6 +228,9 @@ function mpp_get_panel_navigation( $panel ) {
 		foreach ( $module_items as $item ) {
 			if ( empty( $item['panel'] ) || $item['panel'] !== $panel ) {
 				continue;
+			}
+			if ( empty( $item['section'] ) ) {
+				$item['section'] = 'modules';
 			}
 			$items[] = $item;
 		}
@@ -246,39 +263,46 @@ function mpp_get_panel_navigation( $panel ) {
 function mpp_get_admin_navigation() {
 	$items = array(
 		array(
-			'label'      => __( 'Dashboard', 'platform-core' ),
-			'route'      => 'app/admin',
-			'permission' => 'core.panel.admin.access',
+			'label'       => __( 'Dashboard', 'platform-core' ),
+			'route'       => 'app/admin',
+			'permission'  => 'core.panel.admin.access',
+			'description' => __( 'Platform overview', 'platform-core' ),
 		),
 		array(
-			'label'      => __( 'Users', 'platform-core' ),
-			'route'      => 'app/admin/users',
-			'permission' => 'core.acl.manage',
+			'label'       => __( 'Users', 'platform-core' ),
+			'route'       => 'app/admin/users',
+			'permission'  => 'core.acl.manage',
+			'description' => __( 'Accounts and role assignments', 'platform-core' ),
 		),
 		array(
-			'label'      => __( 'Roles', 'platform-core' ),
-			'route'      => 'app/admin/roles',
-			'permission' => 'core.acl.manage',
+			'label'       => __( 'Roles', 'platform-core' ),
+			'route'       => 'app/admin/roles',
+			'permission'  => 'core.acl.manage',
+			'description' => __( 'Role definitions and members', 'platform-core' ),
 		),
 		array(
-			'label'      => __( 'Permissions', 'platform-core' ),
-			'route'      => 'app/admin/permissions',
-			'permission' => 'core.acl.manage',
+			'label'       => __( 'Permissions', 'platform-core' ),
+			'route'       => 'app/admin/permissions',
+			'permission'  => 'core.acl.manage',
+			'description' => __( 'Grant and revoke access', 'platform-core' ),
 		),
 		array(
-			'label'      => __( 'Modules', 'platform-core' ),
-			'route'      => 'app/admin/modules',
-			'permission' => 'core.acl.manage',
+			'label'       => __( 'Modules', 'platform-core' ),
+			'route'       => 'app/admin/modules',
+			'permission'  => 'core.acl.manage',
+			'description' => __( 'Installed platform modules', 'platform-core' ),
 		),
 		array(
-			'label'      => __( 'ACL', 'platform-core' ),
-			'route'      => 'app/admin/acl',
-			'permission' => 'core.acl.manage',
+			'label'       => __( 'ACL', 'platform-core' ),
+			'route'       => 'app/admin/acl',
+			'permission'  => 'core.acl.manage',
+			'description' => __( 'Audit and access history', 'platform-core' ),
 		),
 		array(
-			'label'      => __( 'Settings', 'platform-core' ),
-			'route'      => 'app/admin/settings',
-			'permission' => 'core.acl.manage',
+			'label'       => __( 'Settings', 'platform-core' ),
+			'route'       => 'app/admin/settings',
+			'permission'  => 'core.acl.manage',
+			'description' => __( 'Platform configuration', 'platform-core' ),
 		),
 	);
 

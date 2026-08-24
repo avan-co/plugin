@@ -7,6 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use PlatformTheme\DesignSystem\PanelNavigation;
+
 /**
  * Check if the current route matches a slug.
  *
@@ -39,27 +41,5 @@ function platform_nav_item_class( $slug ) {
  * @param string $panel Panel slug.
  */
 function platform_render_panel_navigation( $panel ) {
-	if ( ! function_exists( 'mpp_get_panel_navigation' ) ) {
-		return;
-	}
-
-	$items = mpp_get_panel_navigation( $panel );
-
-	if ( empty( $items ) ) {
-		return;
-	}
-
-	echo '<ul class="mpp-nav__list">';
-
-	foreach ( $items as $item ) {
-		$route = isset( $item['route'] ) ? $item['route'] : '';
-		printf(
-			'<li class="mpp-nav__item %s"><a href="%s">%s</a></li>',
-			esc_attr( $route ? platform_nav_item_class( $route ) : '' ),
-			esc_url( $item['url'] ),
-			esc_html( $item['label'] )
-		);
-	}
-
-	echo '</ul>';
+	PanelNavigation::render( $panel );
 }
