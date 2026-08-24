@@ -36,10 +36,34 @@ function platform_nav_item_class( $slug ) {
 }
 
 /**
- * Render panel navigation from plugin registry.
+ * Whether the current route uses a panel sidebar.
  *
- * @param string $panel Panel slug.
+ * @return bool
  */
-function platform_render_panel_navigation( $panel ) {
-	PanelNavigation::render( $panel );
+function platform_route_has_sidebar() {
+	if ( ! function_exists( 'mpp_get_current_route' ) ) {
+		return false;
+	}
+
+	$route = mpp_get_current_route();
+
+	if ( ! $route || empty( $route['slug'] ) ) {
+		return false;
+	}
+
+	$slug = $route['slug'];
+
+	if ( in_array( $slug, array( 'app', 'login', 'register', 'forgot-password', 'reset-password', '403', '404' ), true ) ) {
+		return false;
+	}
+
+	if ( in_array( $slug, array( 'profile', 'settings' ), true ) ) {
+		return true;
+	}
+
+	if ( 0 === strpos( $slug, 'app/' ) ) {
+		return true;
+	}
+
+	return false;
 }

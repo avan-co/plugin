@@ -23,6 +23,10 @@ $require_terms = (bool) apply_filters( 'mpp_registration_require_terms', false )
 
 get_header();
 
+$username_value = isset( $_POST['user_login'] ) ? sanitize_user( wp_unslash( $_POST['user_login'] ) ) : '';
+$email_value    = isset( $_POST['user_email'] ) ? sanitize_email( wp_unslash( $_POST['user_email'] ) ) : '';
+$redirect_to    = function_exists( 'mpp_get_post_login_redirect_url' ) ? mpp_get_post_login_redirect_url() : mpp_route_url( 'app/user' );
+
 ob_start();
 
 if ( ! empty( $GLOBALS['mpp_register_error'] ) ) {
@@ -32,16 +36,16 @@ if ( ! empty( $GLOBALS['mpp_register_error'] ) ) {
 <form method="post" action="<?php echo esc_url( mpp_route_url( 'register' ) ); ?>" class="mpp-form" novalidate>
 	<?php echo class_exists( '\MPP\Auth\RegistrationHandler' ) ? \MPP\Auth\RegistrationHandler::nonce_field() : wp_nonce_field( 'mpp_register', 'mpp_register_nonce', true, false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	<input type="hidden" name="mpp_register" value="1">
-	<input type="hidden" name="redirect_to" value="<?php echo esc_url( mpp_route_url( 'app/user' ) ); ?>">
+	<input type="hidden" name="redirect_to" value="<?php echo esc_url( $redirect_to ); ?>">
 
 	<div class="mpp-field">
 		<label class="mpp-field__label" for="user_login"><?php esc_html_e( 'Username', 'platform-theme' ); ?></label>
-		<input class="mpp-input" type="text" name="user_login" id="user_login" required autocomplete="username">
+		<input class="mpp-input" type="text" name="user_login" id="user_login" required autocomplete="username" value="<?php echo esc_attr( $username_value ); ?>">
 	</div>
 
 	<div class="mpp-field">
 		<label class="mpp-field__label" for="user_email"><?php esc_html_e( 'Email', 'platform-theme' ); ?></label>
-		<input class="mpp-input" type="email" name="user_email" id="user_email" required autocomplete="email">
+		<input class="mpp-input" type="email" name="user_email" id="user_email" required autocomplete="email" value="<?php echo esc_attr( $email_value ); ?>">
 	</div>
 
 	<div class="mpp-field">

@@ -30,6 +30,7 @@ use MPP\Auth\RegistrationHandler;
 use MPP\Database\Installer;
 use MPP\Modules\ModuleManager;
 use MPP\Panels\DashboardService;
+use MPP\Services\AuditLabelService;
 use MPP\Services\AuditLogService;
 use MPP\Services\EffectiveAccessService;
 use MPP\Services\ModuleService;
@@ -128,6 +129,8 @@ class Plugin {
 
 		$this->container->get( PlatformSettings::class )->register_hooks();
 
+		add_filter( 'show_admin_bar', array( $this, 'hide_admin_bar_on_platform_routes' ) );
+
 		add_action( 'rest_api_init', array( $module_manager, 'register_module_rest_routes' ) );
 
 		do_action( 'mpp_booted', $this );
@@ -155,6 +158,10 @@ class Plugin {
 
 		$this->container->set( AuditLogService::class, function () {
 			return new AuditLogService();
+		} );
+
+		$this->container->set( AuditLabelService::class, function () {
+			return new AuditLabelService();
 		} );
 
 		$this->container->set( AclEngine::class, function ( Container $c ) {
@@ -222,6 +229,7 @@ class Plugin {
 				$c->get( ModuleService::class ),
 				$c->get( ScopeService::class ),
 				$c->get( AuditLogService::class ),
+				$c->get( AuditLabelService::class ),
 				$c->get( EffectiveAccessService::class ),
 				$c->get( PlatformSettings::class )
 			);
@@ -324,6 +332,24 @@ class Plugin {
 	 */
 	public function acl() {
 		return $this->get( AclEngine::class );
+	}
+
+	/**
+	 * Hide the WordPress admin bar on platform routes.
+	 *
+	 * @param bool $show Whether to show the admin bar.
+	 * @return bool
+	 */
+	public function hide_admin_bar_on_platform_routes( $show ) {
+		if ( ! $show ) {
+			return false;
+		}
+
+		if ( function_exists( 'mpp_get_current_route' ) && mpp_get_current_route() ) {
+			return false;
+		}
+
+		return $show;
 	}
 
 	/**

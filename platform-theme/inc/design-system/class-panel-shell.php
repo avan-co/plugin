@@ -91,7 +91,7 @@ final class PanelShell {
 	 */
 	private static function render_sidebar( $panel ) {
 		?>
-		<aside class="mpp-sidebar" data-panel="<?php echo esc_attr( $panel ); ?>">
+		<aside class="mpp-sidebar" id="mpp-sidebar" data-panel="<?php echo esc_attr( $panel ); ?>">
 			<?php PanelNavigation::render( $panel ); ?>
 		</aside>
 		<?php

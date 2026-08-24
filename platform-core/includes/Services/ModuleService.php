@@ -218,7 +218,7 @@ class ModuleService {
 	private function route_belongs_to_module( $route_slug, $module ) {
 		if ( 'core' === $module ) {
 			return 0 === strpos( $route_slug, 'app/admin' )
-				|| in_array( $route_slug, array( 'app', 'app/user', 'app/manager', 'profile', 'settings', 'login', 'register', 'forgot-password' ), true );
+				|| in_array( $route_slug, array( 'app', 'app/user', 'app/manager', 'profile', 'settings', 'login', 'register', 'forgot-password', 'reset-password' ), true );
 		}
 
 		return $route_slug === 'app/' . $module || 0 === strpos( $route_slug, 'app/' . $module . '/' );

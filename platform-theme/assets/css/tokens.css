@@ -25,10 +25,20 @@
 	--mpp-surface-sidebar: #ffffff;
 	--mpp-surface-popover: #ffffff;
 
-	--mpp-font-body: "Noto Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	--mpp-font-body: "Vazirmatn", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 	--mpp-font-heading: var(--mpp-font-body);
 	--mpp-font-small: 0.8125rem;
 	--mpp-font-label: 0.875rem;
+	--mpp-font-display: clamp(1.75rem, 3vw, 2.5rem);
+	--mpp-font-title: 1.25rem;
+	--mpp-font-subtitle: 1.0625rem;
+
+	--mpp-ring: rgba(37, 99, 235, 0.35);
+	--mpp-ring-offset: 2px;
+
+	--mpp-panel-user-accent: #2563eb;
+	--mpp-panel-manager-accent: #0d9488;
+	--mpp-panel-admin-accent: #7c3aed;
 
 	--mpp-space-xs: 0.25rem;
 	--mpp-space-sm: 0.5rem;
@@ -62,4 +72,26 @@
 	--mpp-radius: var(--mpp-radius-md);
 	--mpp-shadow: var(--mpp-shadow-card);
 	--mpp-font: var(--mpp-font-body);
+}
+
+[data-theme="dark"] {
+	color-scheme: dark;
+	--mpp-background: #0f172a;
+	--mpp-foreground: #f8fafc;
+	--mpp-muted: #1e293b;
+	--mpp-muted-foreground: #94a3b8;
+	--mpp-border: #334155;
+	--mpp-input: #334155;
+	--mpp-primary: #f8fafc;
+	--mpp-primary-foreground: #0f172a;
+	--mpp-secondary: #1e293b;
+	--mpp-secondary-foreground: #f8fafc;
+	--mpp-surface-page: #020617;
+	--mpp-surface-card: #0f172a;
+	--mpp-surface-sidebar: #0f172a;
+	--mpp-surface-popover: #1e293b;
+	--mpp-ring: rgba(96, 165, 250, 0.45);
+	--mpp-shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.35);
+	--mpp-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
+	--mpp-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.5);
 }

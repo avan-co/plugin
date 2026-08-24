@@ -303,4 +303,114 @@ class EffectiveAccessService {
 			'custom'       => false,
 		);
 	}
+
+	/**
+	 * Routes that require a specific permission key.
+	 *
+	 * @param string $permission_key Permission key.
+	 * @return array<int, array<string, string>>
+	 */
+	public function get_routes_for_permission_key( $permission_key ) {
+		if ( ! function_exists( 'mpp_get_routes' ) ) {
+			return array();
+		}
+
+		$matches = array();
+
+		foreach ( mpp_get_routes() as $slug => $definition ) {
+			if ( empty( $definition['permission'] ) || $definition['permission'] !== $permission_key ) {
+				continue;
+			}
+
+			$matches[] = array(
+				'slug'  => $slug,
+				'title' => (string) ( $definition['title'] ?? $slug ),
+			);
+		}
+
+		return $matches;
+	}
+
+	/**
+	 * Impact summary before deleting a role.
+	 *
+	 * @param int $role_id Role ID.
+	 * @return array<string, mixed>
+	 */
+	public function preview_role_delete_impact( $role_id ) {
+		$role = $this->roles->find( $role_id );
+
+		if ( ! $role ) {
+			return array(
+				'user_count'       => 0,
+				'permission_count' => 0,
+				'routes'           => array(),
+			);
+		}
+
+		$permissions = $this->roles->get_permissions( $role_id );
+		$routes      = array();
+
+		foreach ( $permissions as $permission ) {
+			foreach ( $this->get_routes_for_permission_key( $permission['permission_key'] ) as $route ) {
+				$routes[ $route['slug'] ] = $route;
+			}
+		}
+
+		return array(
+			'user_count'       => $this->count_users_with_role( $role_id ),
+			'permission_count' => count( $permissions ),
+			'routes'           => array_values( $routes ),
+		);
+	}
+
+	/**
+	 * Impact summary for syncing role permissions.
+	 *
+	 * @param int              $role_id            Role ID.
+	 * @param array<int, int>  $new_permission_ids Target permission IDs.
+	 * @return array<string, mixed>
+	 */
+	public function preview_permission_sync_impact( $role_id, array $new_permission_ids ) {
+		$before = array_map( 'intval', wp_list_pluck( $this->roles->get_permissions( $role_id ), 'permission_id' ) );
+		$new    = array_map( 'intval', $new_permission_ids );
+		$granted = array_values( array_diff( $new, $before ) );
+		$revoked = array_values( array_diff( $before, $new ) );
+		$users   = $this->count_users_with_role( $role_id );
+
+		$revoked_routes = array();
+		$granted_routes = array();
+
+		foreach ( $revoked as $permission_id ) {
+			$row = $this->registry->find_by_id( $permission_id );
+
+			if ( ! $row ) {
+				continue;
+			}
+
+			foreach ( $this->get_routes_for_permission_key( $row['permission_key'] ) as $route ) {
+				$revoked_routes[ $route['slug'] ] = $route;
+			}
+		}
+
+		foreach ( $granted as $permission_id ) {
+			$row = $this->registry->find_by_id( $permission_id );
+
+			if ( ! $row ) {
+				continue;
+			}
+
+			foreach ( $this->get_routes_for_permission_key( $row['permission_key'] ) as $route ) {
+				$granted_routes[ $route['slug'] ] = $route;
+			}
+		}
+
+		return array(
+			'user_count'     => $users,
+			'granted_count'  => count( $granted ),
+			'revoked_count'  => count( $revoked ),
+			'granted_routes' => array_values( $granted_routes ),
+			'revoked_routes' => array_values( $revoked_routes ),
+		);
+	}
 }

@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: platform-example\n"
@@ -7,55 +8,68 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "Active"
-msgstr "Active"
+msgstr "فعال"
 
-msgid "Demonstrates how an external module registers a protected route and navigation item."
-msgstr "Demonstrates how an external module registers a protected route and navigation item."
+msgid ""
+"Demonstrates how an external module registers a protected route and "
+"navigation item."
+msgstr ""
+"نحوه ثبت مسیر محافظت‌شده و آیتم ناوبری توسط ماژول خارجی را نشان می‌دهد."
 
 msgid "Demonstration page for the Example module."
-msgstr "Demonstration page for the Example module."
+msgstr "صفحه نمایشی ماژول Example."
 
 msgid "Example"
-msgstr "Example"
+msgstr "نمونه"
 
 msgid "Example Demo"
 msgstr "دموی نمونه"
 
 msgid "Example Module"
-msgstr "Example Module"
+msgstr "ماژول نمونه"
 
 msgid "Example Module Demo"
-msgstr "Example Module Demo"
+msgstr "نمایش ماژول نمونه"
 
-msgid "Grant example.demo.view to a role, assign the role to a user, then open this page from the user panel navigation."
-msgstr "Grant example.demo.view to a role, assign the role to a user, then open this page from the user panel navigation."
+msgid ""
+"Grant example.demo.view to a role, assign the role to a user, then open this"
+" page from the user panel navigation."
+msgstr ""
+"example.demo.view را به نقش بدهید، نقش را به کاربر تخصیص دهید، سپس این صفحه "
+"را از ناوبری پنل کاربر باز کنید."
 
 msgid "Manage Example Demo"
 msgstr "مدیریت دموی نمونه"
 
 msgid "Manage Permission"
-msgstr "Manage Permission"
+msgstr "مدیریت مجوز"
 
 msgid "Module"
-msgstr "Module"
+msgstr "ماژول"
 
 msgid "Platform Example requires Platform Core %s or newer."
-msgstr "Platform Example requires Platform Core %s or newer."
+msgstr "Platform Example به هسته پلتفرم %s یا جدیدتر نیاز دارد."
 
 msgid "Platform Example requires Platform Core to be installed and activated."
-msgstr "Platform Example requires Platform Core to be installed and activated."
+msgstr "Platform Example نیاز به نصب و فعال‌سازی هسته پلتفرم دارد."
 
-msgid "Reference module demonstrating permissions, routes, navigation, and dashboard widgets."
-msgstr "Reference module demonstrating permissions, routes, navigation, and dashboard widgets."
+msgid ""
+"Reference module demonstrating permissions, routes, navigation, and "
+"dashboard widgets."
+msgstr "ماژول مرجع برای مجوزها، مسیرها، ناوبری و ویجت داشبورد."
 
 msgid "Route"
-msgstr "Route"
+msgstr "مسیر"
 
-msgid "This page is served by the platform-example plugin through the core module contract."
-msgstr "This page is served by the platform-example plugin through the core module contract."
+msgid ""
+"This page is served by the platform-example plugin through the core module "
+"contract."
+msgstr ""
+"این صفحه توسط پلاگین platform-example از طریق قرارداد ماژول هسته ارائه "
+"می‌شود."
 
 msgid "View Example Demo"
 msgstr "مشاهده دموی نمونه"
 
 msgid "View Permission"
-msgstr "View Permission"
+msgstr "مجوز مشاهده"

@@ -1,0 +1,56 @@
+#
+msgid ""
+msgstr ""
+"Language: fa_IR\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Connected modules"
+msgstr "ماژول‌های متصل"
+
+msgid "Cross-module metrics for manager oversight."
+msgstr "شاخص‌های بین‌ماژولی برای نظارت مدیر."
+
+msgid "Install Tasks and Team modules to populate this report."
+msgstr "ماژول‌های Tasks و Team را نصب کنید تا این گزارش پر شود."
+
+msgid "Open Tasks"
+msgstr "باز کردن وظایف"
+
+msgid "Open Team"
+msgstr "باز کردن تیم"
+
+msgid "Operational reports for managers across tasks and team modules."
+msgstr "گزارش‌های عملیاتی برای مدیران از ماژول‌های وظایف و تیم."
+
+msgid "Operational summaries for your manager workspace."
+msgstr "خلاصه‌های عملیاتی برای فضای کار مدیر."
+
+msgid "Operational summary"
+msgstr "خلاصه عملیاتی"
+
+msgid "Platform Reports requires Platform Core %s or newer."
+msgstr "Platform Reports به هسته پلتفرم %s یا جدیدتر نیاز دارد."
+
+msgid "Platform Reports requires Platform Core to be installed and activated."
+msgstr "Platform Reports نیاز به نصب و فعال‌سازی هسته پلتفرم دارد."
+
+msgid "Reports"
+msgstr "گزارش‌ها"
+
+msgid "Task and team metrics in one place."
+msgstr "شاخص‌های وظایف و تیم در یک جا."
+
+msgid "Tasks Completed"
+msgstr "وظایف تکمیل‌شده"
+
+msgid "Tasks In Progress"
+msgstr "وظایف در حال انجام"
+
+msgid "This report aggregates live data from installed manager modules."
+msgstr "این گزارش داده زنده از ماژول‌های نصب‌شده مدیر را جمع می‌کند."
+
+msgid "Total tracked tasks"
+msgstr "مجموع وظایف ردیابی‌شده"
+
+msgid "View manager reports"
+msgstr "مشاهده گزارش‌های مدیر"

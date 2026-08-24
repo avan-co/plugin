@@ -59,6 +59,20 @@
 	font-size: var(--mpp-font-small);
 }
 
+.mpp-btn--lg {
+	padding: 0.625rem 1.25rem;
+	font-size: 1rem;
+}
+
+.mpp-btn:active:not(:disabled) {
+	transform: translateY(1px);
+}
+
+.mpp-btn.is-loading {
+	pointer-events: none;
+	opacity: 0.75;
+}
+
 .mpp-btn:disabled,
 .mpp-btn[aria-disabled="true"] {
 	opacity: 0.5;
@@ -70,12 +84,125 @@
 	border: 1px solid var(--mpp-border);
 	border-radius: var(--mpp-radius-lg);
 	box-shadow: var(--mpp-shadow-subtle);
+	padding: var(--mpp-space-lg);
 }
 
 .mpp-card--login {
 	max-width: 420px;
 	width: 100%;
 	padding: var(--mpp-space-xl);
+}
+
+.mpp-card--error {
+	border-color: #fecaca;
+	background: linear-gradient(180deg, var(--mpp-destructive-foreground) 0%, var(--mpp-surface-card) 100%);
+	text-align: center;
+	max-width: 480px;
+	width: 100%;
+}
+
+.mpp-card--auth {
+	box-shadow: var(--mpp-shadow-elevated);
+}
+
+.mpp-card__header,
+.mpp-card__body,
+.mpp-card__footer {
+	padding: var(--mpp-space-lg);
+}
+
+.mpp-card__header + .mpp-card__body,
+.mpp-card__body + .mpp-card__footer {
+	padding-top: 0;
+}
+
+.mpp-card__header {
+	padding-bottom: var(--mpp-space-sm);
+	border-bottom: 1px solid var(--mpp-border);
+}
+
+.mpp-card__footer {
+	padding-top: var(--mpp-space-md);
+	border-top: 1px solid var(--mpp-border);
+}
+
+.mpp-auth-brand {
+	display: flex;
+	align-items: center;
+	gap: var(--mpp-space-sm);
+	margin-bottom: var(--mpp-space-lg);
+}
+
+.mpp-auth-brand__mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: var(--mpp-radius-md);
+	background: var(--mpp-primary);
+	color: var(--mpp-primary-foreground);
+	font-weight: 700;
+}
+
+.mpp-auth-brand__name {
+	font-weight: 600;
+	font-size: var(--mpp-font-label);
+}
+
+.mpp-auth-title {
+	margin: 0 0 var(--mpp-space-sm);
+	font-size: 1.5rem;
+}
+
+.mpp-auth-description {
+	margin: 0 0 var(--mpp-space-lg);
+	line-height: 1.6;
+}
+
+.mpp-error-page__icon {
+	width: 4rem;
+	height: 4rem;
+	margin: 0 auto var(--mpp-space-md);
+	border-radius: 999px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--mpp-destructive);
+	background: #fee2e2;
+	border: 1px solid #fecaca;
+}
+
+.mpp-error-page__title {
+	margin: 0 0 var(--mpp-space-sm);
+	font-size: 1.375rem;
+	color: var(--mpp-foreground);
+}
+
+.mpp-error-page__message {
+	margin: 0 0 var(--mpp-space-lg);
+	color: var(--mpp-muted-foreground);
+	line-height: 1.6;
+}
+
+.mpp-error-page__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--mpp-space-sm);
+	justify-content: center;
+}
+
+.mpp-card--error h1 {
+	margin: 0 0 var(--mpp-space-sm);
+	font-size: 2.5rem;
+	color: var(--mpp-destructive);
+}
+
+.mpp-card--error p {
+	margin: 0 0 var(--mpp-space-lg);
+	color: var(--mpp-muted-foreground);
 }
 
 .mpp-badge {
@@ -114,6 +241,42 @@
 	background: var(--mpp-success-foreground);
 	border-color: #bbf7d0;
 	color: var(--mpp-success);
+}
+
+.mpp-alert--info {
+	background: #eff6ff;
+	border-color: #bfdbfe;
+	color: #1d4ed8;
+}
+
+.mpp-alert--warning {
+	background: #fffbeb;
+	border-color: #fde68a;
+	color: #b45309;
+}
+
+.mpp-checkbox {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--mpp-space-sm);
+	margin-bottom: var(--mpp-space-md);
+	font-size: var(--mpp-font-label);
+	cursor: pointer;
+}
+
+.mpp-checkbox input[type="checkbox"] {
+	width: 1rem;
+	height: 1rem;
+	margin: 0.125rem 0 0;
+	flex-shrink: 0;
+	accent-color: var(--mpp-primary);
+}
+
+.mpp-table-wrap {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	border: 1px solid var(--mpp-border);
+	border-radius: var(--mpp-radius-md);
 }
 
 .mpp-form label,
@@ -159,12 +322,38 @@
 	text-align: center;
 	padding: var(--mpp-space-2xl) var(--mpp-space-lg);
 	color: var(--mpp-muted-foreground);
+	background: var(--mpp-muted);
+	border: 1px dashed var(--mpp-border);
+	border-radius: var(--mpp-radius-lg);
+}
+
+.mpp-empty-state__icon {
+	width: 3rem;
+	height: 3rem;
+	margin: 0 auto var(--mpp-space-md);
+	border-radius: 999px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--mpp-surface-card);
+	border: 1px solid var(--mpp-border);
+	color: var(--mpp-muted-foreground);
+	font-size: 1.25rem;
+	font-weight: 700;
 }
 
 .mpp-empty-state__title {
 	margin: 0 0 var(--mpp-space-sm);
 	color: var(--mpp-foreground);
 	font-size: 1.125rem;
+	font-weight: 600;
+}
+
+.mpp-empty-state p {
+	margin: 0;
+	line-height: 1.6;
+	max-width: 36rem;
+	margin-inline: auto;
 }
 
 .mpp-avatar {

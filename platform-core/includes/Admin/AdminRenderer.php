@@ -9,6 +9,7 @@ namespace MPP\Admin;
 
 use MPP\ACL\PermissionRegistry;
 use MPP\ACL\RoleManager;
+use MPP\Services\AuditLabelService;
 use MPP\Services\AuditLogService;
 use MPP\Services\EffectiveAccessService;
 use MPP\Services\ModuleService;
@@ -60,6 +61,11 @@ class AdminRenderer {
 	private $audit;
 
 	/**
+	 * @var AuditLabelService
+	 */
+	private $audit_labels;
+
+	/**
 	 * @var EffectiveAccessService
 	 */
 	private $access;
@@ -80,18 +86,20 @@ class AdminRenderer {
 		ModuleService $modules,
 		ScopeService $scopes,
 		AuditLogService $audit,
+		AuditLabelService $audit_labels,
 		EffectiveAccessService $access,
 		PlatformSettings $settings
 	) {
-		$this->users       = $users;
-		$this->roles       = $roles;
-		$this->permissions = $permissions;
-		$this->registry    = $registry;
-		$this->modules     = $modules;
-		$this->scopes      = $scopes;
-		$this->audit       = $audit;
-		$this->access      = $access;
-		$this->settings    = $settings;
+		$this->users        = $users;
+		$this->roles        = $roles;
+		$this->permissions  = $permissions;
+		$this->registry     = $registry;
+		$this->modules      = $modules;
+		$this->scopes       = $scopes;
+		$this->audit        = $audit;
+		$this->audit_labels = $audit_labels;
+		$this->access       = $access;
+		$this->settings     = $settings;
 	}
 
 	/**
@@ -143,11 +151,28 @@ class AdminRenderer {
 		}
 
 		$alert_type = 'success' === $type ? 'success' : ( 'error' === $type ? 'error' : 'info' );
+		$role       = 'success' === $type ? 'status' : 'alert';
 
 		printf(
-			'<div class="mpp-alert mpp-alert--%s" role="alert">%s</div>',
+			'<div class="mpp-alert mpp-alert--%1$s" role="%2$s">%3$s</div>',
 			esc_attr( $alert_type ),
+			esc_attr( $role ),
 			esc_html( $message )
+		);
+	}
+
+	/**
+	 * Format audit row fields for display.
+	 *
+	 * @param array<string, mixed> $entry Audit entry.
+	 * @return array<string, string>
+	 */
+	private function format_audit_display( array $entry ) {
+		return array(
+			'time'   => $this->audit_labels->format_datetime( $entry['created_at'] ?? '' ),
+			'user'   => $this->audit_labels->format_user_label( $entry['user_id'] ?? 0 ),
+			'action' => $this->audit_labels->get_action_label( $entry['action'] ?? '' ),
+			'object' => $this->audit_labels->format_object_summary( $entry ),
 		);
 	}
 
@@ -201,10 +226,11 @@ class AdminRenderer {
 				<thead><tr><th><?php esc_html_e( 'Time', 'platform-core' ); ?></th><th><?php esc_html_e( 'Action', 'platform-core' ); ?></th><th><?php esc_html_e( 'Object', 'platform-core' ); ?></th></tr></thead>
 				<tbody>
 					<?php foreach ( $summary['recent_audit'] as $entry ) : ?>
+						<?php $audit_row = $this->format_audit_display( $entry ); ?>
 						<tr>
-							<td><?php echo esc_html( $entry['created_at'] ); ?></td>
-							<td><code><?php echo esc_html( $entry['action'] ); ?></code></td>
-							<td><?php echo esc_html( $entry['object_type'] . ( $entry['object_id'] ? ':' . $entry['object_id'] : '' ) ); ?></td>
+							<td><?php echo esc_html( $audit_row['time'] ); ?></td>
+							<td><?php echo esc_html( $audit_row['action'] ); ?></td>
+							<td><?php echo esc_html( $audit_row['object'] ); ?></td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
@@ -287,13 +313,16 @@ class AdminRenderer {
 		} else {
 			?>
 			<form method="get" action="<?php echo esc_url( mpp_route_url( 'app/admin/users' ) ); ?>" class="mpp-admin-search">
-				<input type="search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search users...', 'platform-core' ); ?>">
-				<select name="role_id" class="mpp-select">
+				<label class="screen-reader-text" for="mpp-admin-user-search"><?php esc_html_e( 'Search users', 'platform-core' ); ?></label>
+				<input type="search" id="mpp-admin-user-search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search users...', 'platform-core' ); ?>">
+				<label class="screen-reader-text" for="mpp-admin-user-role"><?php esc_html_e( 'Platform role', 'platform-core' ); ?></label>
+				<select id="mpp-admin-user-role" name="role_id" class="mpp-select" aria-label="<?php esc_attr_e( 'Platform role', 'platform-core' ); ?>">
 					<?php foreach ( $role_options as $value => $label ) : ?>
 						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( (string) $role_id, (string) $value ); ?>><?php echo esc_html( $label ); ?></option>
 					<?php endforeach; ?>
 				</select>
-				<select name="status" class="mpp-select">
+				<label class="screen-reader-text" for="mpp-admin-user-status"><?php esc_html_e( 'Status', 'platform-core' ); ?></label>
+				<select id="mpp-admin-user-status" name="status" class="mpp-select" aria-label="<?php esc_attr_e( 'Status', 'platform-core' ); ?>">
 					<?php foreach ( $status_options as $value => $label ) : ?>
 						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $status, $value ); ?>><?php echo esc_html( $label ); ?></option>
 					<?php endforeach; ?>
@@ -554,18 +583,18 @@ class AdminRenderer {
 			<?php endif; ?>
 
 			<?php if ( ! $is_edit ) : ?>
-				<label><?php esc_html_e( 'Slug', 'platform-core' ); ?></label>
-				<input type="text" name="slug" required pattern="[a-z0-9_-]+">
+				<label for="mpp-role-slug"><?php esc_html_e( 'Slug', 'platform-core' ); ?></label>
+				<input type="text" id="mpp-role-slug" name="slug" required pattern="[a-z0-9_-]+">
 			<?php endif; ?>
 
-			<label><?php esc_html_e( 'Name', 'platform-core' ); ?></label>
-			<input type="text" name="name" required value="<?php echo $is_edit ? esc_attr( $role['name'] ) : ''; ?>">
+			<label for="mpp-role-name"><?php esc_html_e( 'Name', 'platform-core' ); ?></label>
+			<input type="text" id="mpp-role-name" name="name" required value="<?php echo $is_edit ? esc_attr( $role['name'] ) : ''; ?>">
 
-			<label><?php esc_html_e( 'Description', 'platform-core' ); ?></label>
-			<textarea name="description" rows="3"><?php echo $is_edit ? esc_textarea( $role['description'] ) : ''; ?></textarea>
+			<label for="mpp-role-description"><?php esc_html_e( 'Description', 'platform-core' ); ?></label>
+			<textarea id="mpp-role-description" name="description" rows="3"><?php echo $is_edit ? esc_textarea( $role['description'] ) : ''; ?></textarea>
 
-			<label><?php esc_html_e( 'Status', 'platform-core' ); ?></label>
-			<select name="status">
+			<label for="mpp-role-status"><?php esc_html_e( 'Status', 'platform-core' ); ?></label>
+			<select id="mpp-role-status" name="status" aria-label="<?php esc_attr_e( 'Role status', 'platform-core' ); ?>">
 				<option value="active" <?php selected( $is_edit ? ( $role['status'] ?? 'active' ) : 'active', 'active' ); ?>><?php esc_html_e( 'Active', 'platform-core' ); ?></option>
 				<option value="inactive" <?php selected( $is_edit ? ( $role['status'] ?? 'active' ) : '', 'inactive' ); ?>><?php esc_html_e( 'Inactive', 'platform-core' ); ?></option>
 			</select>
@@ -574,11 +603,35 @@ class AdminRenderer {
 		</form>
 
 		<?php if ( $is_edit && empty( $role['is_system'] ) ) : ?>
-			<form method="post" class="mpp-form mpp-card" style="margin-top:1rem" onsubmit="return confirm('<?php echo esc_js( __( 'Delete this role?', 'platform-core' ) ); ?>');">
+			<?php
+			$delete_impact = $this->access->preview_role_delete_impact( $role_id );
+			?>
+			<div class="mpp-impact-preview mpp-card" style="margin-top:1rem">
+				<h3><?php esc_html_e( 'Delete impact', 'platform-core' ); ?></h3>
+				<p class="mpp-muted">
+					<?php
+					printf(
+						/* translators: 1: user count, 2: permission count */
+						esc_html__( '%1$d users and %2$d permissions are linked to this role.', 'platform-core' ),
+						(int) $delete_impact['user_count'],
+						(int) $delete_impact['permission_count']
+					);
+					?>
+				</p>
+				<?php if ( ! empty( $delete_impact['routes'] ) ) : ?>
+					<p class="mpp-muted"><?php esc_html_e( 'Routes that may become inaccessible for affected users:', 'platform-core' ); ?></p>
+					<ul class="mpp-impact-preview__routes">
+						<?php foreach ( $delete_impact['routes'] as $route ) : ?>
+							<li><code><?php echo esc_html( $route['slug'] ); ?></code> — <?php echo esc_html( $route['title'] ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+			</div>
+			<form method="post" class="mpp-form mpp-card" style="margin-top:1rem" data-mpp-confirm="<?php echo esc_attr( sprintf( __( 'Delete the "%s" role? %d users will lose permissions granted only through this role.', 'platform-core' ), $role['name'], (int) $delete_impact['user_count'] ) ); ?>">
 				<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<input type="hidden" name="mpp_admin_action" value="delete_role">
 				<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
-				<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( mpp_route_url( 'app/admin/roles' ) ); ?>">
+				<?php echo FormHandler::redirect_field( mpp_route_url( 'app/admin/roles' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<button type="submit" class="mpp-btn mpp-btn--danger"><?php esc_html_e( 'Delete Role', 'platform-core' ); ?></button>
 			</form>
 		<?php endif; ?>
@@ -634,7 +687,7 @@ class AdminRenderer {
 			);
 		}
 		?>
-		<div class="mpp-perm-tree">
+		<div class="mpp-perm-tree mpp-perm-tree--responsive">
 			<?php foreach ( $tree as $module => $resources ) : ?>
 				<?php if ( $module_filter && $module_filter !== $module ) { continue; } ?>
 				<section class="mpp-perm-tree__module">
@@ -711,6 +764,25 @@ class AdminRenderer {
 			),
 			mpp_route_url( 'app/admin/roles' )
 		);
+		$role           = $this->roles->find( $role_id );
+		$unavailable    = $this->scopes->unavailable_scope_labels();
+		$initial_granted = array_map( 'intval', array_keys( $assigned ) );
+		$confirm_save   = sprintf(
+			/* translators: %s: role name */
+			__( 'Save permission changes for the "%s" role?', 'platform-core' ),
+			$role['name'] ?? ''
+		);
+		$sync_impact    = $this->access->preview_permission_sync_impact( $role_id, $initial_granted );
+		$permission_routes = array();
+
+		foreach ( $tree as $resources ) {
+			foreach ( $resources as $actions ) {
+				foreach ( $actions as $action ) {
+					$pid = (int) $action['id'];
+					$permission_routes[ $pid ] = $this->access->get_routes_for_permission_key( $action['key'] );
+				}
+			}
+		}
 		?>
 		<form method="get" action="<?php echo esc_url( mpp_route_url( 'app/admin/roles' ) ); ?>" class="mpp-filter-bar">
 			<input type="hidden" name="view" value="<?php echo esc_attr( (string) $role_id ); ?>">
@@ -722,11 +794,40 @@ class AdminRenderer {
 			<button type="submit" class="mpp-btn mpp-btn--secondary"><?php esc_html_e( 'Search', 'platform-core' ); ?></button>
 		</form>
 
-		<form method="post" class="mpp-role-permissions">
+		<form method="post" class="mpp-role-permissions" data-mpp-confirm-save="<?php echo esc_attr( $confirm_save ); ?>" data-initial-granted="<?php echo esc_attr( wp_json_encode( $initial_granted ) ); ?>" data-permission-routes="<?php echo esc_attr( wp_json_encode( $permission_routes ) ); ?>">
 			<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<input type="hidden" name="mpp_admin_action" value="save_role_permissions">
 			<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role_id ); ?>">
-			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( $redirect ); ?>">
+			<?php echo FormHandler::redirect_field( $redirect ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+
+			<?php if ( ! empty( $unavailable ) ) : ?>
+				<p class="mpp-scope-hint mpp-muted">
+					<?php
+					printf(
+						/* translators: %s: comma-separated scope labels */
+						esc_html__( 'Only All and Own scopes are available. These scopes are not yet supported: %s.', 'platform-core' ),
+						esc_html( implode( ', ', $unavailable ) )
+					);
+					?>
+				</p>
+			<?php endif; ?>
+
+			<div class="mpp-impact-preview" id="mpp-role-perm-impact" data-user-count="<?php echo esc_attr( (string) $sync_impact['user_count'] ); ?>">
+				<p class="mpp-impact-preview__summary mpp-muted">
+					<?php
+					printf(
+						/* translators: %d: user count */
+						esc_html__( '%d users inherit permissions from this role.', 'platform-core' ),
+						(int) $sync_impact['user_count']
+					);
+					?>
+				</p>
+				<p class="mpp-impact-preview__delta mpp-muted" data-impact-delta hidden></p>
+				<div class="mpp-impact-preview__routes" data-impact-revoked hidden>
+					<p class="mpp-muted"><?php esc_html_e( 'Routes that may become inaccessible:', 'platform-core' ); ?></p>
+					<ul data-impact-revoked-list></ul>
+				</div>
+			</div>
 
 			<?php foreach ( $tree as $module => $resources ) : ?>
 				<?php
@@ -1174,11 +1275,12 @@ class AdminRenderer {
 					<tr><td colspan="5"><?php esc_html_e( 'No audit entries matched your filters.', 'platform-core' ); ?></td></tr>
 				<?php else : ?>
 				<?php foreach ( $entries as $entry ) : ?>
+					<?php $audit_row = $this->format_audit_display( $entry ); ?>
 					<tr>
-						<td data-label="<?php esc_attr_e( 'Time', 'platform-core' ); ?>"><?php echo esc_html( $entry['created_at'] ); ?></td>
-						<td data-label="<?php esc_attr_e( 'User', 'platform-core' ); ?>"><?php echo esc_html( (string) $entry['user_id'] ); ?></td>
-						<td data-label="<?php esc_attr_e( 'Action', 'platform-core' ); ?>"><code><?php echo esc_html( $entry['action'] ); ?></code></td>
-						<td data-label="<?php esc_attr_e( 'Object', 'platform-core' ); ?>"><?php echo esc_html( $entry['object_type'] . ( $entry['object_id'] ? ':' . $entry['object_id'] : '' ) ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Time', 'platform-core' ); ?>"><?php echo esc_html( $audit_row['time'] ); ?></td>
+						<td data-label="<?php esc_attr_e( 'User', 'platform-core' ); ?>"><?php echo esc_html( $audit_row['user'] ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Action', 'platform-core' ); ?>"><?php echo esc_html( $audit_row['action'] ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Object', 'platform-core' ); ?>"><?php echo esc_html( $audit_row['object'] ); ?></td>
 						<td data-label="<?php esc_attr_e( 'IP', 'platform-core' ); ?>"><?php echo esc_html( $entry['ip_address'] ); ?></td>
 					</tr>
 				<?php endforeach; ?>
@@ -1235,6 +1337,7 @@ class AdminRenderer {
 
 		$role_usage = $this->access->get_roles_using_permission( $permission_id );
 		$user_count = $this->access->count_users_with_permission( $permission_id );
+		$routes     = $this->access->get_routes_for_permission_key( $permission['permission_key'] );
 		$audit      = $this->audit->query(
 			array(
 				'object_type' => 'role_permission',
@@ -1254,6 +1357,16 @@ class AdminRenderer {
 				<dt><?php esc_html_e( 'Users with access', 'platform-core' ); ?></dt><dd><?php echo esc_html( (string) $user_count ); ?></dd>
 			</dl>
 			<p class="mpp-muted"><?php esc_html_e( 'A permission alone does not create access. Effective access is calculated from roles, permissions, and scope.', 'platform-core' ); ?></p>
+			<?php if ( ! empty( $routes ) ) : ?>
+				<div class="mpp-impact-preview">
+					<p class="mpp-muted"><?php esc_html_e( 'Routes protected by this permission:', 'platform-core' ); ?></p>
+					<ul class="mpp-impact-preview__routes">
+						<?php foreach ( $routes as $route ) : ?>
+							<li><code><?php echo esc_html( $route['slug'] ); ?></code> — <?php echo esc_html( $route['title'] ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<h3><?php esc_html_e( 'Used by roles', 'platform-core' ); ?></h3>
@@ -1280,7 +1393,14 @@ class AdminRenderer {
 		<?php else : ?>
 			<ul class="mpp-activity-list">
 				<?php foreach ( $audit as $entry ) : ?>
-					<li><code><?php echo esc_html( $entry['action'] ); ?></code> — <?php echo esc_html( $entry['created_at'] ); ?></li>
+					<?php $audit_row = $this->format_audit_display( $entry ); ?>
+					<li>
+						<strong><?php echo esc_html( $audit_row['action'] ); ?></strong>
+						<span class="mpp-muted"><?php echo esc_html( $audit_row['time'] ); ?></span>
+						<?php if ( $audit_row['user'] ) : ?>
+							<span class="mpp-muted"> — <?php echo esc_html( $audit_row['user'] ); ?></span>
+						<?php endif; ?>
+					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php endif; ?>
@@ -1680,12 +1800,12 @@ class AdminRenderer {
 			<?php foreach ( $user['platform_roles'] as $role ) : ?>
 				<li class="mpp-admin-list__item--chip">
 					<?php $this->render_platform_role_chips( array( $role ) ); ?>
-					<form method="post" class="mpp-inline-form">
+					<form method="post" class="mpp-inline-form" data-mpp-confirm="<?php echo esc_attr( sprintf( __( 'Remove the "%s" role from this user?', 'platform-core' ), $role['name'] ) ); ?>">
 						<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<input type="hidden" name="mpp_admin_action" value="revoke_user_role">
 						<input type="hidden" name="user_id" value="<?php echo esc_attr( (string) $user_id ); ?>">
 						<input type="hidden" name="role_id" value="<?php echo esc_attr( (string) $role['id'] ); ?>">
-						<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( $redirect ); ?>">
+						<?php echo FormHandler::redirect_field( $redirect ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<button type="submit" class="mpp-btn mpp-btn--danger mpp-btn--sm"><?php esc_html_e( 'Remove', 'platform-core' ); ?></button>
 					</form>
 				</li>
@@ -1696,8 +1816,9 @@ class AdminRenderer {
 			<?php echo FormHandler::nonce_field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<input type="hidden" name="mpp_admin_action" value="assign_user_role">
 			<input type="hidden" name="user_id" value="<?php echo esc_attr( (string) $user_id ); ?>">
-			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( $redirect ); ?>">
-			<select name="role_id" required>
+			<?php echo FormHandler::redirect_field( $redirect ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<label for="mpp-assign-role-select"><?php esc_html_e( 'Platform role', 'platform-core' ); ?></label>
+			<select id="mpp-assign-role-select" name="role_id" required aria-label="<?php esc_attr_e( 'Select role to assign', 'platform-core' ); ?>">
 				<option value=""><?php esc_html_e( 'Select role...', 'platform-core' ); ?></option>
 				<?php foreach ( $all_roles as $role ) : ?>
 					<?php if ( in_array( (int) $role['id'], $assigned, true ) ) { continue; } ?>

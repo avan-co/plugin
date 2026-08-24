@@ -65,4 +65,25 @@
 			strengthLabel.textContent = labels[Math.max(0, Math.min(score - 1, labels.length - 1))];
 		});
 	}
+
+	var registerForm = document.querySelector('form.mpp-form');
+
+	if (registerForm && document.getElementById('user_pass_confirm')) {
+		registerForm.addEventListener('submit', function (event) {
+			var pass = document.getElementById('user_pass');
+			var confirm = document.getElementById('user_pass_confirm');
+
+			if (!pass || !confirm) {
+				return;
+			}
+
+			if (pass.value !== confirm.value) {
+				event.preventDefault();
+				confirm.setCustomValidity(i18n.passwordMismatch || 'Passwords do not match.');
+				confirm.reportValidity();
+			} else {
+				confirm.setCustomValidity('');
+			}
+		});
+	}
 })();

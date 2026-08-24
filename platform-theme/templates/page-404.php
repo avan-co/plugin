@@ -7,18 +7,26 @@
 
 defined( 'ABSPATH' ) || exit;
 
+require_once get_template_directory() . '/inc/error-page.php';
+
 get_header();
-?>
 
-<main class="mpp-main mpp-main--centered">
-	<div class="mpp-card mpp-card--error">
-		<h1>404</h1>
-		<p><?php esc_html_e( 'The page you are looking for does not exist.', 'platform-theme' ); ?></p>
-		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="mpp-btn mpp-btn--primary">
-			<?php esc_html_e( 'Go Home', 'platform-theme' ); ?>
-		</a>
-	</div>
-</main>
+platform_render_error_page(
+	'404',
+	__( 'Page not found', 'platform-theme' ),
+	__( 'The address may be incorrect, or the page may have been moved or removed.', 'platform-theme' ),
+	array(
+		array(
+			'label'   => __( 'Go to Dashboard', 'platform-theme' ),
+			'url'     => is_user_logged_in() && function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app' ) : home_url( '/' ),
+			'variant' => 'primary',
+		),
+		array(
+			'label'   => __( 'Home', 'platform-theme' ),
+			'url'     => home_url( '/' ),
+			'variant' => 'secondary',
+		),
+	)
+);
 
-<?php
 get_footer();

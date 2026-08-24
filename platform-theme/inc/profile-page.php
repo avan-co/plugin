@@ -33,7 +33,7 @@ function platform_render_profile_content( $redirect_url ) {
 						sprintf(
 							/* translators: %s: registration date */
 							__( 'Member since %s', 'platform-theme' ),
-							mysql2date( get_option( 'date_format' ), $user->user_registered )
+							function_exists( 'mpp_format_date' ) ? mpp_format_date( $user->user_registered ) : mysql2date( get_option( 'date_format' ), $user->user_registered )
 						)
 					);
 					?>
@@ -78,12 +78,14 @@ function platform_render_profile_content( $redirect_url ) {
 						echo platform_ui_form_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							array(
 								'id'          => 'mpp-profile-username',
+								'name'        => 'mpp_username_display',
 								'label'       => __( 'Username', 'platform-theme' ),
 								'value'       => $user->user_login,
 								'description' => __( 'Usernames cannot be changed.', 'platform-theme' ),
 								'attributes'  => array(
-									'disabled' => 'disabled',
-									'readonly' => 'readonly',
+									'readonly'     => 'readonly',
+									'aria-readonly' => 'true',
+									'tabindex'     => '-1',
 								),
 							)
 						);
@@ -121,7 +123,7 @@ function platform_render_profile_content( $redirect_url ) {
 				<dd><?php echo esc_html( $user->user_email ); ?></dd>
 
 				<dt><?php esc_html_e( 'Registered', 'platform-theme' ); ?></dt>
-				<dd><?php echo esc_html( mysql2date( get_option( 'date_format' ), $user->user_registered ) ); ?></dd>
+				<dd><?php echo esc_html( function_exists( 'mpp_format_date' ) ? mpp_format_date( $user->user_registered ) : mysql2date( get_option( 'date_format' ), $user->user_registered ) ); ?></dd>
 
 				<dt><?php esc_html_e( 'Platform Roles', 'platform-theme' ); ?></dt>
 				<dd><?php echo esc_html( ! empty( $roles ) ? implode( ', ', $roles ) : '—' ); ?></dd>

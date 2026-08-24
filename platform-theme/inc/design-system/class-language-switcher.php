@@ -190,17 +190,37 @@ final class LanguageSwitcher {
 	 * @return bool
 	 */
 	public static function should_render() {
+		if ( is_admin() ) {
+			return false;
+		}
+
+		if ( is_front_page() ) {
+			return true;
+		}
+
 		if ( ! function_exists( 'mpp_get_current_route' ) ) {
-			return is_user_logged_in();
+			return false;
 		}
 
 		$route = mpp_get_current_route();
 
-		if ( ! $route || empty( $route['slug'] ) ) {
-			return is_user_logged_in();
+		return $route && ! empty( $route['slug'] );
+	}
+
+	/**
+	 * Text direction for the active locale.
+	 *
+	 * @return string
+	 */
+	public static function get_text_direction() {
+		$locales = self::get_locales();
+		$active  = determine_locale();
+
+		if ( isset( $locales[ $active ]['dir'] ) ) {
+			return $locales[ $active ]['dir'];
 		}
 
-		return 0 === strpos( $route['slug'], 'app/' ) || in_array( $route['slug'], array( 'profile', 'settings', 'app' ), true );
+		return is_rtl() ? 'rtl' : 'ltr';
 	}
 
 	/**

@@ -28,6 +28,7 @@ class Installer {
 
 		self::seed_scopes();
 		self::seed_permissions_and_roles();
+		self::repair_invalid_scope_types();
 
 		delete_option( 'mpp_routes_version' );
 	}
@@ -50,6 +51,7 @@ class Installer {
 			self::create_tables();
 			self::seed_scopes();
 			self::seed_permissions_and_roles();
+			self::repair_invalid_scope_types();
 			delete_option( 'mpp_permissions_hash' );
 			update_option( Schema::VERSION_OPTION, Schema::DB_VERSION );
 			delete_option( 'mpp_routes_version' );
@@ -200,5 +202,32 @@ class Installer {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Repair role permissions corrupted by invalid scope_type values (e.g. "0").
+	 *
+	 * Only updates rows tied to system default roles.
+	 */
+	private static function repair_invalid_scope_types() {
+		global $wpdb;
+
+		$roles_table = Schema::table( 'roles' );
+		$rp_table    = Schema::table( 'role_permissions' );
+
+		$system_role_ids = $wpdb->get_col( "SELECT id FROM {$roles_table} WHERE is_system = 1" );
+
+		if ( empty( $system_role_ids ) ) {
+			return;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $system_role_ids ), '%d' ) );
+
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$rp_table} SET scope_type = 'all' WHERE scope_type = '0' AND role_id IN ({$placeholders})",
+				...array_map( 'intval', $system_role_ids )
+			)
+		);
 	}
 }

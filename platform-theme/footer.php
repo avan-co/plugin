@@ -7,14 +7,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$route = function_exists( 'mpp_get_current_route' ) ? mpp_get_current_route() : null;
-$panel = ( $route && 0 === strpos( $route['slug'], 'app/' ) ) ? explode( '/', $route['slug'] )[1] ?? '' : '';
+$route       = function_exists( 'mpp_get_current_route' ) ? mpp_get_current_route() : null;
+$is_panel    = $route && ! empty( $route['slug'] ) && 0 === strpos( $route['slug'], 'app/' );
+$footer_class = 'mpp-footer' . ( $is_panel ? ' mpp-footer--compact' : '' );
 ?>
 
-<footer class="mpp-footer">
+<footer class="<?php echo esc_attr( $footer_class ); ?>">
 	<div class="mpp-footer__inner">
+		<?php if ( ! $is_panel ) : ?>
 		<div class="mpp-footer__brand">
-			<strong><?php bloginfo( 'name' ); ?></strong>
+			<strong><?php echo esc_html( function_exists( 'mpp_get_platform_name' ) ? mpp_get_platform_name() : get_bloginfo( 'name' ) ); ?></strong>
 			<p class="mpp-footer__tagline"><?php esc_html_e( 'Modular platform workspace', 'platform-theme' ); ?></p>
 		</div>
 		<div class="mpp-footer__links">
@@ -24,7 +26,8 @@ $panel = ( $route && 0 === strpos( $route['slug'], 'app/' ) ) ? explode( '/', $r
 				<a href="<?php echo esc_url( mpp_route_url( 'settings' ) ); ?>"><?php esc_html_e( 'Settings', 'platform-theme' ); ?></a>
 			<?php endif; ?>
 		</div>
-		<p class="mpp-footer__copy">&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?></p>
+		<?php endif; ?>
+		<p class="mpp-footer__copy">&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php echo esc_html( function_exists( 'mpp_get_platform_name' ) ? mpp_get_platform_name() : get_bloginfo( 'name' ) ); ?></p>
 	</div>
 </footer>
 

@@ -119,7 +119,7 @@ function mpp_is_auth_route() {
 		return false;
 	}
 
-	return in_array( $route['slug'], array( 'login', 'register', 'forgot-password' ), true );
+	return in_array( $route['slug'], array( 'login', 'register', 'forgot-password', 'reset-password' ), true );
 }
 
 /**
@@ -129,6 +129,23 @@ function mpp_is_auth_route() {
  */
 function mpp_forgot_password_url() {
 	return mpp_route_url( 'forgot-password' );
+}
+
+/**
+ * Get the themed reset-password URL.
+ *
+ * @param string $key        Reset key from email.
+ * @param string $user_login User login.
+ * @return string
+ */
+function mpp_reset_password_url( $key, $user_login ) {
+	return add_query_arg(
+		array(
+			'key'   => $key,
+			'login' => $user_login,
+		),
+		mpp_route_url( 'reset-password' )
+	);
 }
 
 /**
@@ -212,13 +229,6 @@ function mpp_get_panel_navigation( $panel ) {
 				'permission'  => 'core.settings.view',
 				'section'     => 'account',
 				'description' => __( 'Preferences and notifications', 'platform-core' ),
-			),
-			array(
-				'label'       => __( 'Logout', 'platform-core' ),
-				'url'         => mpp_logout_url(),
-				'route'       => '',
-				'section'     => 'system',
-				'description' => __( 'Sign out of the platform', 'platform-core' ),
 			),
 		),
 		'manager' => array(
@@ -305,18 +315,23 @@ function mpp_get_admin_navigation() {
 					'route'       => 'app/admin/users',
 					'description' => __( 'Accounts and role assignments', 'platform-core' ),
 				),
-				array(
-					'label'       => __( 'Roles', 'platform-core' ),
-					'route'       => 'app/admin/roles',
-					'description' => __( 'Role definitions and members', 'platform-core' ),
-				),
 			),
 		),
 		array(
-			'label'       => __( 'Permissions', 'platform-core' ),
-			'route'       => 'app/admin/permissions',
-			'permission'  => 'core.acl.manage',
-			'description' => __( 'Browse and inspect permissions', 'platform-core' ),
+			'label'      => __( 'Roles & Permissions', 'platform-core' ),
+			'permission' => 'core.acl.manage',
+			'children'   => array(
+				array(
+					'label'       => __( 'Roles', 'platform-core' ),
+					'route'       => 'app/admin/roles',
+					'description' => __( 'Role definitions and permission grants', 'platform-core' ),
+				),
+				array(
+					'label'       => __( 'Permissions', 'platform-core' ),
+					'route'       => 'app/admin/permissions',
+					'description' => __( 'Permission catalog and usage', 'platform-core' ),
+				),
+			),
 		),
 		array(
 			'label'       => __( 'ACL', 'platform-core' ),
@@ -487,9 +502,13 @@ function mpp_render_account_notice() {
 		return;
 	}
 
+	$role = 'success' === $type ? 'status' : 'alert';
+
 	printf(
-		'<div class="mpp-alert mpp-alert--%s" role="alert">%s</div>',
+		'<div class="mpp-alert mpp-alert--%s" role="%s"%s>%s</div>',
 		esc_attr( $alert_type ),
+		esc_attr( $role ),
+		'success' === $type ? ' aria-live="polite"' : '',
 		esc_html( $message )
 	);
 }
@@ -617,6 +636,71 @@ function mpp_get_platform_name() {
 	}
 
 	return (string) $settings->get( 'platform_name', get_bloginfo( 'name' ) );
+}
+
+/**
+ * Resolve the post-login redirect URL for a user.
+ *
+ * Uses the configured default dashboard when the user can access it.
+ *
+ * @param int $user_id User ID.
+ * @return string
+ */
+function mpp_get_post_login_redirect_url( $user_id = 0 ) {
+	$user_id = $user_id ? (int) $user_id : get_current_user_id();
+	$routes  = mpp_get_routes();
+	$slug    = 'app';
+
+	$settings = mpp_platform_settings();
+
+	if ( $settings ) {
+		$configured = sanitize_text_field( (string) $settings->get( 'default_dashboard', 'app/user' ) );
+
+		if ( isset( $routes[ $configured ] ) ) {
+			$slug = $configured;
+		}
+	}
+
+	$definition = $routes[ $slug ] ?? null;
+
+	if ( $definition && ! empty( $definition['permission'] ) && ! mpp_can( $user_id, $definition['permission'] ) ) {
+		$slug = 'app';
+	}
+
+	return mpp_route_url( $slug );
+}
+
+/**
+ * Format a date/time using the platform date format preference.
+ *
+ * @param string $datetime MySQL datetime string.
+ * @param bool   $gmt      Whether the input is GMT.
+ * @return string
+ */
+function mpp_format_date( $datetime, $gmt = false ) {
+	if ( '' === $datetime ) {
+		return '';
+	}
+
+	$format = get_option( 'date_format' );
+
+	return mysql2date( $format, $datetime, $gmt );
+}
+
+/**
+ * Human-readable label for an audit log action key.
+ *
+ * @param string $action Audit action slug.
+ * @return string
+ */
+function mpp_format_audit_action( $action ) {
+	if ( ! function_exists( 'mpp' ) ) {
+		return $action;
+	}
+
+	$service = mpp()->get( \MPP\Services\AuditLabelService::class );
+
+	return $service->get_action_label( $action );
 }
 
 /**

@@ -111,9 +111,10 @@ final class PanelNavigation {
 		echo '<div class="mpp-nav__section">' . esc_html__( 'Account', 'platform-theme' ) . '</div>';
 		echo '<ul class="mpp-nav__list">';
 		printf(
-			'<li class="mpp-nav__item%s"><a href="%s"><span class="mpp-nav__label">%s</span><span class="mpp-nav__desc">%s</span></a></li>',
+			'<li class="mpp-nav__item%s"><a href="%s"%s><span class="mpp-nav__label">%s</span><span class="mpp-nav__desc">%s</span></a></li>',
 			'profile' === $current_slug ? ' mpp-nav__item--active' : '',
 			esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'profile' ) : home_url( '/profile' ) ),
+			'profile' === $current_slug ? ' aria-current="page"' : '',
 			esc_html__( 'Profile', 'platform-theme' ),
 			esc_html__( 'Your account details', 'platform-theme' )
 		);
@@ -176,9 +177,10 @@ final class PanelNavigation {
 		}
 
 		printf(
-			'<li class="%s"><a href="%s"><span class="mpp-nav__label">%s</span>%s</a></li>',
+			'<li class="%s"><a href="%s"%s><span class="mpp-nav__label">%s</span>%s</a></li>',
 			esc_attr( implode( ' ', $classes ) ),
 			esc_url( $item['url'] ),
+			$active ? ' aria-current="page"' : '',
 			esc_html( $item['label'] ),
 			! empty( $item['description'] ) ? '<span class="mpp-nav__desc">' . esc_html( $item['description'] ) . '</span>' : ''
 		);
@@ -229,9 +231,10 @@ final class PanelNavigation {
 		$active = $route && function_exists( 'platform_is_route' ) && platform_is_route( $route );
 
 		printf(
-			'<li class="mpp-nav__item%s"><a href="%s"><span class="mpp-nav__label">%s</span>%s</a></li>',
+			'<li class="mpp-nav__item%s"><a href="%s"%s><span class="mpp-nav__label">%s</span>%s</a></li>',
 			$active ? ' mpp-nav__item--active' : '',
 			esc_url( $item['url'] ),
+			$active ? ' aria-current="page"' : '',
 			esc_html( $item['label'] ),
 			! empty( $item['description'] ) ? '<span class="mpp-nav__desc">' . esc_html( $item['description'] ) . '</span>' : ''
 		);

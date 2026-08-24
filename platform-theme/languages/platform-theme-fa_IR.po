@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: platform-theme\n"
@@ -6,152 +7,162 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "A unified infrastructure for users, roles, permissions, and user, manager, and admin panels with a modular, secure architecture."
-msgstr "A unified infrastructure for users, roles, permissions, and user, manager, and admin panels with a modular, secure architecture."
+msgid ""
+"A unified infrastructure for users, roles, permissions, and user, manager, "
+"and admin panels with a modular, secure architecture."
+msgstr ""
+"زیرساخت یکپارچه برای کاربران، نقش‌ها، مجوزها و پنل‌های کاربر، مدیر و ادمین "
+"با معماری ماژولار و امن."
 
 msgid "ACL"
-msgstr "ACL"
+msgstr "کنترل دسترسی"
 
 msgid "ACL Overview"
-msgstr "ACL Overview"
+msgstr "نمای ACL"
 
 msgid "Access the panel that matches your permissions."
-msgstr "Access the panel that matches your permissions."
+msgstr "به پنلی که با مجوزهای شما مطابقت دارد وارد شوید."
 
 msgid "Accessible Panels"
-msgstr "Accessible Panels"
+msgstr "پنل‌های در دسترس"
 
 msgid "Account"
-msgstr "Account"
+msgstr "حساب کاربری"
 
 msgid "Account Status"
-msgstr "Account Status"
+msgstr "وضعیت حساب"
 
 msgid "Active"
-msgstr "Active"
+msgstr "فعال"
 
 msgid "Activity"
-msgstr "Activity"
+msgstr "فعالیت"
 
 msgid "Add independent modules without changing the platform core."
-msgstr "Add independent modules without changing the platform core."
+msgstr "ماژول‌های مستقل بدون تغییر هسته پلتفرم اضافه کنید."
 
 msgid "Admin"
-msgstr "Admin"
+msgstr "مدیریت"
 
 msgid "Admin Dashboard"
-msgstr "Admin Dashboard"
+msgstr "داشبورد ادمین"
 
 msgid "Admin Panel"
-msgstr "Admin Panel"
+msgstr "پنل ادمین"
 
 msgid "Admin Settings"
-msgstr "Admin Settings"
+msgstr "تنظیمات ادمین"
 
 msgid "Admin panel navigation"
-msgstr "Admin panel navigation"
+msgstr "ناوبری پنل ادمین"
 
 msgid "Administrative changes are recorded for review."
-msgstr "Administrative changes are recorded for review."
+msgstr "تغییرات مدیریتی برای بازبینی ثبت می‌شوند."
 
 msgid "Already have an account?"
-msgstr "Already have an account?"
+msgstr "قبلاً حساب دارید؟"
 
 msgid "Architecture overview"
-msgstr "Architecture overview"
+msgstr "نمای کلی معماری"
 
 msgid "Audit platform access control activity and assignments."
-msgstr "Audit platform access control activity and assignments."
+msgstr "فعالیت و تخصیص‌های کنترل دسترسی پلتفرم را ممیزی کنید."
 
 msgid "Audit trail"
-msgstr "Audit trail"
+msgstr "رد ممیزی"
 
 msgid "Authentication and users are powered by WordPress Core."
-msgstr "Authentication and users are powered by WordPress Core."
+msgstr "احراز هویت و کاربران توسط هسته وردپرس تأمین می‌شوند."
 
 msgid "Bilingual & RTL/LTR"
-msgstr "Bilingual & RTL/LTR"
+msgstr "دو‌زبانه و RTL/LTR"
 
 msgid "Breadcrumb"
-msgstr "Breadcrumb"
+msgstr "مسیر ناوبری"
 
 msgid "Confirm Password"
-msgstr "Confirm Password"
+msgstr "تأیید رمز"
 
 msgid "Core capabilities"
-msgstr "Core capabilities"
+msgstr "قابلیت‌های هسته"
 
 msgid "Create Account"
 msgstr "ایجاد حساب"
 
 msgid "Create a platform account to access your user panel."
-msgstr "Create a platform account to access your user panel."
+msgstr "برای دسترسی به پنل کاربر، حساب پلتفرم بسازید."
 
 msgid "Create and maintain platform roles and permissions."
-msgstr "Create and maintain platform roles and permissions."
+msgstr "ایجاد و نگهداری نقش‌ها و مجوزهای پلتفرم."
 
 msgid "Dashboard"
 msgstr "داشبورد"
 
 msgid "Disabled"
-msgstr "Disabled"
+msgstr "غیرفعال"
 
 msgid "Display Name"
-msgstr "Display Name"
+msgstr "نام نمایشی"
 
 msgid "Dynamic ACL with roles, permissions, and scoped access."
-msgstr "Dynamic ACL with roles, permissions, and scoped access."
+msgstr "ACL پویا با نقش‌ها، مجوزها و دسترسی محدوده‌محور."
 
-msgid "Dynamic roles, scoped permissions, audit logging, and a dedicated ACL admin experience."
-msgstr "Dynamic roles, scoped permissions, audit logging, and a dedicated ACL admin experience."
+msgid ""
+"Dynamic roles, scoped permissions, audit logging, and a dedicated ACL admin "
+"experience."
+msgstr "نقش‌های پویا، مجوزهای محدوده‌محور، ثبت ممیزی و تجربه ادمین ACL."
 
 msgid "Email"
-msgstr "Email"
+msgstr "ایمیل"
 
 msgid "Enable email notifications"
-msgstr "Enable email notifications"
+msgstr "فعال‌سازی اعلان‌های ایمیل"
 
 msgid "Enabled"
-msgstr "Enabled"
+msgstr "فعال"
 
 msgid "Fair password"
-msgstr "Fair password"
+msgstr "رمز متوسط"
 
 msgid "Forgot password?"
 msgstr "رمز عبور را فراموش کرده‌اید؟"
 
 msgid "Go Home"
-msgstr "Go Home"
+msgstr "رفتن به خانه"
 
 msgid "Go to Dashboard"
-msgstr "Go to Dashboard"
+msgstr "رفتن به داشبورد"
 
 msgid "Good password"
-msgstr "Good password"
+msgstr "رمز خوب"
 
 msgid "Grant and revoke permissions with scope controls."
-msgstr "Grant and revoke permissions with scope controls."
+msgstr "اعطا و لغو مجوزها با کنترل محدوده."
 
 msgid "Grant or revoke permissions for each platform role."
-msgstr "Grant or revoke permissions for each platform role."
+msgstr "مجوزها را برای هر نقش پلتفرم اعطا یا لغو کنید."
 
 msgid "Hide"
-msgstr "مخفی"
+msgstr "پنهان"
 
 msgid "How it works"
-msgstr "How it works"
+msgstr "نحوه کار"
 
-msgid "Independent plugins can register routes, permissions, navigation, and dashboard widgets through Platform Core."
-msgstr "Independent plugins can register routes, permissions, navigation, and dashboard widgets through Platform Core."
+msgid ""
+"Independent plugins can register routes, permissions, navigation, and "
+"dashboard widgets through Platform Core."
+msgstr ""
+"پلاگین‌های مستقل می‌توانند مسیر، مجوز، ناوبری و ویجت داشبورد را از طریق هسته"
+" پلتفرم ثبت کنند."
 
 msgid "Installed modules can expose manager widgets here."
-msgstr "Installed modules can expose manager widgets here."
+msgstr "ماژول‌های نصب‌شده می‌توانند ویجت مدیر اینجا نمایش دهند."
 
 msgid "Log In"
-msgstr "Log In"
+msgstr "ورود"
 
 msgid "Log in"
-msgstr "Log in"
+msgstr "ورود"
 
 msgid "Login"
 msgstr "ورود"
@@ -160,199 +171,204 @@ msgid "Logout"
 msgstr "خروج"
 
 msgid "Manage WordPress users and platform role assignments."
-msgstr "Manage WordPress users and platform role assignments."
+msgstr "مدیریت کاربران وردپرس و تخصیص نقش پلتفرم."
 
 msgid "Manage users, roles, permissions, modules, and ACL."
-msgstr "Manage users, roles, permissions, modules, and ACL."
+msgstr "مدیریت کاربران، نقش‌ها، مجوزها، ماژول‌ها و ACL."
 
 msgid "Manage your account preferences and platform access summary."
-msgstr "Manage your account preferences and platform access summary."
+msgstr "ترجیحات حساب و خلاصه دسترسی پلتفرم را مدیریت کنید."
 
 msgid "Manager"
-msgstr "Manager"
+msgstr "مدیر"
 
 msgid "Manager Panel"
-msgstr "Manager Panel"
+msgstr "پنل مدیر"
 
 msgid "Manager Profile"
-msgstr "Manager Profile"
+msgstr "پروفایل مدیر"
 
 msgid "Manager panel navigation"
-msgstr "Manager panel navigation"
+msgstr "ناوبری پنل مدیر"
 
 msgid "Manager reports will be provided by future modules without fake data."
-msgstr "Manager reports will be provided by future modules without fake data."
+msgstr "گزارش‌های مدیر توسط ماژول‌های آینده بدون داده ساختگی ارائه می‌شوند."
 
-msgid "Manager workspace for oversight, module widgets, and future team tools."
-msgstr "Manager workspace for oversight, module widgets, and future team tools."
+msgid ""
+"Manager workspace for oversight, module widgets, and future team tools."
+msgstr "فضای کار مدیر برای نظارت، ویجت ماژول و ابزارهای تیم."
 
 msgid "Manager workspace with placeholders for future team tools."
-msgstr "Manager workspace with placeholders for future team tools."
+msgstr "فضای کار مدیر با placeholder برای ابزارهای تیم."
 
 msgid "Member since %s"
-msgstr "Member since %s"
+msgstr "عضو از %s"
 
 msgid "Modular architecture"
-msgstr "Modular architecture"
+msgstr "معماری ماژولار"
 
 msgid "Module Widgets"
-msgstr "Module Widgets"
+msgstr "ویجت‌های ماژول"
 
 msgid "Modules"
 msgstr "ماژول‌ها"
 
 msgid "Multi-panel WordPress platform foundation"
-msgstr "Multi-panel WordPress platform foundation"
+msgstr "بنیان پلتفرم چندپنلی وردپرس"
 
 msgid "Multiple panels"
-msgstr "Multiple panels"
+msgstr "چند پنل"
 
-msgid "Native RTL/LTR support with a shared design system for Persian and English interfaces."
-msgstr "Native RTL/LTR support with a shared design system for Persian and English interfaces."
+msgid ""
+"Native RTL/LTR support with a shared design system for Persian and English "
+"interfaces."
+msgstr "پشتیبانی بومی RTL/LTR با سیستم طراحی مشترک برای فارسی و انگلیسی."
 
 msgid "Need an account?"
-msgstr "Need an account?"
+msgstr "حساب کاربری ندارید؟"
 
 msgid "No Platform Role"
-msgstr "No Platform Role"
+msgstr "بدون نقش پلتفرم"
 
 msgid "No activity yet"
-msgstr "No activity yet"
+msgstr "هنوز فعالیتی نیست"
 
 msgid "No content found."
-msgstr "No content found."
+msgstr "محتوایی پیدا نشد."
 
 msgid "No module widgets yet"
-msgstr "No module widgets yet"
+msgstr "هنوز ویجت ماژولی نیست"
 
 msgid "No panels are available for your account. Contact an administrator."
-msgstr "No panels are available for your account. Contact an administrator."
+msgstr "پنلی برای حساب شما در دسترس نیست. با ادمین تماس بگیرید."
 
 msgid "No recent activity"
-msgstr "No recent activity"
+msgstr "فعالیت اخیر نیست"
 
-msgid "Notification preferences will appear here when notification modules are enabled."
-msgstr "Notification preferences will appear here when notification modules are enabled."
+msgid ""
+"Notification preferences will appear here when notification modules are "
+"enabled."
+msgstr "ترجیحات اعلان وقتی ماژول اعلان فعال شود اینجا نمایش داده می‌شود."
 
 msgid "Notifications"
-msgstr "Notifications"
+msgstr "اعلان‌ها"
 
 msgid "Notifications:"
-msgstr "Notifications:"
+msgstr "اعلان‌ها:"
 
 msgid "Open Settings"
-msgstr "Open Settings"
+msgstr "باز کردن تنظیمات"
 
 msgid "Overview of users, roles, modules, and recent activity."
-msgstr "Overview of users, roles, modules, and recent activity."
+msgstr "نمای کلی کاربران، نقش‌ها، ماژول‌ها و فعالیت اخیر."
 
 msgid "Panel navigation"
-msgstr "Panel navigation"
+msgstr "ناوبری پنل"
 
 msgid "Password"
-msgstr "Password"
+msgstr "رمز عبور"
 
 msgid "Password changes are managed through your WordPress account profile."
-msgstr "Password changes are managed through your WordPress account profile."
+msgstr "تغییر رمز از طریق پروفایل حساب وردپرس مدیریت می‌شود."
 
 msgid "Pending Tasks"
-msgstr "Pending Tasks"
+msgstr "وظایف در انتظار"
 
 msgid "Permission matrix"
-msgstr "Permission matrix"
+msgstr "ماتریس مجوز"
 
 msgid "Permissions"
 msgstr "مجوزهای دسترسی"
 
 msgid "Personal dashboard, profile, and account settings."
-msgstr "Personal dashboard, profile, and account settings."
+msgstr "داشبورد شخصی، پروفایل و تنظیمات حساب."
 
 msgid "Platform"
-msgstr "Platform"
+msgstr "پلتفرم"
 
 msgid "Platform Core"
-msgstr "Platform Core"
+msgstr "هسته پلتفرم"
 
 msgid "Platform Modules"
-msgstr "Platform Modules"
+msgstr "ماژول‌های پلتفرم"
 
 msgid "Platform Primary"
-msgstr "Platform Primary"
+msgstr "اصلی پلتفرم"
 
 msgid "Platform Roles"
-msgstr "Platform Roles"
+msgstr "نقش‌های پلتفرم"
 
 msgid "Platform administrators manage ACL from the admin panel."
-msgstr "Platform administrators manage ACL from the admin panel."
+msgstr "ادمین‌های پلتفرم ACL را از پنل ادمین مدیریت می‌کنند."
 
 msgid "Platform roles remain separate from WordPress roles."
-msgstr "Platform roles remain separate from WordPress roles."
+msgstr "نقش‌های پلتفرم از نقش‌های وردپرس جدا هستند."
 
 msgid "Profile"
 msgstr "پروفایل"
 
 msgid "Project oversight will appear here when a project module is installed."
-msgstr "Project oversight will appear here when a project module is installed."
+msgstr "نظارت پروژه وقتی ماژول پروژه نصب شود اینجا نمایش داده می‌شود."
 
 msgid "Projects"
-msgstr "Projects"
+msgstr "پروژه‌ها"
 
 msgid "Public navigation"
-msgstr "Public navigation"
+msgstr "ناوبری عمومی"
 
 msgid "Ready to get started?"
-msgstr "Ready to get started?"
+msgstr "آماده شروع هستید؟"
 
 msgid "Receive a platform role such as platform_user."
-msgstr "Receive a platform role such as platform_user."
+msgstr "نقش پلتفرمی مانند platform_user دریافت کنید."
 
 msgid "Recent Activity"
-msgstr "Recent Activity"
+msgstr "فعالیت اخیر"
 
 msgid "Register"
 msgstr "ثبت‌نام"
 
 msgid "Register or log in to the platform."
-msgstr "Register or log in to the platform."
+msgstr "در پلتفرم ثبت‌نام یا وارد شوید."
 
 msgid "Remember me"
 msgstr "مرا به خاطر بسپار"
 
 msgid "Reports"
-msgstr "Reports"
+msgstr "گزارش‌ها"
 
 msgid "Review core platform configuration and runtime status."
-msgstr "Review core platform configuration and runtime status."
+msgstr "پیکربندی هسته و وضعیت زمان اجرا را بازبینی کنید."
 
 msgid "Review registered platform modules and their capabilities."
-msgstr "Review registered platform modules and their capabilities."
+msgstr "بررسی ماژول‌های ثبت‌شده و قابلیت‌های آن‌ها."
 
 msgid "Role and access management"
-msgstr "Role and access management"
+msgstr "مدیریت نقش و دسترسی"
 
 msgid "Role-based access"
-msgstr "Role-based access"
+msgstr "دسترسی نقش‌محور"
 
 msgid "Roles"
 msgstr "نقش‌ها"
 
 msgid "Save Profile"
-msgstr "Save Profile"
+msgstr "ذخیره پروفایل"
 
 msgid "Save Settings"
 msgstr "ذخیره تنظیمات"
 
 msgid "Security"
-msgstr "Security"
+msgstr "امنیت"
 
 msgid "Security & ACL"
-msgstr "Security & ACL"
+msgstr "امنیت و ACL"
 
 msgid "Select a panel to continue."
-msgstr "Select a panel to continue."
+msgstr "برای ادامه یک پنل انتخاب کنید."
 
 msgid "Separate experiences for users, managers, and administrators."
-msgstr "Separate experiences for users, managers, and administrators."
+msgstr "تجربه‌های جدا برای کاربران، مدیران و ادمین‌ها."
 
 msgid "Settings"
 msgstr "تنظیمات"
@@ -361,82 +377,82 @@ msgid "Show"
 msgstr "نمایش"
 
 msgid "Show password"
-msgstr "Show password"
+msgstr "نمایش رمز عبور"
 
 msgid "Sign in or create an account to access your panel."
-msgstr "Sign in or create an account to access your panel."
+msgstr "برای دسترسی به پنل وارد شوید یا حساب بسازید."
 
 msgid "Sign in with your username or email address."
-msgstr "Sign in with your username or email address."
+msgstr "با نام کاربری یا ایمیل وارد شوید."
 
 msgid "Strong password"
-msgstr "Strong password"
+msgstr "رمز قوی"
 
 msgid "Team"
-msgstr "Team"
+msgstr "تیم"
 
 msgid "Team Members"
-msgstr "Team Members"
+msgstr "اعضای تیم"
 
 msgid "Team management will be available when a team module is installed."
-msgstr "Team management will be available when a team module is installed."
+msgstr "مدیریت تیم وقتی ماژول تیم نصب شود در دسترس خواهد بود."
 
 msgid "The page you are looking for does not exist."
-msgstr "The page you are looking for does not exist."
+msgstr "صفحه مورد نظر شما وجود ندارد."
 
 msgid "Toggle navigation"
-msgstr "Toggle navigation"
+msgstr "باز و بسته کردن منو"
 
 msgid "User"
-msgstr "User"
+msgstr "کاربر"
 
 msgid "User / Manager / Admin panels"
-msgstr "User / Manager / Admin panels"
+msgstr "پنل‌های کاربر / مدیر / ادمین"
 
 msgid "User Panel"
-msgstr "User Panel"
+msgstr "پنل کاربر"
 
 msgid "User panel navigation"
-msgstr "User panel navigation"
+msgstr "ناوبری پنل کاربر"
 
 msgid "Username"
-msgstr "Username"
+msgstr "نام کاربری"
 
 msgid "Username or Email"
-msgstr "Username or Email"
+msgstr "نام کاربری یا ایمیل"
 
 msgid "Username:"
-msgstr "Username:"
+msgstr "نام کاربری:"
 
 msgid "Users"
 msgstr "کاربران"
 
 msgid "View and update your account profile information."
-msgstr "View and update your account profile information."
+msgstr "اطلاعات پروفایل حساب را ببینید و به‌روزرسانی کنید."
 
 msgid "Weak password"
-msgstr "Weak password"
+msgstr "رمز ضعیف"
 
 msgid "Welcome back, %s."
-msgstr "Welcome back, %s."
+msgstr "خوش آمدید، %s."
 
 msgid "WordPress Core"
-msgstr "WordPress Core"
+msgstr "هسته وردپرس"
 
 msgid "WordPress foundation"
-msgstr "WordPress foundation"
+msgstr "بنیان وردپرس"
 
 msgid "You do not have permission to access this page."
-msgstr "You do not have permission to access this page."
+msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
 msgid "You have view-only access to settings."
-msgstr "You have view-only access to settings."
+msgstr "شما فقط دسترسی مشاهده به تنظیمات دارید."
 
 msgid "Your manager actions will be listed here."
-msgstr "Your manager actions will be listed here."
+msgstr "اقدامات مدیر شما اینجا فهرست می‌شود."
 
 msgid "Your personal workspace, account summary, and module widgets."
-msgstr "Your personal workspace, account summary, and module widgets."
+msgstr "فضای کار شخصی، خلاصه حساب و ویجت‌های ماژول."
 
 msgid "Your recent platform actions will appear here."
-msgstr "Your recent platform actions will appear here."
+msgstr "اقدامات اخیر پلتفرم شما اینجا نمایش داده می‌شود."

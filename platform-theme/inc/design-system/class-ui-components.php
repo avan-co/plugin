@@ -109,9 +109,14 @@ final class UIComponents {
 	 * @param string $type    Alert type.
 	 */
 	public static function alert( $message, $type = 'info' ) {
+		$type = sanitize_html_class( $type );
+		$role = in_array( $type, array( 'error', 'warning' ), true ) ? 'alert' : 'status';
+
 		printf(
-			'<div class="mpp-alert mpp-alert--%s" role="alert">%s</div>',
-			esc_attr( sanitize_html_class( $type ) ),
+			'<div class="mpp-alert mpp-alert--%s" role="%s"%s>%s</div>',
+			esc_attr( $type ),
+			esc_attr( $role ),
+			'status' === $role ? ' aria-live="polite"' : '',
 			esc_html( $message )
 		);
 	}
@@ -122,9 +127,10 @@ final class UIComponents {
 	 * @param string $title       Title.
 	 * @param string $description Description.
 	 */
-	public static function empty_state( $title, $description = '' ) {
+	public static function empty_state( $title, $description = '', $icon = '…' ) {
 		?>
 		<div class="mpp-empty-state">
+			<div class="mpp-empty-state__icon" aria-hidden="true"><?php echo esc_html( $icon ); ?></div>
 			<h3 class="mpp-empty-state__title"><?php echo esc_html( $title ); ?></h3>
 			<?php if ( $description ) : ?>
 				<p><?php echo esc_html( $description ); ?></p>
@@ -491,11 +497,12 @@ final class UIComponents {
 				$value = $field['value'] ?? '';
 				?>
 				<?php if ( 'select' === $type ) : ?>
-					<label class="mpp-filter-bar__field">
+					<?php $select_id = 'mpp-filter-' . sanitize_html_class( $name ); ?>
+					<label class="mpp-filter-bar__field" for="<?php echo esc_attr( $select_id ); ?>">
 						<?php if ( $label ) : ?>
 							<span class="screen-reader-text"><?php echo esc_html( $label ); ?></span>
 						<?php endif; ?>
-						<select name="<?php echo esc_attr( $name ); ?>" class="mpp-select">
+						<select id="<?php echo esc_attr( $select_id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="mpp-select" aria-label="<?php echo esc_attr( $label ); ?>">
 							<?php foreach ( (array) ( $field['options'] ?? array() ) as $option_value => $option_label ) : ?>
 								<option value="<?php echo esc_attr( (string) $option_value ); ?>" <?php selected( (string) $value, (string) $option_value ); ?>>
 									<?php echo esc_html( $option_label ); ?>

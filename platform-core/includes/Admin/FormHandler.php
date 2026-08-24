@@ -102,8 +102,9 @@ class FormHandler {
 		}
 
 		$action  = sanitize_key( wp_unslash( $_POST['mpp_admin_action'] ) );
-		$redirect = isset( $_POST['mpp_redirect'] ) ? esc_url_raw( wp_unslash( $_POST['mpp_redirect'] ) ) : mpp_route_url( 'app/admin' );
-		$redirect = wp_validate_redirect( $redirect, mpp_route_url( 'app/admin' ) );
+		$redirect = isset( $_POST['mpp_redirect'] ) ? esc_url_raw( wp_unslash( $_POST['mpp_redirect'] ) ) : self::current_request_url();
+		$redirect = $redirect ? wp_validate_redirect( $redirect, mpp_route_url( 'app/admin' ) ) : mpp_route_url( 'app/admin' );
+		$redirect = remove_query_arg( array( 'mpp_notice', 'mpp_message' ), $redirect );
 
 		$result = $this->dispatch( $action );
 
@@ -442,7 +443,7 @@ class FormHandler {
 		}
 
 		$this->audit->log(
-			'role.permissions.updated',
+			'role.permissions.saved',
 			'role',
 			$role_id,
 			array( 'permissions' => wp_list_pluck( $before, 'permission_id' ) ),
@@ -494,5 +495,47 @@ class FormHandler {
 	 */
 	public static function nonce_field() {
 		return wp_nonce_field( self::NONCE_ACTION, 'mpp_admin_nonce', true, false );
+	}
+
+	/**
+	 * Hidden redirect field preserving the current admin URL (filters and tabs).
+	 *
+	 * @param string $fallback Fallback URL when the request URI is unavailable.
+	 * @return string
+	 */
+	public static function redirect_field( $fallback = '' ) {
+		$url = self::current_request_url();
+
+		if ( ! $url ) {
+			$url = $fallback ?: mpp_route_url( 'app/admin' );
+		}
+
+		return '<input type="hidden" name="mpp_redirect" value="' . esc_url( $url ) . '">';
+	}
+
+	/**
+	 * Alias for redirect_field() for backwards compatibility.
+	 *
+	 * @param string $fallback Fallback URL.
+	 * @return string
+	 */
+	public static function referer_field( $fallback = '' ) {
+		return self::redirect_field( $fallback );
+	}
+
+	/**
+	 * Build the current request URL without flash notice query args.
+	 *
+	 * @return string
+	 */
+	public static function current_request_url() {
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return '';
+		}
+
+		$uri = wp_unslash( $_SERVER['REQUEST_URI'] );
+		$url = esc_url_raw( home_url( $uri ) );
+
+		return remove_query_arg( array( 'mpp_notice', 'mpp_message' ), $url );
 	}
 }
