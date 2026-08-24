@@ -263,7 +263,7 @@
 		gap: var(--mpp-space-md);
 		padding: 0.625rem 0.875rem;
 		border-bottom: 1px solid var(--mpp-border);
-		text-align: right;
+		text-align: end;
 	}
 
 	.mpp-admin-table--stack td:last-child {
@@ -274,7 +274,9 @@
 		content: attr(data-label);
 		font-weight: 600;
 		color: var(--mpp-muted-foreground);
-		text-align: left;
+		text-align: start;
+		flex: 0 0 auto;
+		max-width: 45%;
 	}
 }
 

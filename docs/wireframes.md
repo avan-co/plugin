@@ -366,7 +366,7 @@ Account section (footer): Profile, Logout
 4. Admin Settings → categorized sidebar layout
 5. Themed Forgot Password page
 6. Nested Users/Roles in admin navigation
-7. Mobile table → card transforms (CSS + markup patterns)
+7. Mobile table → card transforms (CSS + markup patterns) — done via `.mpp-admin-table--stack` + `responsive.css`
 
 ---
 
@@ -382,4 +382,5 @@ Account section (footer): Profile, Logout
 - **Phase 8 (Settings):** Complete — appearance section, timezone, form fields, mobile section picker, header branding
 - **Phase 9 (Panels):** Complete — user/manager dashboards with welcome, stats, module shortcuts, activity
 - **Phase 10 (Authentication):** Complete — themed forgot-password route, auth page shell, minimal header
-- **Phase 11+:** Pending — responsive/RTL, testing
+- **Phase 11 (Responsive/RTL):** Complete — responsive.css, stacked table logical alignment, mobile nav UX
+- **Phase 12+:** Pending — testing

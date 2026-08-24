@@ -134,6 +134,20 @@ Used by: login, register, forgot-password (Phase 10).
 - Body class: `mpp-rtl` when `is_rtl()`
 - Breadcrumb separator flips in `[dir="rtl"]`
 - Sidebar active border uses `border-inline-start`
+- Shared RTL rules in `responsive.css` (lists, tabs, pagination, form actions)
+- Stacked admin tables use `text-align: start/end` for label/value pairs
+
+## Responsive
+
+File: `platform-theme/assets/css/responsive.css` (loaded after `panels.css`)
+
+| Breakpoint | Patterns |
+|------------|----------|
+| ≤768px | Filter bar stacks; stats 2-up; profile lists single-column; form actions full-width |
+| ≤480px | Stats and module grids single-column |
+| ≤900px | Sidebar collapse + nav toggle (see `panels.css`) |
+
+Mobile navigation closes on link click, outside click, and Escape (`navigation.js`).
 
 ## File load order
 
@@ -142,7 +156,8 @@ Used by: login, register, forgot-password (Phase 10).
 3. `style.css` (theme)
 4. `main.css`
 5. `panels.css`
-6. `admin.css` (admin routes only)
+6. `responsive.css`
+7. `admin.css` (admin routes only)
 
 ## Phase 3 status
 
@@ -153,7 +168,8 @@ Used by: login, register, forgot-password (Phase 10).
 - [x] Permission tree CSS (`.mpp-perm-tree`)
 - [x] Page implementations (Phase 4 admin shell)
 - [x] Permissions role editor on Role Details (Phase 5)
-- [ ] Responsive/RTL, testing (Phase 11+)
+- [ ] Testing (Phase 12)
+- [x] Responsive layout and RTL refinements (Phase 11)
 - [x] Auth pages: login, register, forgot-password with shared shell (Phase 10)
 - [x] Modules list/detail pages (Phase 6)
 - [x] Users list filters and detail polish (Phase 7)
