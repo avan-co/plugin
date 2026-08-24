@@ -44,6 +44,16 @@ class PlatformSettingsTest extends TestCase {
 		);
 
 		$this->assertSame( array(), $errors );
+		$this->assertSame( '#112233', $settings->get( 'accent_color' ) );
+	}
+
+	/**
+	 * get_timezone_override returns empty string when unset.
+	 */
+	public function test_get_timezone_override_returns_empty_when_unset(): void {
+		$settings = new PlatformSettings();
+
+		$this->assertSame( '', $settings->get_timezone_override() );
 	}
 
 	/**

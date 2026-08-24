@@ -82,4 +82,21 @@ class ModuleServiceTest extends TestCase {
 		$this->assertSame( 'example.demo.manage', $items[0]['key'] );
 		$this->assertSame( 'demo', $items[0]['resource'] );
 	}
+
+	/**
+	 * Core auth routes are excluded from module route ownership.
+	 */
+	public function test_core_auth_routes_are_not_module_owned(): void {
+		$modules  = $this->getMockBuilder( ModuleManager::class )->disableOriginalConstructor()->getMock();
+		$registry = $this->getMockBuilder( PermissionRegistry::class )->disableOriginalConstructor()->getMock();
+		$modules->method( 'all' )->willReturn( array() );
+		$registry->method( 'get_grouped' )->willReturn( array() );
+
+		$service = new ModuleService( $modules, $registry );
+		$method  = new \ReflectionMethod( ModuleService::class, 'route_belongs_to_module' );
+		$method->setAccessible( true );
+
+		$this->assertFalse( $method->invoke( $service, 'forgot-password', 'example' ) );
+		$this->assertFalse( $method->invoke( $service, 'login', 'example' ) );
+	}
 }

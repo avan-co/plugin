@@ -149,6 +149,17 @@ File: `platform-theme/assets/css/responsive.css` (loaded after `panels.css`)
 
 Mobile navigation closes on link click, outside click, and Escape (`navigation.js`).
 
+## Testing
+
+Run from `platform-core/`:
+
+```bash
+composer install
+composer test
+```
+
+Phase 12 adds coverage for auth handlers, settings, dashboard shortcuts, route definitions, and theme asset wiring.
+
 ## File load order
 
 1. `tokens.css`
@@ -168,8 +179,8 @@ Mobile navigation closes on link click, outside click, and Escape (`navigation.j
 - [x] Permission tree CSS (`.mpp-perm-tree`)
 - [x] Page implementations (Phase 4 admin shell)
 - [x] Permissions role editor on Role Details (Phase 5)
-- [ ] Testing (Phase 12)
 - [x] Responsive layout and RTL refinements (Phase 11)
+- [x] PHPUnit coverage for auth, settings, dashboards, and theme assets (Phase 12)
 - [x] Auth pages: login, register, forgot-password with shared shell (Phase 10)
 - [x] Modules list/detail pages (Phase 6)
 - [x] Users list filters and detail polish (Phase 7)

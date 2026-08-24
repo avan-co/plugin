@@ -32,7 +32,21 @@ class DashboardServiceTest extends TestCase {
 			 * @return array<int, array<string, string>>
 			 */
 			function mpp_get_panel_navigation( $panel ) {
-				unset( $panel );
+				if ( 'manager' === $panel ) {
+					return array(
+						array(
+							'label' => 'Dashboard',
+							'url'   => '/app/manager',
+							'route' => 'app/manager',
+						),
+						array(
+							'label' => 'Team Reports',
+							'url'   => '/app/reports',
+							'route' => 'app/reports',
+						),
+					);
+				}
+
 				return array(
 					array(
 						'label' => 'Dashboard',
@@ -56,6 +70,17 @@ class DashboardServiceTest extends TestCase {
 		$this->assertSame( 'Example Demo', $shortcuts[0]['label'] );
 		$this->assertSame( '/app/example', $shortcuts[0]['url'] );
 		$this->assertSame( 'E', $shortcuts[0]['icon'] );
+	}
+
+	/**
+	 * get_module_shortcuts excludes manager core routes.
+	 */
+	public function test_get_module_shortcuts_excludes_manager_core_routes(): void {
+		$service   = $this->make_service();
+		$shortcuts = $service->get_module_shortcuts( 'manager' );
+
+		$this->assertCount( 1, $shortcuts );
+		$this->assertSame( 'Team Reports', $shortcuts[0]['label'] );
 	}
 
 	/**

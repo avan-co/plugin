@@ -45,7 +45,7 @@ class RouteDefinitionsTest extends TestCase {
 		$router = new Router( $engine );
 		$routes = $router->get_routes();
 
-		foreach ( array( 'login', 'register', '403', '404' ) as $slug ) {
+		foreach ( array( 'login', 'register', 'forgot-password', '403', '404' ) as $slug ) {
 			$this->assertArrayHasKey( $slug, $routes );
 			$this->assertFalse( $routes[ $slug ]['auth'] );
 			$this->assertEmpty( $routes[ $slug ]['permission'] );
