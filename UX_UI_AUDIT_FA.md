@@ -285,6 +285,10 @@ axe در دسکتاپ برای لینک‌های Panel Switcher، توضیح آ�
 | P2-18 | متن Login و Register انگلیسی و عمومی است | حس محصول اختصاصی ایجاد نمی‌شود | microcopy برندمحور و contextual |
 | P2-19 | Profile کاربر و Manager دو قالب تقریباً تکراری دارند | رفتار و نگه‌داری ناسازگار می‌شود | Account Experience مشترک |
 | P2-20 | Manager و Admin نیز از Footer عمومی استفاده می‌کنند | فضای زائد در اپلیکیشن عملیاتی | Footer فشرده یا حذف در Shell داخلی |
+| P2-21 | لینک Settings مدیر به `/settings` می‌رود و صفحه با Shell پنل User رندر می‌شود | Context مدیر ناگهان شکسته می‌شود | Route یا Shell زمینه‌محور برای تنظیمات مشترک |
+| P2-22 | کلاس‌های استفاده‌شده‌ای مانند `.mpp-card--error`، `.mpp-alert--info`، `.mpp-checkbox`، `.mpp-field__hint` و `.mpp-table-wrap` Style متناظر ندارند | صفحات خطا، Hint، Checkbox و جدول‌ها ناتمام یا وابسته به Browser Default دیده می‌شوند | تکمیل Inventory کامپوننت‌ها و حذف کلاس‌های مرده |
+| P2-23 | جدول‌های Admin با `text-align:left` و Back/Pagination با فلش‌های ثابت LTR ساخته شده‌اند | RTL در صفحات مدیریتی ناهماهنگ است | Logical Alignment و Iconهای direction-aware |
+| P2-24 | Landing همیشه Register را نشان می‌دهد، حتی اگر ثبت‌نام عمومی غیرفعال باشد | CTA کاربر را به Redirect بی‌توضیح می‌فرستد | نمایش CTA بر اساس وضعیت واقعی Registration |
 
 ## تحلیل طراحی بصری
 
