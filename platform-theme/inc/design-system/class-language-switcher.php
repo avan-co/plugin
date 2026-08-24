@@ -19,11 +19,46 @@ final class LanguageSwitcher {
 	const QUERY_VAR = 'mpp_lang';
 
 	/**
+	 * Guard against recursive locale filter calls.
+	 *
+	 * @var bool
+	 */
+	private static $applying_locale = false;
+
+	/**
 	 * Register locale hooks.
 	 */
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'handle_switch' ), 1 );
 		add_filter( 'locale', array( __CLASS__, 'filter_locale' ) );
+	}
+
+	/**
+	 * Supported locale codes.
+	 *
+	 * Must not call translation functions here — this runs during locale bootstrapping.
+	 *
+	 * @return array<int, string>
+	 */
+	public static function get_supported_locale_codes() {
+		$codes = array( 'en_US', 'fa_IR' );
+
+		/**
+		 * Filter supported platform locale codes.
+		 *
+		 * @param array<int, string> $codes Locale codes.
+		 */
+		return apply_filters( 'platform_supported_locale_codes', $codes );
+	}
+
+	/**
+	 * Whether a locale code is supported by the platform switcher.
+	 *
+	 * @param string $locale Locale code.
+	 * @return bool
+	 */
+	public static function is_supported_locale( $locale ) {
+		return in_array( $locale, self::get_supported_locale_codes(), true );
 	}
 
 	/**
@@ -34,12 +69,12 @@ final class LanguageSwitcher {
 	public static function get_locales() {
 		$locales = array(
 			'en_US' => array(
-				'label'  => __( 'English', 'platform-theme' ),
+				'label'  => 'English',
 				'native' => 'English',
 				'dir'    => 'ltr',
 			),
 			'fa_IR' => array(
-				'label'  => __( 'Persian', 'platform-theme' ),
+				'label'  => 'Persian',
 				'native' => 'فارسی',
 				'dir'    => 'rtl',
 			),
@@ -47,6 +82,8 @@ final class LanguageSwitcher {
 
 		/**
 		 * Filter available platform panel locales.
+		 *
+		 * Avoid calling translation functions in this filter during locale bootstrap.
 		 *
 		 * @param array<string, array<string, string>> $locales Locale map.
 		 */
@@ -59,18 +96,16 @@ final class LanguageSwitcher {
 	 * @return string|null
 	 */
 	public static function get_active_locale() {
-		$locales = self::get_locales();
-
 		if ( is_user_logged_in() ) {
 			$stored = get_user_meta( get_current_user_id(), self::META_KEY, true );
-			if ( is_string( $stored ) && isset( $locales[ $stored ] ) ) {
+			if ( is_string( $stored ) && self::is_supported_locale( $stored ) ) {
 				return $stored;
 			}
 		}
 
 		if ( isset( $_COOKIE[ self::COOKIE ] ) ) {
 			$cookie = sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE ] ) );
-			if ( isset( $locales[ $cookie ] ) ) {
+			if ( self::is_supported_locale( $cookie ) ) {
 				return $cookie;
 			}
 		}
@@ -85,7 +120,13 @@ final class LanguageSwitcher {
 	 * @return string
 	 */
 	public static function filter_locale( $locale ) {
-		$preferred = self::get_active_locale();
+		if ( self::$applying_locale ) {
+			return $locale;
+		}
+
+		self::$applying_locale = true;
+		$preferred             = self::get_active_locale();
+		self::$applying_locale = false;
 
 		return $preferred ? $preferred : $locale;
 	}
@@ -99,9 +140,8 @@ final class LanguageSwitcher {
 		}
 
 		$requested = sanitize_text_field( wp_unslash( $_GET[ self::QUERY_VAR ] ) );
-		$locales   = self::get_locales();
 
-		if ( ! isset( $locales[ $requested ] ) ) {
+		if ( ! self::is_supported_locale( $requested ) ) {
 			return;
 		}
 
@@ -179,6 +219,10 @@ final class LanguageSwitcher {
 		echo '<select id="mpp-lang-select" class="mpp-lang-switcher__select" onchange="if (this.value) { window.location.href = this.value; }">';
 
 		foreach ( $locales as $code => $meta ) {
+			if ( ! self::is_supported_locale( $code ) ) {
+				continue;
+			}
+
 			printf(
 				'<option value="%s"%s>%s</option>',
 				esc_url( self::get_switch_url( $code ) ),
