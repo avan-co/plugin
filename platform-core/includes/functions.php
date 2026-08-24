@@ -213,13 +213,6 @@ function mpp_get_panel_navigation( $panel ) {
 				'section'     => 'account',
 				'description' => __( 'Preferences and notifications', 'platform-core' ),
 			),
-			array(
-				'label'       => __( 'Logout', 'platform-core' ),
-				'url'         => mpp_logout_url(),
-				'route'       => '',
-				'section'     => 'system',
-				'description' => __( 'Sign out of the platform', 'platform-core' ),
-			),
 		),
 		'manager' => array(
 			array(
@@ -621,6 +614,55 @@ function mpp_get_platform_name() {
 	}
 
 	return (string) $settings->get( 'platform_name', get_bloginfo( 'name' ) );
+}
+
+/**
+ * Resolve the post-login redirect URL for a user.
+ *
+ * Uses the configured default dashboard when the user can access it.
+ *
+ * @param int $user_id User ID.
+ * @return string
+ */
+function mpp_get_post_login_redirect_url( $user_id = 0 ) {
+	$user_id = $user_id ? (int) $user_id : get_current_user_id();
+	$routes  = mpp_get_routes();
+	$slug    = 'app';
+
+	$settings = mpp_platform_settings();
+
+	if ( $settings ) {
+		$configured = sanitize_text_field( (string) $settings->get( 'default_dashboard', 'app/user' ) );
+
+		if ( isset( $routes[ $configured ] ) ) {
+			$slug = $configured;
+		}
+	}
+
+	$definition = $routes[ $slug ] ?? null;
+
+	if ( $definition && ! empty( $definition['permission'] ) && ! mpp_can( $user_id, $definition['permission'] ) ) {
+		$slug = 'app';
+	}
+
+	return mpp_route_url( $slug );
+}
+
+/**
+ * Format a date/time using the platform date format preference.
+ *
+ * @param string $datetime MySQL datetime string.
+ * @param bool   $gmt      Whether the input is GMT.
+ * @return string
+ */
+function mpp_format_date( $datetime, $gmt = false ) {
+	if ( '' === $datetime ) {
+		return '';
+	}
+
+	$format = get_option( 'date_format' );
+
+	return mysql2date( $format, $datetime, $gmt );
 }
 
 /**

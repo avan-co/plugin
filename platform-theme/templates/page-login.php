@@ -16,6 +16,9 @@ require_once get_template_directory() . '/inc/auth-page.php';
 
 get_header();
 
+$login_value = isset( $_POST['log'] ) ? sanitize_text_field( wp_unslash( $_POST['log'] ) ) : '';
+$redirect_to = function_exists( 'mpp_get_post_login_redirect_url' ) ? mpp_get_post_login_redirect_url() : mpp_route_url( 'app' );
+
 ob_start();
 
 if ( ! empty( $GLOBALS['mpp_login_error'] ) ) {
@@ -25,11 +28,11 @@ if ( ! empty( $GLOBALS['mpp_login_error'] ) ) {
 <form method="post" action="<?php echo esc_url( mpp_route_url( 'login' ) ); ?>" class="mpp-form" novalidate>
 	<?php wp_nonce_field( 'mpp_login', 'mpp_login_nonce' ); ?>
 	<input type="hidden" name="mpp_login" value="1">
-	<input type="hidden" name="redirect_to" value="<?php echo esc_url( mpp_route_url( 'app' ) ); ?>">
+	<input type="hidden" name="redirect_to" value="<?php echo esc_url( $redirect_to ); ?>">
 
 	<div class="mpp-field">
 		<label class="mpp-field__label" for="log"><?php esc_html_e( 'Username or Email', 'platform-theme' ); ?></label>
-		<input class="mpp-input" type="text" name="log" id="log" required autocomplete="username">
+		<input class="mpp-input" type="text" name="log" id="log" required autocomplete="username" value="<?php echo esc_attr( $login_value ); ?>">
 	</div>
 
 	<div class="mpp-field">

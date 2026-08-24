@@ -143,6 +143,90 @@ body.mpp-body {
 .mpp-panel-switcher a:hover {
 	background: var(--mpp-primary);
 	color: var(--mpp-primary-foreground);
+	border-color: var(--mpp-primary);
+}
+
+.mpp-panel-switcher li.is-active a,
+.mpp-panel-switcher a[aria-current="page"] {
+	background: var(--mpp-primary);
+	color: var(--mpp-primary-foreground);
+	border-color: var(--mpp-primary);
+	font-weight: 600;
+}
+
+.mpp-account-menu {
+	position: relative;
+}
+
+.mpp-account-menu__trigger {
+	display: flex;
+	align-items: center;
+	gap: var(--mpp-space-sm);
+	padding: 0.25rem 0.5rem;
+	border: 1px solid var(--mpp-border);
+	border-radius: var(--mpp-radius-md);
+	background: var(--mpp-background);
+	color: var(--mpp-foreground);
+	cursor: pointer;
+	font: inherit;
+	font-size: var(--mpp-font-small);
+	max-width: 12rem;
+}
+
+.mpp-account-menu__trigger:focus-visible {
+	outline: 2px solid var(--mpp-info);
+	outline-offset: 2px;
+}
+
+.mpp-account-menu__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.mpp-account-menu__panel {
+	position: absolute;
+	top: calc(100% + 0.375rem);
+	inset-inline-end: 0;
+	min-width: 220px;
+	background: var(--mpp-surface-card);
+	border: 1px solid var(--mpp-border);
+	border-radius: var(--mpp-radius-md);
+	box-shadow: var(--mpp-shadow-elevated);
+	z-index: 110;
+	padding: var(--mpp-space-sm);
+}
+
+.mpp-account-menu__header {
+	display: flex;
+	flex-direction: column;
+	gap: 0.125rem;
+	padding: var(--mpp-space-sm) var(--mpp-space-md);
+	border-bottom: 1px solid var(--mpp-border);
+	margin-bottom: var(--mpp-space-xs);
+}
+
+.mpp-account-menu__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.mpp-account-menu__list a {
+	display: block;
+	padding: 0.5rem var(--mpp-space-md);
+	border-radius: var(--mpp-radius-sm);
+	color: var(--mpp-foreground);
+	text-decoration: none;
+	font-size: var(--mpp-font-small);
+}
+
+.mpp-account-menu__list a:hover {
+	background: var(--mpp-muted);
+}
+
+.mpp-account-menu__logout {
+	color: var(--mpp-destructive);
 }
 
 .mpp-lang-switcher__select {
@@ -646,7 +730,7 @@ body.mpp-body {
 /* Mobile */
 @media (max-width: 900px) {
 	.mpp-header__tools .mpp-panel-switcher,
-	.mpp-header__tools .mpp-header__user {
+	.mpp-header__tools .mpp-account-menu__name {
 		display: none;
 	}
 

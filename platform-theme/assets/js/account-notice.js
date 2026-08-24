@@ -1,8 +1,15 @@
 /**
- * Clear account flash-notice query parameters after display.
+ * Clear account flash-notice query parameters and move focus to the message.
  */
 (function () {
 	'use strict';
+
+	var notice = document.querySelector('.mpp-alert');
+
+	if (notice) {
+		notice.setAttribute('tabindex', '-1');
+		notice.focus({ preventScroll: true });
+	}
 
 	var params = new URLSearchParams(window.location.search);
 

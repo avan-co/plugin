@@ -21,6 +21,8 @@ class PlatformSettings {
 	 */
 	public function register_hooks() {
 		add_filter( 'pre_option_timezone_string', array( $this, 'filter_timezone_string' ) );
+		add_filter( 'pre_option_date_format', array( $this, 'filter_date_format' ) );
+		add_filter( 'auth_cookie_expiration', array( $this, 'filter_auth_cookie_expiration' ), 10, 3 );
 	}
 
 	/**
@@ -37,6 +39,42 @@ class PlatformSettings {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Override WordPress date format when a platform format is saved.
+	 *
+	 * @param mixed $value Current pre-option value.
+	 * @return mixed
+	 */
+	public function filter_date_format( $value ) {
+		$format = get_option( self::OPTION_PREFIX . 'date_format', '' );
+
+		if ( is_string( $format ) && '' !== $format ) {
+			return $format;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Apply platform remember-me duration to auth cookies.
+	 *
+	 * @param int  $expiration Cookie lifetime in seconds.
+	 * @param int  $user_id    User ID.
+	 * @param bool $remember   Whether remember-me was selected.
+	 * @return int
+	 */
+	public function filter_auth_cookie_expiration( $expiration, $user_id, $remember ) {
+		unset( $user_id );
+
+		if ( ! $remember ) {
+			return $expiration;
+		}
+
+		$days = max( 1, min( 365, (int) $this->get( 'session_remember_days', 14 ) ) );
+
+		return $days * DAY_IN_SECONDS;
 	}
 
 	/**

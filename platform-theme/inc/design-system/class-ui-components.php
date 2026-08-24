@@ -496,11 +496,12 @@ final class UIComponents {
 				$value = $field['value'] ?? '';
 				?>
 				<?php if ( 'select' === $type ) : ?>
-					<label class="mpp-filter-bar__field">
+					<?php $select_id = 'mpp-filter-' . sanitize_html_class( $name ); ?>
+					<label class="mpp-filter-bar__field" for="<?php echo esc_attr( $select_id ); ?>">
 						<?php if ( $label ) : ?>
 							<span class="screen-reader-text"><?php echo esc_html( $label ); ?></span>
 						<?php endif; ?>
-						<select name="<?php echo esc_attr( $name ); ?>" class="mpp-select">
+						<select id="<?php echo esc_attr( $select_id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="mpp-select" aria-label="<?php echo esc_attr( $label ); ?>">
 							<?php foreach ( (array) ( $field['options'] ?? array() ) as $option_value => $option_label ) : ?>
 								<option value="<?php echo esc_attr( (string) $option_value ); ?>" <?php selected( (string) $value, (string) $option_value ); ?>>
 									<?php echo esc_html( $option_label ); ?>

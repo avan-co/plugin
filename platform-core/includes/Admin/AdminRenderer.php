@@ -287,13 +287,16 @@ class AdminRenderer {
 		} else {
 			?>
 			<form method="get" action="<?php echo esc_url( mpp_route_url( 'app/admin/users' ) ); ?>" class="mpp-admin-search">
-				<input type="search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search users...', 'platform-core' ); ?>">
-				<select name="role_id" class="mpp-select">
+				<label class="screen-reader-text" for="mpp-admin-user-search"><?php esc_html_e( 'Search users', 'platform-core' ); ?></label>
+				<input type="search" id="mpp-admin-user-search" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search users...', 'platform-core' ); ?>">
+				<label class="screen-reader-text" for="mpp-admin-user-role"><?php esc_html_e( 'Platform role', 'platform-core' ); ?></label>
+				<select id="mpp-admin-user-role" name="role_id" class="mpp-select" aria-label="<?php esc_attr_e( 'Platform role', 'platform-core' ); ?>">
 					<?php foreach ( $role_options as $value => $label ) : ?>
 						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( (string) $role_id, (string) $value ); ?>><?php echo esc_html( $label ); ?></option>
 					<?php endforeach; ?>
 				</select>
-				<select name="status" class="mpp-select">
+				<label class="screen-reader-text" for="mpp-admin-user-status"><?php esc_html_e( 'Status', 'platform-core' ); ?></label>
+				<select id="mpp-admin-user-status" name="status" class="mpp-select" aria-label="<?php esc_attr_e( 'Status', 'platform-core' ); ?>">
 					<?php foreach ( $status_options as $value => $label ) : ?>
 						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $status, $value ); ?>><?php echo esc_html( $label ); ?></option>
 					<?php endforeach; ?>
@@ -554,18 +557,18 @@ class AdminRenderer {
 			<?php endif; ?>
 
 			<?php if ( ! $is_edit ) : ?>
-				<label><?php esc_html_e( 'Slug', 'platform-core' ); ?></label>
-				<input type="text" name="slug" required pattern="[a-z0-9_-]+">
+				<label for="mpp-role-slug"><?php esc_html_e( 'Slug', 'platform-core' ); ?></label>
+				<input type="text" id="mpp-role-slug" name="slug" required pattern="[a-z0-9_-]+">
 			<?php endif; ?>
 
-			<label><?php esc_html_e( 'Name', 'platform-core' ); ?></label>
-			<input type="text" name="name" required value="<?php echo $is_edit ? esc_attr( $role['name'] ) : ''; ?>">
+			<label for="mpp-role-name"><?php esc_html_e( 'Name', 'platform-core' ); ?></label>
+			<input type="text" id="mpp-role-name" name="name" required value="<?php echo $is_edit ? esc_attr( $role['name'] ) : ''; ?>">
 
-			<label><?php esc_html_e( 'Description', 'platform-core' ); ?></label>
-			<textarea name="description" rows="3"><?php echo $is_edit ? esc_textarea( $role['description'] ) : ''; ?></textarea>
+			<label for="mpp-role-description"><?php esc_html_e( 'Description', 'platform-core' ); ?></label>
+			<textarea id="mpp-role-description" name="description" rows="3"><?php echo $is_edit ? esc_textarea( $role['description'] ) : ''; ?></textarea>
 
-			<label><?php esc_html_e( 'Status', 'platform-core' ); ?></label>
-			<select name="status">
+			<label for="mpp-role-status"><?php esc_html_e( 'Status', 'platform-core' ); ?></label>
+			<select id="mpp-role-status" name="status" aria-label="<?php esc_attr_e( 'Role status', 'platform-core' ); ?>">
 				<option value="active" <?php selected( $is_edit ? ( $role['status'] ?? 'active' ) : 'active', 'active' ); ?>><?php esc_html_e( 'Active', 'platform-core' ); ?></option>
 				<option value="inactive" <?php selected( $is_edit ? ( $role['status'] ?? 'active' ) : '', 'inactive' ); ?>><?php esc_html_e( 'Inactive', 'platform-core' ); ?></option>
 			</select>
@@ -1697,7 +1700,8 @@ class AdminRenderer {
 			<input type="hidden" name="mpp_admin_action" value="assign_user_role">
 			<input type="hidden" name="user_id" value="<?php echo esc_attr( (string) $user_id ); ?>">
 			<input type="hidden" name="mpp_redirect" value="<?php echo esc_url( $redirect ); ?>">
-			<select name="role_id" required>
+			<label for="mpp-assign-role-select"><?php esc_html_e( 'Platform role', 'platform-core' ); ?></label>
+			<select id="mpp-assign-role-select" name="role_id" required aria-label="<?php esc_attr_e( 'Select role to assign', 'platform-core' ); ?>">
 				<option value=""><?php esc_html_e( 'Select role...', 'platform-core' ); ?></option>
 				<?php foreach ( $all_roles as $role ) : ?>
 					<?php if ( in_array( (int) $role['id'], $assigned, true ) ) { continue; } ?>

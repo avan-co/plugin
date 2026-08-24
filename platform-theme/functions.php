@@ -100,6 +100,13 @@ function platform_theme_enqueue_assets() {
 			wp_get_theme()->get( 'Version' ),
 			true
 		);
+		wp_enqueue_script(
+			'platform-theme-account-menu',
+			get_template_directory_uri() . '/assets/js/account-menu.js',
+			array(),
+			wp_get_theme()->get( 'Version' ),
+			true
+		);
 	}
 
 	if ( is_front_page() ) {
@@ -131,6 +138,7 @@ function platform_theme_enqueue_assets() {
 					'fair'   => __( 'Fair password', 'platform-theme' ),
 					'good'   => __( 'Good password', 'platform-theme' ),
 					'strong' => __( 'Strong password', 'platform-theme' ),
+					'passwordMismatch' => __( 'Passwords do not match.', 'platform-theme' ),
 				)
 			);
 		}
@@ -205,6 +213,86 @@ function platform_get_page_title() {
 }
 
 /**
+ * Get the active panel slug from the current route.
+ *
+ * @return string
+ */
+function platform_get_current_panel() {
+	if ( ! function_exists( 'mpp_get_current_route' ) ) {
+		return '';
+	}
+
+	$route = mpp_get_current_route();
+
+	if ( ! $route || empty( $route['slug'] ) ) {
+		return '';
+	}
+
+	$slug = $route['slug'];
+
+	if ( preg_match( '#^app/(user|manager|admin)(?:/|$)#', $slug, $matches ) ) {
+		return $matches[1];
+	}
+
+	if ( in_array( $slug, array( 'profile', 'settings' ), true ) && function_exists( 'mpp_get_accessible_panels' ) ) {
+		$panels = mpp_get_accessible_panels();
+
+		return ! empty( $panels ) ? (string) $panels[0] : 'user';
+	}
+
+	return '';
+}
+
+/**
+ * Render account menu dropdown for logged-in users.
+ */
+function platform_render_account_menu() {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	$user = wp_get_current_user();
+
+	?>
+	<div class="mpp-account-menu" data-account-menu>
+		<button
+			type="button"
+			class="mpp-account-menu__trigger"
+			aria-expanded="false"
+			aria-controls="mpp-account-menu-panel"
+			aria-haspopup="true"
+		>
+			<?php echo platform_ui_avatar( (int) $user->ID, 32 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<span class="mpp-account-menu__name"><?php echo esc_html( $user->display_name ); ?></span>
+		</button>
+		<div id="mpp-account-menu-panel" class="mpp-account-menu__panel" hidden>
+			<div class="mpp-account-menu__header">
+				<strong><?php echo esc_html( $user->display_name ); ?></strong>
+				<span class="mpp-muted"><?php echo esc_html( $user->user_email ); ?></span>
+			</div>
+			<ul class="mpp-account-menu__list">
+				<li>
+					<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'profile' ) : home_url( '/profile' ) ); ?>">
+						<?php esc_html_e( 'Profile', 'platform-theme' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'settings' ) : home_url( '/settings' ) ); ?>">
+						<?php esc_html_e( 'Settings', 'platform-theme' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo esc_url( function_exists( 'mpp_logout_url' ) ? mpp_logout_url() : wp_logout_url() ); ?>" class="mpp-account-menu__logout">
+						<?php esc_html_e( 'Logout', 'platform-theme' ); ?>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<?php
+}
+
+/**
  * Render panel switcher links.
  */
 function platform_render_panel_switcher() {
@@ -223,6 +311,8 @@ function platform_render_panel_switcher() {
 		return;
 	}
 
+	$current_panel = platform_get_current_panel();
+
 	echo '<nav class="mpp-panel-switcher" aria-label="' . esc_attr__( 'Panel navigation', 'platform-theme' ) . '">';
 	echo '<ul>';
 
@@ -231,9 +321,13 @@ function platform_render_panel_switcher() {
 			continue;
 		}
 
+		$is_active = $panel === $current_panel;
+
 		printf(
-			'<li><a href="%s">%s</a></li>',
+			'<li%s><a href="%s"%s>%s</a></li>',
+			$is_active ? ' class="is-active"' : '',
 			esc_url( function_exists( 'mpp_route_url' ) ? mpp_route_url( 'app/' . $panel ) : home_url( '/app/' . $panel ) ),
+			$is_active ? ' aria-current="page"' : '',
 			esc_html( $labels[ $panel ] )
 		);
 	}
